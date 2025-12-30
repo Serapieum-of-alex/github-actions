@@ -3,7 +3,7 @@ description: 'Deploy MkDocs documentation to GitHub Pages with versioning suppor
 
 inputs:
   trigger:
-    description: 'Deployment trigger type (pull-request, main, release)'
+    description: 'Deployment trigger type (pull_request, main, release)'
     required: true
   package-manager:
     description: 'Package manager to use (pip, uv, pixi)'
@@ -66,7 +66,7 @@ runs:
         echo "::endgroup::"
 
     - name: Deploy to GitHub Pages (Pull Request)
-      if: inputs.trigger == 'pull-request'
+      if: inputs.trigger == 'pull_request'
       shell: bash
       env:
         ACTIONS_DEPLOY_TOKEN: ${{ inputs.deploy-token }}

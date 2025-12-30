@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: Serapieum-of-alex/github-actions/actions/mkdocs-deploy@v1
         with:
-          trigger: 'pull-request'
+          trigger: 'pull_request'
           package-manager: 'uv'
           deploy-token: ${{ secrets.ACTIONS_DEPLOY_TOKEN }}
 
@@ -59,7 +59,7 @@ jobs:
 
 | Input | Description | Required | Default |
 |-------|-------------|----------|---------|
-| `trigger` | Deployment trigger type (`pull-request`, `main`, `release`) | Yes | - |
+| `trigger` | Deployment trigger type (`pull_request`, `main`, `release`) | Yes | - |
 | `package-manager` | Package manager to use (`pip`, `uv`, `pixi`) | No | `uv` |
 | `python-version` | Python version to install | No | `3.12` |
 | `install-groups` | Dependency groups to install | No | `docs` |
