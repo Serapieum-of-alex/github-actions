@@ -37,8 +37,23 @@ runs:
       with:
         fetch-depth: 0
 
-    - name: Set up Python environment
-      uses: Serapieum-of-alex/github-actions/actions/python-setup/${{ inputs.package-manager }}@main
+    - name: Set up Python environment (pip)
+      if: ${{ inputs.package-manager == 'pip' }}
+      uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@main
+      with:
+        python-version: ${{ inputs.python-version }}
+        install-groups: ${{ inputs.install-groups }}
+
+    - name: Set up Python environment (uv)
+      if: ${{ inputs.package-manager == 'uv' }}
+      uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@main
+      with:
+        python-version: ${{ inputs.python-version }}
+        install-groups: ${{ inputs.install-groups }}
+
+    - name: Set up Python environment (pixi)
+      if: ${{ inputs.package-manager == 'pixi' }}
+      uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@main
       with:
         python-version: ${{ inputs.python-version }}
         install-groups: ${{ inputs.install-groups }}
