@@ -1,0 +1,115 @@
+name: 'Deploy MkDocs'
+description: 'Deploy MkDocs documentation to GitHub Pages with versioning support'
+
+inputs:
+  trigger:
+    description: 'Deployment trigger type (pull-request, main, release)'
+    required: true
+  package-manager:
+    description: 'Package manager to use (pip, uv, pixi)'
+    required: false
+    default: 'uv'
+  python-version:
+    description: 'Python version to install'
+    required: false
+    default: '3.12'
+  install-groups:
+    description: 'Dependency groups to install'
+    required: false
+    default: 'docs'
+  deploy-token:
+    description: 'GitHub token for deployment'
+    required: true
+  release-tag:
+    description: 'Release tag version (for release trigger)'
+    required: false
+    default: ''
+  mike-alias:
+    description: 'Mike alias for releases (e.g., latest)'
+    required: false
+    default: 'latest'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python environment
+      uses: Serapieum-of-alex/github-actions/actions/python-setup/${{ inputs.package-manager }}@main
+      with:
+        python-version: ${{ inputs.python-version }}
+        install-groups: ${{ inputs.install-groups }}
+
+    - name: Configure Git
+      shell: bash
+      run: |
+        echo "::group::Configuring Git"
+        git config --global user.name '${{ github.actor }}'
+        git config --global user.email '${{ github.actor }}@users.noreply.github.com'
+        echo "::endgroup::"
+
+    - name: Set release tag environment variable
+      if: inputs.trigger == 'release'
+      shell: bash
+      run: |
+        echo "::group::Setting release tag"
+        if [ -n "${{ inputs.release-tag }}" ]; then
+          export RELEASE_TAG_VERSION="${{ inputs.release-tag }}"
+        else
+          export RELEASE_TAG_VERSION="${{ github.event.release.tag_name }}"
+        fi
+        echo "RELEASE_TAG_VERSION=${RELEASE_TAG_VERSION}" >> $GITHUB_ENV
+        echo "Release tag: ${RELEASE_TAG_VERSION}"
+        echo "::endgroup::"
+
+    - name: Deploy to GitHub Pages (Pull Request)
+      if: inputs.trigger == 'pull-request'
+      shell: bash
+      env:
+        ACTIONS_DEPLOY_TOKEN: ${{ inputs.deploy-token }}
+        PACKAGE_MANAGER: ${{ inputs.package-manager }}
+      run: |
+        echo "::group::Deploying pull request documentation"
+        if [ "$PACKAGE_MANAGER" = "pip" ]; then
+          mike deploy --push develop
+        else
+          $PACKAGE_MANAGER run mike deploy --push develop
+        fi
+        echo "::endgroup::"
+
+    - name: Deploy to GitHub Pages (Main)
+      if: inputs.trigger == 'main'
+      shell: bash
+      env:
+        ACTIONS_DEPLOY_TOKEN: ${{ inputs.deploy-token }}
+        PACKAGE_MANAGER: ${{ inputs.package-manager }}
+      run: |
+        echo "::group::Deploying main branch documentation"
+        if [ "$PACKAGE_MANAGER" = "pip" ]; then
+          mike deploy --push main
+          mike set-default --push main
+        else
+          $PACKAGE_MANAGER run mike deploy --push main
+          $PACKAGE_MANAGER run mike set-default --push main
+        fi
+        echo "::endgroup::"
+
+    - name: Deploy to GitHub Pages (Release)
+      if: inputs.trigger == 'release'
+      shell: bash
+      env:
+        ACTIONS_DEPLOY_TOKEN: ${{ inputs.deploy-token }}
+        PACKAGE_MANAGER: ${{ inputs.package-manager }}
+      run: |
+        echo "::group::Deploying release documentation"
+        if [ "$PACKAGE_MANAGER" = "pip" ]; then
+          mike deploy --push --update-aliases ${RELEASE_TAG_VERSION} ${{ inputs.mike-alias }}
+          mike set-default --push ${{ inputs.mike-alias }}
+        else
+          $PACKAGE_MANAGER run mike deploy --push --update-aliases ${RELEASE_TAG_VERSION} ${{ inputs.mike-alias }}
+          $PACKAGE_MANAGER run mike set-default --push ${{ inputs.mike-alias }}
+        fi
+        echo "::endgroup::"
