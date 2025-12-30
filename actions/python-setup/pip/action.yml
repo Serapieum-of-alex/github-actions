@@ -1,0 +1,79 @@
+name: 'Setup Python with pip'
+description: 'Setup Python environment with pip package manager for pyproject.toml projects'
+
+inputs:
+  python-version:
+    description: 'Python version to install'
+    required: false
+    default: '3.12'
+  cache:
+    description: 'Cache packages dependencies (pip, pipenv, poetry)'
+    required: false
+    default: 'pip'
+  architecture:
+    description: 'Target architecture for Python to use (x64, x86)'
+    required: false
+    default: 'x64'
+  install-groups:
+    description: 'Dependency groups to install (e.g., "dev", "test docs")'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: ${{ inputs.cache }}
+        architecture: ${{ inputs.architecture }}
+
+    - name: Upgrade pip
+      shell: bash
+      run: |
+        echo "::group::Upgrading pip"
+        python -m pip install --upgrade pip
+        echo "::endgroup::"
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        echo "::group::Installing dependencies"
+        if [ -f pyproject.toml ]; then
+          echo "Found pyproject.toml, installing package..."
+          
+          # Check if install-groups are specified
+          if [ -n "${{ inputs.install-groups }}" ]; then
+            echo "Installing with dependency groups: ${{ inputs.install-groups }}"
+            
+            # Split groups on space and comma
+            IFS=' ,' read -r -a groups <<< "${{ inputs.install-groups }}"
+            
+            # Build pip install command with groups
+            install_cmd="pip install ."
+            for group in "${groups[@]}"; do
+              # Remove leading/trailing whitespace
+              group=$(echo "$group" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+              if [[ -n "$group" ]]; then
+                install_cmd="$install_cmd[$group]"
+              fi
+            done
+            
+            echo "Running: $install_cmd"
+            eval "$install_cmd"
+          else
+            echo "Installing package without optional groups..."
+            pip install .
+          fi
+        else
+          echo "No pyproject.toml found - skipping package installation"
+        fi
+        echo "::endgroup::"
+
+    - name: List installed packages
+      shell: bash
+      run: |
+        echo "::group::Installed packages summary"
+        pip list
+        echo "::endgroup::"
