@@ -78,7 +78,8 @@ runs:
       uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@main
       with:
         python-version: ${{ inputs.python-version }}
-        install-groups: ${{ inputs.install-groups }}
+        environments: ${{ inputs.install-groups }}
+        activate-environment: ${{ inputs.install-groups }}
 
     - name: Configure Git
       shell: bash
