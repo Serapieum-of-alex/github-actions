@@ -40,10 +40,6 @@ inputs:
     description: 'Create as draft release'
     required: false
     default: 'false'
-  prerelease:
-    description: 'Mark as prerelease (auto-detected from version if not specified)'
-    required: false
-    default: 'auto'
   package-manager:
     description: 'Package manager to use for pre-release setup (pip, uv, pixi)'
     required: false
@@ -173,5 +169,5 @@ runs:
         body_path: ${{ inputs.release-notes == 'tag' && 'CHANGELOG.md' || '' }}
         tag_name: ${{ steps.bump_version.outputs.NEW_VERSION }}
         draft: ${{ inputs.draft == 'true' }}
-        prerelease: ${{ inputs.prerelease == 'auto' && (contains(steps.bump_version.outputs.NEW_VERSION, '-') || contains(steps.bump_version.outputs.NEW_VERSION, 'alpha') || contains(steps.bump_version.outputs.NEW_VERSION, 'beta') || contains(steps.bump_version.outputs.NEW_VERSION, 'rc')) || inputs.prerelease == 'true' }}
+        prerelease: ${{ contains(steps.bump_version.outputs.NEW_VERSION, '-') || contains(steps.bump_version.outputs.NEW_VERSION, 'alpha') || contains(steps.bump_version.outputs.NEW_VERSION, 'beta') || contains(steps.bump_version.outputs.NEW_VERSION, 'rc') }}
         generate_release_notes: ${{ inputs.release-notes == 'auto' }}
