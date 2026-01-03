@@ -41,10 +41,16 @@ jobs:
           python --version
           uv --version
           uv pip list
+          # Activate venv (cross-platform)
+          if [ -f .venv/bin/activate ]; then
+            source .venv/bin/activate
+          else
+            source .venv/Scripts/activate
+          fi
           # Verify core dependency is installed
-          uv run python -c "import requests; print('[OK] Core dependency installed')"
+          python -c "import requests; print('[OK] Core dependency installed')"
           # Verify dev group is NOT installed (default is now empty)
-          if uv run python -c "import pytest" 2>/dev/null; then
+          if python -c "import pytest" 2>/dev/null; then
             echo "[ERROR] pytest should not be installed"
             exit 1
           else
@@ -85,11 +91,17 @@ jobs:
         shell: bash
         run: |
           uv pip list
+          # Activate venv (cross-platform)
+          if [ -f .venv/bin/activate ]; then
+            source .venv/bin/activate
+          else
+            source .venv/Scripts/activate
+          fi
           # Verify test and docs groups are installed
-          uv run python -c "import pytest_cov; import pytest_mock; print('[OK] Test dependencies installed')"
-          uv run python -c "import mkdocs; print('[OK] Docs dependencies installed')"
+          python -c "import pytest_cov; import pytest_mock; print('[OK] Test dependencies installed')"
+          python -c "import mkdocs; print('[OK] Docs dependencies installed')"
           # Verify dev group is NOT installed
-          if uv run python -c "import black" 2>/dev/null; then
+          if python -c "import black" 2>/dev/null; then
             echo "[ERROR] black should not be installed"
             exit 1
           else
@@ -128,10 +140,16 @@ jobs:
         shell: bash
         run: |
           uv pip list
+          # Activate venv (cross-platform)
+          if [ -f .venv/bin/activate ]; then
+            source .venv/bin/activate
+          else
+            source .venv/Scripts/activate
+          fi
           # Verify core dependency is installed
-          uv run python -c "import requests; print('[OK] Core dependency installed')"
+          python -c "import requests; print('[OK] Core dependency installed')"
           # Verify dev group is NOT installed
-          if uv run python -c "import pytest" 2>/dev/null; then
+          if python -c "import pytest" 2>/dev/null; then
             echo "[ERROR] pytest should not be installed"
             exit 1
           else
@@ -201,7 +219,9 @@ jobs:
         shell: bash
         run: |
           uv pip list
-          uv run python -c "import requests; print('[OK] Dependencies installed without lock verification')"
+          # Activate venv (cross-platform)
+          if [ -f .venv/bin/activate ]; then source .venv/bin/activate; else source .venv/Scripts/activate; fi
+          python -c "import requests; print('[OK] Dependencies installed without lock verification')"
 
   test-uv-lock-verification-fail:
     name: Test uv action - Lock verification failure
@@ -291,13 +311,13 @@ jobs:
         shell: bash
         run: |
           python --version
-          uv run python -c "import sys; assert sys.version_info[:2] == tuple(map(int, '${{ matrix.python-version }}'.split('.')[:2]))"
+          python -c "import sys; assert sys.version_info[:2] == tuple(map(int, '${{ matrix.python-version }}'.split('.')[:2]))"
           uv pip list
 
       - name: Test uv functionality
         shell: bash
         run: |
-          uv run python -c "import requests; import pytest; print(f'[OK] Python ${{ matrix.python-version }} working on ${{ matrix.os }}')"
+          python -c "import requests; import pytest; print(f'[OK] Python ${{ matrix.python-version }} working on ${{ matrix.os }}')"
 
   test-uv-cache:
     name: Test uv action - Cache functionality
@@ -364,7 +384,7 @@ jobs:
       - name: Verify all groups installed
         shell: bash
         run: |
-          uv run python -c "import pytest; import pytest_cov; import mkdocs; print('[OK] All comma-separated groups installed')"
+          python -c "import pytest; import pytest_cov; import mkdocs; print('[OK] All comma-separated groups installed')"
 
   test-uv-mixed-separators:
     name: Test uv action - Mixed separators (space and comma)
@@ -399,7 +419,7 @@ jobs:
       - name: Verify all groups installed
         shell: bash
         run: |
-          uv run python -c "import pytest; import pytest_cov; import mkdocs; print('[OK] All mixed-separator groups installed')"
+          python -c "import pytest; import pytest_cov; import mkdocs; print('[OK] All mixed-separator groups installed')"
 
   test-uv-space-separated-groups:
     name: Test uv action - Space-separated groups
@@ -434,7 +454,7 @@ jobs:
       - name: Verify all groups installed
         shell: bash
         run: |
-          uv run python -c "import pytest; import pytest_cov; import mkdocs; print('[OK] All space-separated groups installed')"
+          python -c "import pytest; import pytest_cov; import mkdocs; print('[OK] All space-separated groups installed')"
 
   test-uv-no-dependency-groups-section:
     name: Test uv action - No dependency-groups section
@@ -462,7 +482,7 @@ jobs:
       - name: Verify action succeeded with core dependencies only
         shell: bash
         run: |
-          uv run python -c "import requests; print('[OK] Core dependencies installed without dependency-groups section')"
+          python -c "import requests; print('[OK] Core dependencies installed without dependency-groups section')"
           uv pip list
           echo "[OK] Action succeeded without dependency-groups section"
 
@@ -497,4 +517,4 @@ jobs:
       - name: Verify dev group installed
         shell: bash
         run: |
-          uv run python -c "import pytest; import black; print('[OK] Dev group explicitly installed')"
+          python -c "import pytest; import black; print('[OK] Dev group explicitly installed')"
