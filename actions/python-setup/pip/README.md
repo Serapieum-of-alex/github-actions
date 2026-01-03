@@ -35,14 +35,14 @@ Setup Python environment with pip package manager for pyproject.toml projects us
 ### Basic Python Setup
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
 ```
 
 ### Specific Python Version with Poetry Caching
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
     with:
       python-version: '3.11'
@@ -52,7 +52,7 @@ steps:
 ### pyproject.toml with Dependency Groups
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
     with:
       python-version: '3.12'
@@ -66,7 +66,7 @@ strategy:
     python-version: ['3.10', '3.11', '3.12']
     
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
     with:
       python-version: ${{ matrix.python-version }}

@@ -34,7 +34,7 @@ This action wraps `actions/setup-python@v6` with additional functionality for ma
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
 ```
 
@@ -44,7 +44,7 @@ This sets up Python 3.12 (default) without caching. Suitable for projects withou
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
     with:
       cache: 'pip'
@@ -56,7 +56,7 @@ steps:
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
     with:
       install-groups: 'dev test'
@@ -157,7 +157,7 @@ All actions are grouped in GitHub Actions logs for better readability:
 **Use Case**: Testing the action itself, or simple scripts without dependencies.
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v5
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
 # No cache needed, no pyproject.toml required
 ```
@@ -180,7 +180,7 @@ dependencies = ["requests", "numpy"]
 ```
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v5
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
   with:
     cache: 'pip'
@@ -208,7 +208,7 @@ docs = ["mkdocs", "mkdocs-material"]
 ```
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v5
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
   with:
     cache: 'pip'
@@ -231,7 +231,7 @@ strategy:
     os: [ubuntu-latest, windows-latest, macos-latest]
 
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
     with:
       python-version: ${{ matrix.python-version }}
@@ -253,7 +253,7 @@ numpy==1.26.0
 ```
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v5
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
   with:
     cache: 'pip'
@@ -269,7 +269,7 @@ numpy==1.26.0
 **Use Case**: Supporting legacy Windows systems.
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v5
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
   with:
     architecture: 'x86'
@@ -281,7 +281,7 @@ numpy==1.26.0
 **Use Case**: Using alternative package managers.
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v5
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
   with:
     cache: 'poetry'  # or 'pipenv'
@@ -431,7 +431,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@main
         with:
           cache: 'pip'
@@ -602,7 +602,7 @@ steps:
 ### 7. Combine with Other Actions
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v5
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
   with:
     cache: 'pip'

@@ -34,7 +34,7 @@ This action provides a complete Python environment setup using [uv](https://gith
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
 
   # Virtual environment is automatically activated!
@@ -46,7 +46,7 @@ steps:
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
     with:
       install-groups: 'dev test'
@@ -193,7 +193,7 @@ Environment information
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
 
   - name: Run application
@@ -216,7 +216,7 @@ dependencies = ["requests", "pydantic"]
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
     with:
       install-groups: 'dev'
@@ -243,7 +243,7 @@ dev = ["black", "mypy", "ruff"]
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
     with:
       install-groups: 'test'
@@ -270,7 +270,7 @@ test = ["pytest", "pytest-cov", "coverage"]
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
     with:
       install-groups: 'docs'
@@ -296,7 +296,7 @@ docs = ["mkdocs", "mkdocs-material"]
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
     with:
       install-groups: 'dev test'
@@ -335,7 +335,7 @@ strategy:
     python-version: ['3.10', '3.11', '3.12']
 
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
     with:
       python-version: ${{ matrix.python-version }}
@@ -356,7 +356,7 @@ strategy:
     os: [ubuntu-latest, windows-latest, macos-latest]
 
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
     with:
       install-groups: 'test'
@@ -372,7 +372,7 @@ steps:
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
     with:
       verify-lock: 'false'  # Skip lock check
@@ -393,7 +393,7 @@ dependencies = ["mylib @ git+https://github.com/user/repo@main"]
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
 
   - run: python app.py
@@ -600,7 +600,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
         with:
           install-groups: 'dev test'

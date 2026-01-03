@@ -2,9 +2,6 @@ name: Test python-setup pip
 
 on:
   push:
-    branches: [main]
-  pull_request:
-  workflow_dispatch:
 
 jobs:
   test-pip-basic:
@@ -12,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Test pip action with defaults (cache='')
         uses: ./actions/python-setup/pip
@@ -28,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Create test pyproject.toml
         run: |
@@ -69,7 +66,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Create minimal pyproject.toml
         shell: bash
@@ -102,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Create test pyproject.toml
         run: |
@@ -132,7 +129,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Create minimal pyproject.toml
         shell: bash
@@ -158,7 +155,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Test pip action with cache but no dependency file (should fail)
         id: test-cache-error
@@ -181,7 +178,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Create requirements.txt
         run: |
@@ -207,7 +204,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Test pip action without pyproject.toml or requirements.txt
         uses: ./actions/python-setup/pip
