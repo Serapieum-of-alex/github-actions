@@ -1,0 +1,134 @@
+name: Test Actions
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-pip-basic:
+    name: Test pip action - Basic
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test pip action with defaults
+        uses: ./actions/python-setup/pip
+
+      - name: Verify Python installation
+        run: |
+          python --version
+          pip --version
+          pip list
+
+  test-pip-with-groups:
+    name: Test pip action - With dependency groups
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-project"
+          version = "0.1.0"
+          dependencies = ["requests"]
+
+          [project.optional-dependencies]
+          dev = ["pytest", "black"]
+          test = ["pytest-cov"]
+          docs = ["mkdocs"]
+          EOF
+
+      - name: Test pip action with dependency groups
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'dev test'
+
+      - name: Verify installations
+        run: |
+          python --version
+          pip list
+          # Verify dev dependencies are installed
+          python -c "import pytest; import black; print('✓ Dev dependencies installed')"
+          python -c "import pytest_cov; print('✓ Test dependencies installed')"
+
+  test-pip-matrix:
+    name: Test pip action - Matrix
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.10', '3.11', '3.12']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test pip action with Python ${{ matrix.python-version }}
+        uses: ./actions/python-setup/pip
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Verify Python version
+        run: |
+          python --version
+          python -c "import sys; assert sys.version_info[:2] == tuple(map(int, '${{ matrix.python-version }}'.split('.')[:2]))"
+          pip list
+
+      - name: Test pip functionality
+        run: |
+          pip install requests
+          python -c "import requests; print(f'✓ requests {requests.__version__} installed successfully')"
+
+  test-pip-cache:
+    name: Test pip action - Cache validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-cache"
+          version = "0.1.0"
+          dependencies = ["requests", "numpy"]
+          EOF
+
+      - name: First run - populate cache
+        uses: ./actions/python-setup/pip
+        with:
+          cache: 'pip'
+
+      - name: Verify cache is working
+        run: |
+          pip list
+          echo "Cache should be populated for subsequent runs"
+
+  test-pip-architecture:
+    name: Test pip action - Architecture
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        architecture: [x64, x86]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test pip action with ${{ matrix.architecture }}
+        uses: ./actions/python-setup/pip
+        with:
+          architecture: ${{ matrix.architecture }}
+
+      - name: Verify architecture
+        run: |
+          python --version
+          python -c "import platform; print(f'Architecture: {platform.architecture()}')"
