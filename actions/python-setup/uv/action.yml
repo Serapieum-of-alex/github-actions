@@ -72,9 +72,31 @@ runs:
         uv sync "${args[@]}"
         echo "::endgroup::"
 
-    - name: List environment contents
+    - name: Show environment information
       shell: bash
       run: |
+        echo "::group::Environment information"
+        echo "Virtual environment location:"
+        if [ -d .venv ]; then
+          echo "  $(pwd)/.venv"
+          echo ""
+          echo "Python executable:"
+          if [ -f .venv/bin/python ]; then
+            echo "  $(pwd)/.venv/bin/python"
+          elif [ -f .venv/Scripts/python.exe ]; then
+            echo "  $(pwd)/.venv/Scripts/python.exe"
+          fi
+          echo ""
+          echo "Activation command (Linux/macOS):"
+          echo "  source .venv/bin/activate"
+          echo ""
+          echo "Activation command (Windows):"
+          echo "  source .venv/Scripts/activate"
+        else
+          echo "  No .venv directory found"
+        fi
+        echo "::endgroup::"
+
         echo "::group::Installed packages summary"
         uv pip list
         echo "::endgroup::"
