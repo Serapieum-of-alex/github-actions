@@ -50,12 +50,13 @@ jobs:
           install-groups: 'dev test'
 
       - name: Verify installations
+        shell: bash
         run: |
           python --version
           pip list
           # Verify dev dependencies are installed
-          python -c "import pytest; import black; print('✓ Dev dependencies installed')"
-          python -c "import pytest_cov; print('✓ Test dependencies installed')"
+          python -c "import pytest; import black; print('[OK] Dev dependencies installed')"
+          python -c "import pytest_cov; print('[OK] Test dependencies installed')"
 
   test-pip-matrix:
     name: Test pip action - Matrix
@@ -91,9 +92,10 @@ jobs:
           pip list
 
       - name: Test pip functionality
+        shell: bash
         run: |
           pip install requests
-          python -c "import requests; print(f'✓ requests {requests.__version__} installed successfully')"
+          python -c "import requests; print(f'[OK] requests {requests.__version__} installed successfully')"
 
   test-pip-cache:
     name: Test pip action - Cache validation
@@ -166,12 +168,13 @@ jobs:
           cache: 'pip'
 
       - name: Verify action failed as expected
+        shell: bash
         run: |
           if [ "${{ steps.test-cache-error.outcome }}" != "failure" ]; then
             echo "::error::Expected action to fail when cache is enabled without pyproject.toml/requirements.txt"
             exit 1
           fi
-          echo "✓ Action correctly failed when cache enabled without dependency files"
+          echo "[OK] Action correctly failed when cache enabled without dependency files"
 
   test-pip-cache-with-requirements:
     name: Test pip action - Cache with requirements.txt
@@ -193,10 +196,11 @@ jobs:
           cache: 'pip'
 
       - name: Verify cache validation passed
+        shell: bash
         run: |
           python --version
           pip list
-          echo "✓ Cache validation passed with requirements.txt"
+          echo "[OK] Cache validation passed with requirements.txt"
 
   test-pip-no-dependency-file:
     name: Test pip action - No dependency files (no cache)
@@ -209,8 +213,9 @@ jobs:
         uses: ./actions/python-setup/pip
 
       - name: Verify Python still works
+        shell: bash
         run: |
           python --version
           pip --version
           pip install requests
-          python -c "import requests; print('✓ Can still install packages without dependency files')"
+          python -c "import requests; print('[OK] Can still install packages without dependency files')"
