@@ -8,13 +8,13 @@ on:
 
 jobs:
   test-pip-basic:
-    name: Test pip action - Basic
+    name: Test pip action - defaults
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Test pip action with defaults
+      - name: Test pip action with defaults (cache='')
         uses: ./actions/python-setup/pip
 
       - name: Verify Python installation
@@ -70,6 +70,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Create minimal pyproject.toml
+        shell: bash
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-matrix"
+          version = "0.1.0"
+          EOF
+
       - name: Test pip action with Python ${{ matrix.python-version }}
         uses: ./actions/python-setup/pip
         with:
@@ -123,6 +132,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Create minimal pyproject.toml
+        shell: bash
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-architecture"
+          version = "0.1.0"
+          EOF
+
       - name: Test pip action with ${{ matrix.architecture }}
         uses: ./actions/python-setup/pip
         with:
@@ -132,3 +150,67 @@ jobs:
         run: |
           python --version
           python -c "import platform; print(f'Architecture: {platform.architecture()}')"
+
+  test-pip-cache-validation-error:
+    name: Test pip action - Cache validation error
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test pip action with cache but no dependency file (should fail)
+        id: test-cache-error
+        continue-on-error: true
+        uses: ./actions/python-setup/pip
+        with:
+          cache: 'pip'
+
+      - name: Verify action failed as expected
+        run: |
+          if [ "${{ steps.test-cache-error.outcome }}" != "failure" ]; then
+            echo "::error::Expected action to fail when cache is enabled without pyproject.toml/requirements.txt"
+            exit 1
+          fi
+          echo "✓ Action correctly failed when cache enabled without dependency files"
+
+  test-pip-cache-with-requirements:
+    name: Test pip action - Cache with requirements.txt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create requirements.txt
+        run: |
+          cat > requirements.txt << 'EOF'
+          requests==2.31.0
+          numpy==1.26.0
+          EOF
+
+      - name: Test pip action with cache and requirements.txt
+        uses: ./actions/python-setup/pip
+        with:
+          cache: 'pip'
+
+      - name: Verify cache validation passed
+        run: |
+          python --version
+          pip list
+          echo "✓ Cache validation passed with requirements.txt"
+
+  test-pip-no-dependency-file:
+    name: Test pip action - No dependency files (no cache)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test pip action without pyproject.toml or requirements.txt
+        uses: ./actions/python-setup/pip
+
+      - name: Verify Python still works
+        run: |
+          python --version
+          pip --version
+          pip install requests
+          python -c "import requests; print('✓ Can still install packages without dependency files')"
