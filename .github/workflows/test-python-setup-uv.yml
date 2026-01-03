@@ -41,12 +41,6 @@ jobs:
           python --version
           uv --version
           uv pip list
-          # Activate venv (cross-platform)
-          if [ -f .venv/bin/activate ]; then
-            source .venv/bin/activate
-          else
-            source .venv/Scripts/activate
-          fi
           # Verify core dependency is installed
           python -c "import requests; print('[OK] Core dependency installed')"
           # Verify dev group is NOT installed (default is now empty)
@@ -91,12 +85,6 @@ jobs:
         shell: bash
         run: |
           uv pip list
-          # Activate venv (cross-platform)
-          if [ -f .venv/bin/activate ]; then
-            source .venv/bin/activate
-          else
-            source .venv/Scripts/activate
-          fi
           # Verify test and docs groups are installed
           python -c "import pytest_cov; import pytest_mock; print('[OK] Test dependencies installed')"
           python -c "import mkdocs; print('[OK] Docs dependencies installed')"
@@ -140,12 +128,6 @@ jobs:
         shell: bash
         run: |
           uv pip list
-          # Activate venv (cross-platform)
-          if [ -f .venv/bin/activate ]; then
-            source .venv/bin/activate
-          else
-            source .venv/Scripts/activate
-          fi
           # Verify core dependency is installed
           python -c "import requests; print('[OK] Core dependency installed')"
           # Verify dev group is NOT installed
@@ -219,8 +201,6 @@ jobs:
         shell: bash
         run: |
           uv pip list
-          # Activate venv (cross-platform)
-          if [ -f .venv/bin/activate ]; then source .venv/bin/activate; else source .venv/Scripts/activate; fi
           python -c "import requests; print('[OK] Dependencies installed without lock verification')"
 
   test-uv-lock-verification-fail:

@@ -72,10 +72,32 @@ runs:
         uv sync "${args[@]}"
         echo "::endgroup::"
 
+    - name: Activate virtual environment
+      shell: bash
+      run: |
+        echo "::group::Activating virtual environment"
+        # Determine the correct bin/Scripts directory
+        if [ -f .venv/bin/python ]; then
+          VENV_BIN="$(pwd)/.venv/bin"
+          echo "Adding to PATH: $VENV_BIN"
+          echo "$VENV_BIN" >> $GITHUB_PATH
+          echo "VIRTUAL_ENV=$(pwd)/.venv" >> $GITHUB_ENV
+        elif [ -f .venv/Scripts/python.exe ]; then
+          VENV_SCRIPTS="$(pwd)/.venv/Scripts"
+          echo "Adding to PATH: $VENV_SCRIPTS"
+          echo "$VENV_SCRIPTS" >> $GITHUB_PATH
+          echo "VIRTUAL_ENV=$(pwd)/.venv" >> $GITHUB_ENV
+        else
+          echo "::warning::No virtual environment found at .venv"
+        fi
+        echo "::endgroup::"
+
     - name: Show environment information
       shell: bash
       run: |
         echo "::group::Environment information"
+        echo "Virtual environment: ACTIVATED"
+        echo ""
         echo "Virtual environment location:"
         if [ -d .venv ]; then
           echo "  $(pwd)/.venv"
@@ -87,16 +109,19 @@ runs:
             echo "  $(pwd)/.venv/Scripts/python.exe"
           fi
           echo ""
-          echo "Activation command (Linux/macOS):"
-          echo "  source .venv/bin/activate"
+          echo "The virtual environment has been automatically activated."
+          echo "You can now use 'python' and installed CLI tools directly in subsequent steps."
           echo ""
-          echo "Activation command (Windows):"
-          echo "  source .venv/Scripts/activate"
+          echo "Example usage:"
+          echo "  - run: python --version"
+          echo "  - run: pytest"
+          echo "  - run: black ."
         else
           echo "  No .venv directory found"
         fi
         echo "::endgroup::"
 
         echo "::group::Installed packages summary"
+        python --version
         uv pip list
         echo "::endgroup::"
