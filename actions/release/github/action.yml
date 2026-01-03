@@ -28,14 +28,6 @@ inputs:
       - beta
       - rc
     default: 'none'
-  release-notes:
-    description: 'Release notes source (auto or tag - defaults to commitizen changelog)'
-    required: false
-    type: choice
-    options:
-      - tag
-      - auto
-    default: 'tag'
   draft:
     description: 'Create as draft release'
     required: false
@@ -166,8 +158,7 @@ runs:
       with:
         token: ${{ inputs.github-token }}
         name: ${{ steps.bump_version.outputs.NEW_VERSION }}
-        body_path: ${{ inputs.release-notes == 'tag' && 'CHANGELOG.md' || '' }}
         tag_name: ${{ steps.bump_version.outputs.NEW_VERSION }}
         draft: ${{ inputs.draft == 'true' }}
         prerelease: ${{ contains(steps.bump_version.outputs.NEW_VERSION, '-') || contains(steps.bump_version.outputs.NEW_VERSION, 'alpha') || contains(steps.bump_version.outputs.NEW_VERSION, 'beta') || contains(steps.bump_version.outputs.NEW_VERSION, 'rc') }}
-        generate_release_notes: ${{ inputs.release-notes == 'auto' }}
+        generate_release_notes: true
