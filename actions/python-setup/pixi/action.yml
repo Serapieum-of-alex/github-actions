@@ -13,7 +13,7 @@ inputs:
   verify-lock:
     description: 'Whether to verify the lock file is up to date'
     required: false
-    default: 'false'
+    default: 'true'
 
 runs:
   using: 'composite'
