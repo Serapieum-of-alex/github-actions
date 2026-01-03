@@ -25,7 +25,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama"]
+          dev = ["pyyaml"]
           EOF
 
           # Initialize uv and create lock file
@@ -44,8 +44,8 @@ jobs:
           # Verify core dependency is installed
           python -c "import requests; print('[OK] Core dependency installed')"
           # Verify dev group is NOT installed (default is now empty)
-          if python -c "import colorama" 2>/dev/null; then
-            echo "[ERROR] colorama should not be installed"
+          if python -c "import yaml" 2>/dev/null; then
+            echo "[ERROR] pyyaml should not be installed"
             exit 1
           else
             echo "[OK] Dev group not installed with default empty install-groups"
@@ -68,7 +68,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama"]
+          dev = ["pyyaml"]
           test = ["pytest-cov", "pytest-mock"]
           docs = ["mkdocs"]
           EOF
@@ -89,8 +89,8 @@ jobs:
           python -c "import pytest_cov; import pytest_mock; print('[OK] Test dependencies installed')"
           python -c "import mkdocs; print('[OK] Docs dependencies installed')"
           # Verify dev group is NOT installed
-          if python -c "import colorama" 2>/dev/null; then
-            echo "[ERROR] colorama should not be installed"
+          if python -c "import yaml" 2>/dev/null; then
+            echo "[ERROR] pyyaml should not be installed"
             exit 1
           else
             echo "[OK] Dev group not installed as expected"
@@ -113,7 +113,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama"]
+          dev = ["pyyaml"]
           EOF
 
           pip install uv
@@ -131,8 +131,8 @@ jobs:
           # Verify core dependency is installed
           python -c "import requests; print('[OK] Core dependency installed')"
           # Verify dev group is NOT installed
-          if python -c "import colorama" 2>/dev/null; then
-            echo "[ERROR] colorama should not be installed"
+          if python -c "import yaml" 2>/dev/null; then
+            echo "[ERROR] pyyaml should not be installed"
             exit 1
           else
             echo "[OK] No optional groups installed"
@@ -155,7 +155,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama"]
+          dev = ["pyyaml"]
           EOF
 
           pip install uv
@@ -186,7 +186,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama"]
+          dev = ["pyyaml"]
           EOF
 
           pip install uv
@@ -220,7 +220,7 @@ jobs:
           dependencies = ["requests==2.28.0"]
 
           [dependency-groups]
-          dev = ["colorama"]
+          dev = ["pyyaml"]
           EOF
 
           pip install uv
@@ -235,7 +235,7 @@ jobs:
           dependencies = ["requests==2.31.0"]
 
           [dependency-groups]
-          dev = ["colorama"]
+          dev = ["pyyaml"]
           EOF
 
       - name: Test uv action with outdated lock (should fail)
@@ -276,7 +276,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama"]
+          dev = ["pyyaml"]
           EOF
 
           pip install uv
@@ -298,7 +298,7 @@ jobs:
       - name: Test uv functionality
         shell: bash
         run: |
-          python -c "import requests; import colorama; print(f'[OK] Python ${{ matrix.python-version }} working on ${{ matrix.os }}')"
+          python -c "import requests; import yaml; print(f'[OK] Python ${{ matrix.python-version }} working on ${{ matrix.os }}')"
 
   test-uv-cache:
     name: Test uv action - Cache functionality
@@ -317,7 +317,7 @@ jobs:
           dependencies = ["requests", "numpy"]
 
           [dependency-groups]
-          dev = ["colorama", "mypy"]
+          dev = ["pyyaml", "mypy"]
           EOF
 
           pip install uv
@@ -349,7 +349,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama"]
+          dev = ["pyyaml"]
           test = ["pytest-cov"]
           docs = ["mkdocs"]
           EOF
@@ -365,7 +365,7 @@ jobs:
       - name: Verify all groups installed
         shell: bash
         run: |
-          python -c "import colorama; import pytest_cov; import mkdocs; print('[OK] All comma-separated groups installed')"
+          python -c "import yaml; import pytest_cov; import mkdocs; print('[OK] All comma-separated groups installed')"
 
   test-uv-mixed-separators:
     name: Test uv action - Mixed separators (space and comma)
@@ -384,7 +384,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama"]
+          dev = ["pyyaml"]
           test = ["pytest-cov"]
           docs = ["mkdocs"]
           EOF
@@ -400,7 +400,7 @@ jobs:
       - name: Verify all groups installed
         shell: bash
         run: |
-          python -c "import colorama; import pytest_cov; import mkdocs; print('[OK] All mixed-separator groups installed')"
+          python -c "import yaml; import pytest_cov; import mkdocs; print('[OK] All mixed-separator groups installed')"
 
   test-uv-space-separated-groups:
     name: Test uv action - Space-separated groups
@@ -419,7 +419,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama"]
+          dev = ["pyyaml"]
           test = ["pytest-cov"]
           docs = ["mkdocs"]
           EOF
@@ -435,7 +435,7 @@ jobs:
       - name: Verify all groups installed
         shell: bash
         run: |
-          python -c "import colorama; import pytest_cov; import mkdocs; print('[OK] All space-separated groups installed')"
+          python -c "import yaml; import pytest_cov; import mkdocs; print('[OK] All space-separated groups installed')"
 
   test-uv-no-dependency-groups-section:
     name: Test uv action - No dependency-groups section
@@ -484,7 +484,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama"]
+          dev = ["pyyaml"]
           EOF
 
           pip install uv
@@ -498,4 +498,4 @@ jobs:
       - name: Verify dev group installed
         shell: bash
         run: |
-          python -c "import colorama; print('[OK] Dev group explicitly installed')"
+          python -c "import yaml; print('[OK] Dev group explicitly installed')"
