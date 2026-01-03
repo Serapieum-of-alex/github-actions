@@ -9,7 +9,7 @@ inputs:
   cache:
     description: 'Cache packages dependencies (pip, pipenv, poetry)'
     required: false
-    default: 'pip'
+    default: ''
   architecture:
     description: 'Target architecture for Python to use (x64, x86)'
     required: false
@@ -22,6 +22,19 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Validate cache requirements
+      if: ${{ inputs.cache != '' }}
+      shell: bash
+      run: |
+        echo "::group::Validating cache requirements"
+        if [ ! -f pyproject.toml ] && [ ! -f requirements.txt ]; then
+          echo "::error::Cache is enabled (cache='${{ inputs.cache }}') but no pyproject.toml or requirements.txt found."
+          echo "::error::Either create a pyproject.toml/requirements.txt file or set cache: '' to disable caching."
+          exit 1
+        fi
+        echo "Cache validation passed - found dependency file"
+        echo "::endgroup::"
+
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
