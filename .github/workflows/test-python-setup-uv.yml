@@ -8,7 +8,7 @@ on:
 
 jobs:
   test-uv-basic:
-    name: Test uv action - Basic with defaults (core only)
+    name: Test uv action - defaults (core only)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -44,12 +44,12 @@ jobs:
           # Verify core dependency is installed
           python -c "import requests; print('[OK] Core dependency installed')"
           # Verify dev group is NOT installed (default is now empty)
-          python -c "try:
-              import pytest
-              print('[ERROR] pytest should not be installed')
-              exit(1)
-          except ImportError:
-              print('[OK] Dev group not installed with default empty install-groups')"
+          if python -c "import pytest" 2>/dev/null; then
+            echo "[ERROR] pytest should not be installed"
+            exit 1
+          else
+            echo "[OK] Dev group not installed with default empty install-groups"
+          fi
 
   test-uv-custom-groups:
     name: Test uv action - Custom install groups
@@ -89,12 +89,12 @@ jobs:
           python -c "import pytest_cov; import pytest_mock; print('[OK] Test dependencies installed')"
           python -c "import mkdocs; print('[OK] Docs dependencies installed')"
           # Verify dev group is NOT installed
-          python -c "try:
-              import black
-              print('[ERROR] black should not be installed')
-              exit(1)
-          except ImportError:
-              print('[OK] Dev group not installed as expected')"
+          if python -c "import black" 2>/dev/null; then
+            echo "[ERROR] black should not be installed"
+            exit 1
+          else
+            echo "[OK] Dev group not installed as expected"
+          fi
 
   test-uv-no-groups:
     name: Test uv action - No groups (core only)
@@ -131,12 +131,12 @@ jobs:
           # Verify core dependency is installed
           python -c "import requests; print('[OK] Core dependency installed')"
           # Verify dev group is NOT installed
-          python -c "try:
-              import pytest
-              print('[ERROR] pytest should not be installed')
-              exit(1)
-          except ImportError:
-              print('[OK] No optional groups installed')"
+          if python -c "import pytest" 2>/dev/null; then
+            echo "[ERROR] pytest should not be installed"
+            exit 1
+          else
+            echo "[OK] No optional groups installed"
+          fi
 
   test-uv-lock-verification:
     name: Test uv action - Lock file verification
