@@ -1,4 +1,4 @@
-name: Test UV Action
+name: Test python-setup uv
 
 on:
   push:

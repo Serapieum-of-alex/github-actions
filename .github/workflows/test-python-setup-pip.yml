@@ -1,4 +1,4 @@
-name: Test Actions
+name: Test python-setup pip
 
 on:
   push:
