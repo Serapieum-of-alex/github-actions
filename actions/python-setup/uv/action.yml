@@ -49,20 +49,24 @@ runs:
         if [[ -n "${{ inputs.install-groups }}" ]]; then
           echo "Installing with groups: ${{ inputs.install-groups }}"
 
+          # Exclude default dependency groups
+          args+=("--no-default-groups")
+
           # Split groups on space and comma
           IFS=' ,' read -r -a groups <<< "${{ inputs.install-groups }}"
 
+          # Add all requested groups
           for group in "${groups[@]}"; do
             # Remove leading/trailing whitespace
             group=$(echo "$group" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
             if [[ -n "$group" ]]; then
-              args+=("--only-group" "$group")
+              args+=("--group" "$group")
             fi
           done
         else
           echo "Installing core dependencies only (no optional groups)"
-          # Explicitly exclude all groups when install-groups is empty
-          args+=("--no-dev")
+          # Install without any optional groups
+          args+=("--no-default-groups")
         fi
 
         echo "Running: uv sync ${args[*]}"
