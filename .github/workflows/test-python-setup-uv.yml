@@ -1,0 +1,430 @@
+name: Test UV Action
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-uv-basic:
+    name: Test uv action - Basic with defaults
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project with uv
+        run: |
+          # Create pyproject.toml
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-basic"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+
+          [dependency-groups]
+          dev = ["pytest", "black"]
+          EOF
+
+          # Initialize uv and create lock file
+          pip install uv
+          uv lock
+
+      - name: Test uv action with defaults
+        uses: ./actions/python-setup/uv
+
+      - name: Verify installations
+        shell: bash
+        run: |
+          python --version
+          uv --version
+          uv pip list
+          # Verify dev group is installed (default)
+          python -c "import pytest; import black; print('[OK] Dev dependencies installed')"
+
+  test-uv-custom-groups:
+    name: Test uv action - Custom install groups
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project with multiple groups
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-groups"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+
+          [dependency-groups]
+          dev = ["pytest", "black"]
+          test = ["pytest-cov", "pytest-mock"]
+          docs = ["mkdocs"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with custom groups
+        uses: ./actions/python-setup/uv
+        with:
+          install-groups: 'test docs'
+
+      - name: Verify custom groups installed
+        shell: bash
+        run: |
+          uv pip list
+          # Verify test and docs groups are installed
+          python -c "import pytest_cov; import pytest_mock; print('[OK] Test dependencies installed')"
+          python -c "import mkdocs; print('[OK] Docs dependencies installed')"
+          # Verify dev group is NOT installed
+          python -c "try:
+              import black
+              print('[ERROR] black should not be installed')
+              exit(1)
+          except ImportError:
+              print('[OK] Dev group not installed as expected')"
+
+  test-uv-no-groups:
+    name: Test uv action - No groups (core only)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-no-groups"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+
+          [dependency-groups]
+          dev = ["pytest"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with empty groups
+        uses: ./actions/python-setup/uv
+        with:
+          install-groups: ''
+
+      - name: Verify only core dependencies
+        shell: bash
+        run: |
+          uv pip list
+          # Verify core dependency is installed
+          python -c "import requests; print('[OK] Core dependency installed')"
+          # Verify dev group is NOT installed
+          python -c "try:
+              import pytest
+              print('[ERROR] pytest should not be installed')
+              exit(1)
+          except ImportError:
+              print('[OK] No optional groups installed')"
+
+  test-uv-lock-verification:
+    name: Test uv action - Lock file verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project with up-to-date lock
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-lock"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+
+          [dependency-groups]
+          dev = ["pytest"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with lock verification enabled (default)
+        uses: ./actions/python-setup/uv
+
+      - name: Verify lock check passed
+        shell: bash
+        run: |
+          echo "[OK] Lock verification passed"
+
+  test-uv-lock-verification-disabled:
+    name: Test uv action - Lock verification disabled
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project with potentially outdated lock
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-no-verify"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+
+          [dependency-groups]
+          dev = ["pytest"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with lock verification disabled
+        uses: ./actions/python-setup/uv
+        with:
+          verify-lock: 'false'
+
+      - name: Verify installation succeeded
+        shell: bash
+        run: |
+          uv pip list
+          python -c "import requests; print('[OK] Dependencies installed without lock verification')"
+
+  test-uv-lock-verification-fail:
+    name: Test uv action - Lock verification failure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project with outdated lock
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-lock-fail"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests==2.28.0"]
+
+          [dependency-groups]
+          dev = ["pytest"]
+          EOF
+
+          pip install uv
+          uv lock
+
+          # Modify pyproject.toml to make lock outdated
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-lock-fail"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests==2.31.0"]
+
+          [dependency-groups]
+          dev = ["pytest"]
+          EOF
+
+      - name: Test uv action with outdated lock (should fail)
+        id: test-lock-fail
+        continue-on-error: true
+        uses: ./actions/python-setup/uv
+
+      - name: Verify action failed as expected
+        shell: bash
+        run: |
+          if [ "${{ steps.test-lock-fail.outcome }}" != "failure" ]; then
+            echo "::error::Expected action to fail when lock file is outdated"
+            exit 1
+          fi
+          echo "[OK] Action correctly failed when lock file is outdated"
+
+  test-uv-matrix:
+    name: Test uv action - Matrix
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.10', '3.11', '3.12']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project
+        shell: bash
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-matrix"
+          version = "0.1.0"
+          requires-python = ">=3.10"
+          dependencies = ["requests"]
+
+          [dependency-groups]
+          dev = ["pytest"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with Python ${{ matrix.python-version }}
+        uses: ./actions/python-setup/uv
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Verify Python version
+        shell: bash
+        run: |
+          python --version
+          python -c "import sys; assert sys.version_info[:2] == tuple(map(int, '${{ matrix.python-version }}'.split('.')[:2]))"
+          uv pip list
+
+      - name: Test uv functionality
+        shell: bash
+        run: |
+          python -c "import requests; import pytest; print(f'[OK] Python ${{ matrix.python-version }} working on ${{ matrix.os }}')"
+
+  test-uv-cache:
+    name: Test uv action - Cache functionality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-cache"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests", "numpy"]
+
+          [dependency-groups]
+          dev = ["pytest", "black", "mypy"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: First run - populate cache
+        uses: ./actions/python-setup/uv
+
+      - name: Verify cache populated
+        shell: bash
+        run: |
+          uv pip list
+          echo "[OK] Cache should be populated for subsequent runs"
+
+  test-uv-comma-separated-groups:
+    name: Test uv action - Comma-separated groups
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-comma"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+
+          [dependency-groups]
+          dev = ["pytest"]
+          test = ["pytest-cov"]
+          docs = ["mkdocs"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with comma-separated groups
+        uses: ./actions/python-setup/uv
+        with:
+          install-groups: 'dev,test,docs'
+
+      - name: Verify all groups installed
+        shell: bash
+        run: |
+          python -c "import pytest; import pytest_cov; import mkdocs; print('[OK] All comma-separated groups installed')"
+
+  test-uv-mixed-separators:
+    name: Test uv action - Mixed separators (space and comma)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-mixed"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+
+          [dependency-groups]
+          dev = ["pytest"]
+          test = ["pytest-cov"]
+          docs = ["mkdocs"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with mixed separators
+        uses: ./actions/python-setup/uv
+        with:
+          install-groups: 'dev, test docs'
+
+      - name: Verify all groups installed
+        shell: bash
+        run: |
+          python -c "import pytest; import pytest_cov; import mkdocs; print('[OK] All mixed-separator groups installed')"
+
+  test-uv-space-separated-groups:
+    name: Test uv action - Space-separated groups
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-space"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+
+          [dependency-groups]
+          dev = ["pytest"]
+          test = ["pytest-cov"]
+          docs = ["mkdocs"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with space-separated groups
+        uses: ./actions/python-setup/uv
+        with:
+          install-groups: 'dev test docs'
+
+      - name: Verify all groups installed
+        shell: bash
+        run: |
+          python -c "import pytest; import pytest_cov; import mkdocs; print('[OK] All space-separated groups installed')"
