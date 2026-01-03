@@ -1,0 +1,180 @@
+name: 'GitHub Release'
+description: 'Create a GitHub release with optional package manager setup for building/testing'
+
+inputs:
+  github-token:
+    description: 'GitHub token for creating releases'
+    required: true
+  release-branch:
+    description: 'Branch to create release from'
+    required: false
+    default: 'main'
+  increment:
+    description: 'Version increment type (patch, minor, major)'
+    required: false
+    type: choice
+    options:
+      - patch
+      - minor
+      - major
+    default: 'patch'
+  prerelease-type:
+    description: 'Prerelease type (none, alpha, beta, rc)'
+    required: false
+    type: choice
+    options:
+      - none
+      - alpha
+      - beta
+      - rc
+    default: 'none'
+  release-title:
+    description: 'Custom release title (defaults to tag name)'
+    required: false
+    default: ''
+  release-notes:
+    description: 'Release notes source (auto, custom, or tag - defaults to tag annotation if available)'
+    required: false
+    default: 'tag'
+  release-notes-text:
+    description: 'Custom release notes text (used when release-notes is custom)'
+    required: false
+    default: ''
+  draft:
+    description: 'Create as draft release'
+    required: false
+    default: 'false'
+  prerelease:
+    description: 'Mark as prerelease (auto-detected from version if not specified)'
+    required: false
+    default: 'auto'
+  package-manager:
+    description: 'Package manager to use for pre-release setup (pip, uv, pixi, none)'
+    required: false
+    default: 'uv'
+  python-version:
+    description: 'Python version to install (only if package-manager is not none)'
+    required: false
+    default: '3.12'
+  install-groups:
+    description: 'Dependency groups to install (only if package-manager is not none)'
+    required: false
+    default: 'dev'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+        ref: ${{ inputs.release-branch }}
+
+    - name: Set up Python environment (pip)
+      if: ${{ inputs.package-manager == 'pip' }}
+      uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@main
+      with:
+        python-version: ${{ inputs.python-version }}
+        install-groups: ${{ inputs.install-groups }}
+
+    - name: Set up Python environment (uv)
+      if: ${{ inputs.package-manager == 'uv' }}
+      uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@main
+      with:
+        python-version: ${{ inputs.python-version }}
+        install-groups: ${{ inputs.install-groups }}
+
+    - name: Set up Python environment (pixi)
+      if: ${{ inputs.package-manager == 'pixi' }}
+      uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@main
+      with:
+        python-version: ${{ inputs.python-version }}
+        install-groups: ${{ inputs.install-groups }}
+
+    - name: Configure Git
+      if: ${{ inputs.package-manager != 'none' }}
+      shell: bash
+      run: |
+        echo "::group::Configuring Git"
+        git config --global user.name '${{ github.actor }}'
+        git config --global user.email '${{ github.actor }}@users.noreply.github.com'
+        echo "::endgroup::"
+
+    - name: Generate changelog and bump version with commitizen
+      if: ${{ inputs.package-manager != 'none' }}
+      id: bump_version
+      shell: bash
+      run: |
+        echo "::group::Generating changelog and bumping version"
+        
+        # Build commitizen command
+        if [ "${{ inputs.package-manager }}" = "pip" ]; then
+          CZ_CMD="cz"
+        else
+          CZ_CMD="${{ inputs.package-manager }} run cz"
+        fi
+        
+        # Get current version first
+        CURRENT_VERSION=$($CZ_CMD version --project)
+        echo "Current version: $CURRENT_VERSION"
+        
+        # Calculate what the next version will be (dry run)
+        echo "Calculating next version..."
+        if [ "${{ inputs.prerelease-type }}" != "none" ]; then
+          NEXT_VERSION=$($CZ_CMD bump --dry-run --increment ${{ inputs.increment }} --prerelease ${{ inputs.prerelease-type }} | grep "tag to create" | awk '{print $NF}')
+        else
+          NEXT_VERSION=$($CZ_CMD bump --dry-run --increment ${{ inputs.increment }} | grep "tag to create" | awk '{print $NF}')
+        fi
+        
+        echo "Next version will be: $NEXT_VERSION"
+        
+        # Generate changelog with the calculated version
+        echo "Generating changelog..."
+        $CZ_CMD changelog --unreleased-version="$NEXT_VERSION" --incremental
+        
+        # Actually bump version
+        echo "Bumping version..."
+        if [ "${{ inputs.prerelease-type }}" != "none" ]; then
+          $CZ_CMD bump --yes --increment ${{ inputs.increment }} --prerelease ${{ inputs.prerelease-type }}
+        else
+          $CZ_CMD bump --yes --increment ${{ inputs.increment }}
+        fi
+        
+        # Verify the new version
+        NEW_VERSION=$($CZ_CMD version --project)
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+        echo "Final version: $NEW_VERSION"
+        
+        echo "::endgroup::"
+
+    - name: Push changes and tags
+      if: ${{ inputs.package-manager != 'none' }}
+      shell: bash
+      run: |
+        echo "::group::Pushing changes and tags"
+        
+        echo "Pushing changes to repository"
+        if ! git push; then
+          echo "::error::Failed to push changes to repository"
+          exit 1
+        fi
+        
+        echo "Pushing tags to repository"
+        if ! git push --tags; then
+          echo "::error::Failed to push tags to repository"
+          exit 1
+        fi
+        
+        echo "::endgroup::"
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        token: ${{ inputs.github-token }}
+        name: ${{ inputs.release-title != '' && inputs.release-title || (inputs.package-manager != 'none' && steps.bump_version.outputs.NEW_VERSION || github.ref_name) }}
+        body: ${{ inputs.release-notes == 'custom' && inputs.release-notes-text || '' }}
+        body_path: ${{ inputs.release-notes == 'custom' && inputs.release-notes-text == '' && 'RELEASE_NOTES.md' || (inputs.release-notes == 'tag' && inputs.package-manager != 'none' && 'CHANGELOG.md' || '') }}
+        tag_name: ${{ inputs.package-manager != 'none' && steps.bump_version.outputs.NEW_VERSION || github.ref_name }}
+        draft: ${{ inputs.draft == 'true' }}
+        prerelease: ${{ inputs.prerelease == 'auto' && inputs.package-manager != 'none' && (contains(steps.bump_version.outputs.NEW_VERSION, '-') || contains(steps.bump_version.outputs.NEW_VERSION, 'alpha') || contains(steps.bump_version.outputs.NEW_VERSION, 'beta') || contains(steps.bump_version.outputs.NEW_VERSION, 'rc')) || inputs.prerelease == 'true' }}
+        generate_release_notes: ${{ inputs.release-notes == 'auto' }}
