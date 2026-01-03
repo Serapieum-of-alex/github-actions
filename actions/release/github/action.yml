@@ -98,6 +98,8 @@ runs:
         # Build commitizen command
         if [ "${{ inputs.package-manager }}" = "pip" ]; then
           CZ_CMD="cz"
+        elif [ "${{ inputs.package-manager }}" = "pixi" ]; then
+          CZ_CMD="pixi run -e ${{ inputs.install-groups }} cz"
         else
           CZ_CMD="${{ inputs.package-manager }} run cz"
         fi
