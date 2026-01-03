@@ -56,7 +56,7 @@ runs:
             # Remove leading/trailing whitespace
             group=$(echo "$group" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
             if [[ -n "$group" ]]; then
-              args+=("--group" "$group")
+              args+=("--only-group" "$group")
             fi
           done
         else
