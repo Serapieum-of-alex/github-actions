@@ -140,22 +140,6 @@ runs:
         echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "Final version: $NEW_VERSION"
         
-        # Get the changelog file path from commitizen config
-        CHANGELOG_FILE=$($CZ_CMD info | grep "changelog_file:" | awk '{print $2}' | tr -d '"' || echo "CHANGELOG.md")
-        echo "CHANGELOG_FILE=$CHANGELOG_FILE" >> $GITHUB_OUTPUT
-        echo "Changelog file: $CHANGELOG_FILE"
-        
-        echo "::endgroup::"
-
-    - name: Debug changelog file
-      shell: bash
-      run: |
-        echo "::group::Debug changelog file"
-        echo "Changelog file from commitizen: ${{ steps.bump_version.outputs.CHANGELOG_FILE }}"
-        echo "Checking if changelog file exists:"
-        ls -la "${{ steps.bump_version.outputs.CHANGELOG_FILE }}" || echo "Changelog file not found"
-        echo "Changelog file content (if exists):"
-        cat "${{ steps.bump_version.outputs.CHANGELOG_FILE }}" || echo "Cannot read changelog file"
         echo "::endgroup::"
 
     - name: Push changes and tags
@@ -182,7 +166,7 @@ runs:
       with:
         token: ${{ inputs.github-token }}
         name: ${{ steps.bump_version.outputs.NEW_VERSION }}
-        body_path: ${{ inputs.release-notes == 'tag' && steps.bump_version.outputs.CHANGELOG_FILE || '' }}
+        body_path: ${{ inputs.release-notes == 'tag' && 'CHANGELOG.md' || '' }}
         tag_name: ${{ steps.bump_version.outputs.NEW_VERSION }}
         draft: ${{ inputs.draft == 'true' }}
         prerelease: ${{ contains(steps.bump_version.outputs.NEW_VERSION, '-') || contains(steps.bump_version.outputs.NEW_VERSION, 'alpha') || contains(steps.bump_version.outputs.NEW_VERSION, 'beta') || contains(steps.bump_version.outputs.NEW_VERSION, 'rc') }}
