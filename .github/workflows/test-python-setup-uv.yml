@@ -25,7 +25,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama", "rich"]
+          dev = ["colorama"]
           EOF
 
           # Initialize uv and create lock file
@@ -68,7 +68,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama", "rich"]
+          dev = ["colorama"]
           test = ["pytest-cov", "pytest-mock"]
           docs = ["mkdocs"]
           EOF
@@ -89,8 +89,8 @@ jobs:
           python -c "import pytest_cov; import pytest_mock; print('[OK] Test dependencies installed')"
           python -c "import mkdocs; print('[OK] Docs dependencies installed')"
           # Verify dev group is NOT installed
-          if python -c "import rich" 2>/dev/null; then
-            echo "[ERROR] rich should not be installed"
+          if python -c "import colorama" 2>/dev/null; then
+            echo "[ERROR] colorama should not be installed"
             exit 1
           else
             echo "[OK] Dev group not installed as expected"
@@ -286,6 +286,7 @@ jobs:
         uses: ./actions/python-setup/uv
         with:
           python-version: ${{ matrix.python-version }}
+          install-groups: 'dev'
 
       - name: Verify Python version
         shell: bash
@@ -316,7 +317,7 @@ jobs:
           dependencies = ["requests", "numpy"]
 
           [dependency-groups]
-          dev = ["colorama", "rich", "mypy"]
+          dev = ["colorama", "mypy"]
           EOF
 
           pip install uv
@@ -483,7 +484,7 @@ jobs:
           dependencies = ["requests"]
 
           [dependency-groups]
-          dev = ["colorama", "rich"]
+          dev = ["colorama"]
           EOF
 
           pip install uv
@@ -497,4 +498,4 @@ jobs:
       - name: Verify dev group installed
         shell: bash
         run: |
-          python -c "import colorama; import rich; print('[OK] Dev group explicitly installed')"
+          python -c "import colorama; print('[OK] Dev group explicitly installed')"
