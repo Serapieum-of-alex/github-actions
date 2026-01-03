@@ -61,6 +61,8 @@ runs:
           done
         else
           echo "Installing core dependencies only (no optional groups)"
+          # Explicitly exclude all groups when install-groups is empty
+          args+=("--no-dev")
         fi
 
         echo "Running: uv sync ${args[*]}"
