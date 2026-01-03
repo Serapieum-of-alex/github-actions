@@ -85,6 +85,8 @@ jobs:
         shell: bash
         run: |
           uv pip list
+          # Verify core dependencies are installed
+          python -c "import requests; print('[OK] Core dependencies installed')"
           # Verify test and docs groups are installed
           python -c "import pytest_cov; import pytest_mock; print('[OK] Test dependencies installed')"
           python -c "import mkdocs; print('[OK] Docs dependencies installed')"
