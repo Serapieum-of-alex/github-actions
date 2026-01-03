@@ -28,18 +28,14 @@ inputs:
       - beta
       - rc
     default: 'none'
-  release-title:
-    description: 'Custom release title (defaults to tag name)'
-    required: false
-    default: ''
   release-notes:
-    description: 'Release notes source (auto, custom, or tag - defaults to tag annotation if available)'
+    description: 'Release notes source (auto or tag - defaults to commitizen changelog)'
     required: false
+    type: choice
+    options:
+      - tag
+      - auto
     default: 'tag'
-  release-notes-text:
-    description: 'Custom release notes text (used when release-notes is custom)'
-    required: false
-    default: ''
   draft:
     description: 'Create as draft release'
     required: false
@@ -49,15 +45,20 @@ inputs:
     required: false
     default: 'auto'
   package-manager:
-    description: 'Package manager to use for pre-release setup (pip, uv, pixi, none)'
+    description: 'Package manager to use for pre-release setup (pip, uv, pixi)'
     required: false
+    type: choice
+    options:
+      - pip
+      - uv
+      - pixi
     default: 'uv'
   python-version:
-    description: 'Python version to install (only if package-manager is not none)'
+    description: 'Python version to install'
     required: false
     default: '3.12'
   install-groups:
-    description: 'Dependency groups to install (only if package-manager is not none)'
+    description: 'Dependency groups to install'
     required: false
     default: 'dev'
 
@@ -92,7 +93,6 @@ runs:
         install-groups: ${{ inputs.install-groups }}
 
     - name: Configure Git
-      if: ${{ inputs.package-manager != 'none' }}
       shell: bash
       run: |
         echo "::group::Configuring Git"
@@ -101,7 +101,6 @@ runs:
         echo "::endgroup::"
 
     - name: Generate changelog and bump version with commitizen
-      if: ${{ inputs.package-manager != 'none' }}
       id: bump_version
       shell: bash
       run: |
@@ -148,7 +147,6 @@ runs:
         echo "::endgroup::"
 
     - name: Push changes and tags
-      if: ${{ inputs.package-manager != 'none' }}
       shell: bash
       run: |
         echo "::group::Pushing changes and tags"
@@ -171,10 +169,9 @@ runs:
       uses: softprops/action-gh-release@v2
       with:
         token: ${{ inputs.github-token }}
-        name: ${{ inputs.release-title != '' && inputs.release-title || (inputs.package-manager != 'none' && steps.bump_version.outputs.NEW_VERSION || github.ref_name) }}
-        body: ${{ inputs.release-notes == 'custom' && inputs.release-notes-text || '' }}
-        body_path: ${{ inputs.release-notes == 'custom' && inputs.release-notes-text == '' && 'RELEASE_NOTES.md' || (inputs.release-notes == 'tag' && inputs.package-manager != 'none' && 'CHANGELOG.md' || '') }}
-        tag_name: ${{ inputs.package-manager != 'none' && steps.bump_version.outputs.NEW_VERSION || github.ref_name }}
+        name: ${{ steps.bump_version.outputs.NEW_VERSION }}
+        body_path: ${{ inputs.release-notes == 'tag' && 'CHANGELOG.md' || '' }}
+        tag_name: ${{ steps.bump_version.outputs.NEW_VERSION }}
         draft: ${{ inputs.draft == 'true' }}
-        prerelease: ${{ inputs.prerelease == 'auto' && inputs.package-manager != 'none' && (contains(steps.bump_version.outputs.NEW_VERSION, '-') || contains(steps.bump_version.outputs.NEW_VERSION, 'alpha') || contains(steps.bump_version.outputs.NEW_VERSION, 'beta') || contains(steps.bump_version.outputs.NEW_VERSION, 'rc')) || inputs.prerelease == 'true' }}
+        prerelease: ${{ inputs.prerelease == 'auto' && (contains(steps.bump_version.outputs.NEW_VERSION, '-') || contains(steps.bump_version.outputs.NEW_VERSION, 'alpha') || contains(steps.bump_version.outputs.NEW_VERSION, 'beta') || contains(steps.bump_version.outputs.NEW_VERSION, 'rc')) || inputs.prerelease == 'true' }}
         generate_release_notes: ${{ inputs.release-notes == 'auto' }}
