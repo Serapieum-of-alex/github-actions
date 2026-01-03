@@ -8,7 +8,7 @@ on:
 
 jobs:
   test-uv-basic:
-    name: Test uv action - Basic with defaults
+    name: Test uv action - Basic with defaults (core only)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -32,7 +32,7 @@ jobs:
           pip install uv
           uv lock
 
-      - name: Test uv action with defaults
+      - name: Test uv action with defaults (no groups)
         uses: ./actions/python-setup/uv
 
       - name: Verify installations
@@ -41,8 +41,15 @@ jobs:
           python --version
           uv --version
           uv pip list
-          # Verify dev group is installed (default)
-          python -c "import pytest; import black; print('[OK] Dev dependencies installed')"
+          # Verify core dependency is installed
+          python -c "import requests; print('[OK] Core dependency installed')"
+          # Verify dev group is NOT installed (default is now empty)
+          python -c "try:
+              import pytest
+              print('[ERROR] pytest should not be installed')
+              exit(1)
+          except ImportError:
+              print('[OK] Dev group not installed with default empty install-groups')"
 
   test-uv-custom-groups:
     name: Test uv action - Custom install groups
@@ -428,3 +435,66 @@ jobs:
         shell: bash
         run: |
           python -c "import pytest; import pytest_cov; import mkdocs; print('[OK] All space-separated groups installed')"
+
+  test-uv-no-dependency-groups-section:
+    name: Test uv action - No dependency-groups section
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project without dependency-groups
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-no-groups-section"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with defaults (should work - no groups)
+        uses: ./actions/python-setup/uv
+
+      - name: Verify action succeeded with core dependencies only
+        shell: bash
+        run: |
+          python -c "import requests; print('[OK] Core dependencies installed without dependency-groups section')"
+          uv pip list
+          echo "[OK] Action succeeded without dependency-groups section"
+
+  test-uv-explicit-dev-group:
+    name: Test uv action - Explicit dev group
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-explicit-dev"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+
+          [dependency-groups]
+          dev = ["pytest", "black"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with explicit dev group
+        uses: ./actions/python-setup/uv
+        with:
+          install-groups: 'dev'
+
+      - name: Verify dev group installed
+        shell: bash
+        run: |
+          python -c "import pytest; import black; print('[OK] Dev group explicitly installed')"
