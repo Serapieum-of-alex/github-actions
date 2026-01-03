@@ -59,20 +59,25 @@ runs:
           # Check if install-groups are specified
           if [ -n "${{ inputs.install-groups }}" ]; then
             echo "Installing with dependency groups: ${{ inputs.install-groups }}"
-            
+
             # Split groups on space and comma
             IFS=' ,' read -r -a groups <<< "${{ inputs.install-groups }}"
-            
-            # Build pip install command with groups
-            install_cmd="pip install ."
+
+            # Build comma-separated list of groups for pip
+            group_list=""
             for group in "${groups[@]}"; do
               # Remove leading/trailing whitespace
               group=$(echo "$group" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
               if [[ -n "$group" ]]; then
-                install_cmd="$install_cmd[$group]"
+                if [[ -z "$group_list" ]]; then
+                  group_list="$group"
+                else
+                  group_list="$group_list,$group"
+                fi
               fi
             done
-            
+
+            install_cmd="pip install .[$group_list]"
             echo "Running: $install_cmd"
             eval "$install_cmd"
           else
