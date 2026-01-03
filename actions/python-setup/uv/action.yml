@@ -7,9 +7,9 @@ inputs:
     required: false
     default: '3.12'
   install-groups:
-    description: 'uv sync groups to install (e.g., "dev", "dev docs")'
+    description: 'uv sync groups to install (e.g., "dev", "dev docs"). Leave empty to install only core dependencies.'
     required: false
-    default: 'dev'
+    default: ''
   verify-lock:
     description: 'Whether to verify the lock file is up to date'
     required: false
@@ -41,25 +41,31 @@ runs:
       shell: bash
       run: |
         echo "::group::Preparing uv sync command"
-        echo "Installing groups: ${{ inputs.install-groups }}"
-        
-        # Simple approach: build array of arguments
+
+        # Start with frozen flag
         args=("--frozen")
-        
-        # Split groups on space and comma
-        IFS=' ,' read -r -a groups <<< "${{ inputs.install-groups }}"
-        
-        for group in "${groups[@]}"; do
-          # Remove leading/trailing whitespace
-          group=$(echo "$group" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-          if [[ -n "$group" ]]; then
-            args+=("--group" "$group")
-          fi
-        done
-        
+
+        # Check if install-groups is provided
+        if [[ -n "${{ inputs.install-groups }}" ]]; then
+          echo "Installing with groups: ${{ inputs.install-groups }}"
+
+          # Split groups on space and comma
+          IFS=' ,' read -r -a groups <<< "${{ inputs.install-groups }}"
+
+          for group in "${groups[@]}"; do
+            # Remove leading/trailing whitespace
+            group=$(echo "$group" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            if [[ -n "$group" ]]; then
+              args+=("--group" "$group")
+            fi
+          done
+        else
+          echo "Installing core dependencies only (no optional groups)"
+        fi
+
         echo "Running: uv sync ${args[*]}"
         echo "::endgroup::"
-        
+
         echo "::group::Installing dependencies with uv"
         uv sync "${args[@]}"
         echo "::endgroup::"
