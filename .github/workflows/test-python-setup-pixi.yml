@@ -100,9 +100,10 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Create test pyproject.toml with multiple environments
+        shell: python
         run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
+          with open('pyproject.toml', 'w') as f:
+              f.write('''[project]
           name = "multi-env-project"
           version = "0.1.0"
           dependencies = []
@@ -125,7 +126,7 @@ jobs:
           [tool.pixi.environments]
           py311 = ["py311"]
           py312 = ["py312"]
-          EOF
+          ''')
 
       - name: Test pixi setup with multiple environments
         uses: ./actions/python-setup/pixi
@@ -488,9 +489,10 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Create test pyproject.toml
+        shell: python
         run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
+          with open('pyproject.toml', 'w') as f:
+              f.write('''[project]
           name = "cross-platform-test"
           version = "0.1.0"
           dependencies = []
@@ -514,7 +516,7 @@ jobs:
           default = []
           py311 = ["py311"]
           py312 = ["py312"]
-          EOF
+          ''')
 
       - name: Test pixi setup
         uses: ./actions/python-setup/pixi
