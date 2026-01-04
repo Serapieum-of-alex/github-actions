@@ -44,8 +44,6 @@ runs:
 
         # Start with frozen flag
         args=("--frozen")
-        # Exclude default dependency groups
-        args+=("--no-default-groups")
 
         # Initialize flags for tracking what we're installing
         has_groups=false
