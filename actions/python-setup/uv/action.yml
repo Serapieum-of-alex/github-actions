@@ -77,9 +77,10 @@ runs:
             fi
           done
 
-          # Only add --no-default-groups if we have dependency groups
-          if [[ "$has_groups" == true ]]; then
-            # Insert --no-default-groups after --frozen but before any --group flags
+          # Add --no-default-groups when we have explicit groups or only extras
+          # This ensures we only install what was explicitly requested
+          if [[ "$has_groups" == true || "$has_extras" == true ]]; then
+            # Insert --no-default-groups after --frozen but before any other flags
             args=("--frozen" "--no-default-groups" "${args[@]:1}")
           fi
         else
