@@ -77,7 +77,7 @@ jobs:
       - name: Test uv action with custom groups
         uses: ./actions/python-setup/uv
         with:
-          install-groups: 'test docs'
+          install-groups: 'groups: test docs'
 
       - name: Verify custom groups installed
         shell: bash
@@ -286,7 +286,7 @@ jobs:
         uses: ./actions/python-setup/uv
         with:
           python-version: ${{ matrix.python-version }}
-          install-groups: 'dev'
+          install-groups: 'groups: dev'
 
       - name: Verify Python version
         shell: bash
@@ -360,7 +360,7 @@ jobs:
       - name: Test uv action with comma-separated groups
         uses: ./actions/python-setup/uv
         with:
-          install-groups: 'dev,test,docs'
+          install-groups: 'groups: dev test docs'
 
       - name: Verify all groups installed
         shell: bash
@@ -395,7 +395,7 @@ jobs:
       - name: Test uv action with mixed separators
         uses: ./actions/python-setup/uv
         with:
-          install-groups: 'dev, test docs'
+          install-groups: 'groups: dev test docs'
 
       - name: Verify all groups installed
         shell: bash
@@ -430,7 +430,7 @@ jobs:
       - name: Test uv action with space-separated groups
         uses: ./actions/python-setup/uv
         with:
-          install-groups: 'dev test docs'
+          install-groups: 'groups: dev test docs'
 
       - name: Verify all groups installed
         shell: bash
@@ -493,7 +493,7 @@ jobs:
       - name: Test uv action with explicit dev group
         uses: ./actions/python-setup/uv
         with:
-          install-groups: 'dev'
+          install-groups: 'groups: dev'
 
       - name: Verify dev group installed
         shell: bash
@@ -531,7 +531,7 @@ jobs:
       - name: Test uv action with optional dependencies only
         uses: ./actions/python-setup/uv
         with:
-          install-groups: 'extra:aws extra:viz'
+          install-groups: 'extras: aws viz'
 
       - name: Verify optional dependencies installed
         shell: bash
@@ -581,7 +581,7 @@ jobs:
       - name: Test uv action with mixed groups and extras
         uses: ./actions/python-setup/uv
         with:
-          install-groups: 'dev extra:aws test extra:viz'
+          install-groups: 'groups: dev test, extras: aws viz'
 
       - name: Verify mixed installation
         shell: bash

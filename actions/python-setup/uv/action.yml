@@ -7,7 +7,7 @@ inputs:
     required: false
     default: '3.12'
   install-groups:
-    description: 'Dependency groups (from [dependency-groups]) and/or optional dependencies (from [project.optional-dependencies]) to install. Format: "dev", "dev docs", "extra:aws extra:viz". Prefix optional dependencies with "extra:". Leave empty to install only core dependencies.'
+    description: 'Format: "groups: dev test, extras: aws viz" or "groups: dev" or "extras: aws viz". Leave empty to install only core dependencies.'
     required: false
     default: ''
   verify-lock:
@@ -52,30 +52,49 @@ runs:
         # Check if install-groups is provided
         if [[ -n "${{ inputs.install-groups }}" ]]; then
           echo "Processing install-groups: ${{ inputs.install-groups }}"
-
-          # Split groups on space and comma
-          IFS=' ,' read -r -a items <<< "${{ inputs.install-groups }}"
-
-          # Process each item
-          for item in "${items[@]}"; do
-            # Remove leading/trailing whitespace
-            item=$(echo "$item" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-            if [[ -n "$item" ]]; then
-              # Check if this is an optional dependency (prefixed with "extra:")
-              if [[ "$item" == extra:* ]]; then
-                # Extract the extra name after "extra:"
-                extra_name="${item#extra:}"
-                args+=("--extra" "$extra_name")
-                has_extras=true
-                echo "  - Adding optional dependency (extra): $extra_name"
-              else
-                # Regular dependency group
-                args+=("--group" "$item")
-                has_groups=true
-                echo "  - Adding dependency group: $item"
-              fi
+          
+          input_str="${{ inputs.install-groups }}"
+          
+          # Extract groups section if present
+          if [[ "$input_str" =~ groups:[[:space:]]*([^,]*)(,|$) ]]; then
+            groups_part="${BASH_REMATCH[1]}"
+            # Remove leading/trailing whitespace and split on spaces
+            groups_part=$(echo "$groups_part" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            if [[ -n "$groups_part" ]]; then
+              IFS=' ' read -r -a group_names <<< "$groups_part"
+              for group in "${group_names[@]}"; do
+                group=$(echo "$group" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+                if [[ -n "$group" ]]; then
+                  args+=("--group" "$group")
+                  has_groups=true
+                  echo "  - Adding dependency group: $group"
+                fi
+              done
             fi
-          done
+          fi
+          
+          # Extract extras section if present
+          if [[ "$input_str" =~ extras:[[:space:]]*([^,]*)(,|$) ]]; then
+            extras_part="${BASH_REMATCH[1]}"
+            # Remove leading/trailing whitespace and split on spaces
+            extras_part=$(echo "$extras_part" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            if [[ -n "$extras_part" ]]; then
+              IFS=' ' read -r -a extra_names <<< "$extras_part"
+              for extra in "${extra_names[@]}"; do
+                extra=$(echo "$extra" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+                if [[ -n "$extra" ]]; then
+                  args+=("--extra" "$extra")
+                  has_extras=true
+                  echo "  - Adding optional dependency (extra): $extra"
+                fi
+              done
+            fi
+          fi
+          
+          # Check if neither groups nor extras were found - might be old format
+          if [[ "$has_groups" == false && "$has_extras" == false ]]; then
+            echo "::warning::No 'groups:' or 'extras:' sections found. Please use format: 'groups: name1 name2, extras: extra1 extra2'"
+          fi
 
           # Add --no-default-groups when we have explicit groups or only extras
           # This ensures we only install what was explicitly requested

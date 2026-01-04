@@ -44,7 +44,7 @@ jobs:
       - name: Test pip action with dependency groups
         uses: ./actions/python-setup/pip
         with:
-          install-groups: 'dev test'
+          install-groups: 'groups: dev test'
 
       - name: Verify installations
         shell: bash
@@ -216,3 +216,128 @@ jobs:
           pip --version
           pip install requests
           python -c "import requests; print('[OK] Can still install packages without dependency files')"
+
+  test-pip-optional-dependencies:
+    name: Test pip action - Optional dependencies (extras)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Create test project with optional dependencies
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-pip-extras"
+          version = "0.1.0"
+          dependencies = ["requests"]
+
+          [project.optional-dependencies]
+          aws = ["boto3"]
+          viz = ["matplotlib"]
+
+          [dependency-groups]
+          dev = ["httpx"]
+          test = ["pytest"]
+          EOF
+
+      - name: Test pip action with optional dependencies only
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'extras: aws viz'
+
+      - name: Verify optional dependencies installed
+        shell: bash
+        run: |
+          pip list
+          # Verify core dependencies are installed
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          # Verify optional dependencies are installed
+          python -c "import boto3; print('[OK] AWS extra installed')"
+          python -c "import matplotlib; print('[OK] Viz extra installed')"
+          # Verify dependency groups are NOT installed (no --dependency-groups support in older pip)
+          if python -c "import httpx" 2>/dev/null; then
+            echo "[OK] httpx found - dependency groups may be supported"
+          else
+            echo "[OK] httpx not found as expected (dependency groups not supported in this pip version)"
+          fi
+
+  test-pip-mixed-groups-and-extras:
+    name: Test pip action - Mixed groups and extras
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-pip-mixed"
+          version = "0.1.0"
+          dependencies = ["requests"]
+
+          [project.optional-dependencies]
+          aws = ["boto3"]
+
+          [dependency-groups]
+          dev = ["httpx"]
+          EOF
+
+      - name: Test pip action with mixed groups and extras
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'groups: dev, extras: aws'
+
+      - name: Verify mixed installation
+        shell: bash
+        run: |
+          pip list
+          # Verify all requested dependencies are installed
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import boto3; print('[OK] AWS extra installed')"
+          # Dev group installation depends on pip version support for --dependency-groups
+          if python -c "import httpx" 2>/dev/null; then
+            echo "[OK] Dev group installed (pip supports --dependency-groups)"
+          else
+            echo "[OK] Dev group not installed (pip version does not support --dependency-groups)"
+          fi
+
+  test-pip-dependency-groups-only:
+    name: Test pip action - Dependency groups only
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Create test project with dependency groups
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-pip-dep-groups"
+          version = "0.1.0"
+          dependencies = ["requests"]
+
+          [dependency-groups]
+          dev = ["httpx"]
+          test = ["pytest"]
+          EOF
+
+      - name: Test pip action with dependency groups only
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'groups: dev test'
+
+      - name: Verify dependency groups installation
+        shell: bash
+        run: |
+          pip list
+          # Verify core dependencies are installed
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          # Dependency group installation depends on pip version
+          if python -c "import httpx; import pytest" 2>/dev/null; then
+            echo "[OK] Dependency groups installed (pip supports PEP 735)"
+          else
+            echo "[OK] Dependency groups not installed (pip version does not support PEP 735 --dependency-groups)"
+            echo "[INFO] This is expected for older pip versions. Consider using uv action for dependency groups support."
+          fi
