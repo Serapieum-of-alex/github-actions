@@ -4,8 +4,8 @@ on:
   push:
 
 jobs:
-  test-basic-pixi:
-    name: Basic pixi Test
+  test-pixi-basic:
+    name: Test pixi action - defaults
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -49,8 +49,44 @@ jobs:
           python -c "import numpy; print(f'NumPy version: {numpy.__version__}')"
           python -c "import pytest; print(f'Pytest version: {pytest.__version__}')"
 
-  test-multiple-environments:
-    name: Test Multiple Environments
+  test-pixi-default-environment:
+    name: Test pixi action - Default environment only
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml with default environment
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-default-only"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          requests = ">=2.31"
+
+          [tool.pixi.environments]
+          default = []
+          EOF
+
+      - name: Test pixi action with defaults (should use default environment)
+        uses: ./actions/python-setup/pixi
+        # No inputs provided - should use defaults
+
+      - name: Verify default environment installation
+        run: |
+          python --version
+          python -c "import requests; print('[OK] Default environment installed')"
+          pixi info
+
+  test-pixi-multiple-environments:
+    name: Test pixi action - Multiple environments
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -106,8 +142,8 @@ jobs:
           pixi list -e py311
           pixi list -e py312
 
-  test-environment-activation:
-    name: Test Environment Activation
+  test-pixi-environment-activation:
+    name: Test pixi action - Environment activation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -154,8 +190,8 @@ jobs:
           echo "Testing that prod packages are not in dev environment..."
           python -c "import flask" 2>/dev/null && echo "ERROR: Flask should not be in dev!" && exit 1 || echo "Good: Flask not in dev environment"
 
-  test-lock-verification:
-    name: Test Lock File Verification
+  test-pixi-lock-verification:
+    name: Test pixi action - Lock file verification
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -214,8 +250,8 @@ jobs:
         with:
           verify-lock: "false"
 
-  test-caching:
-    name: Test Caching
+  test-pixi-caching:
+    name: Test pixi action - Caching
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -262,8 +298,8 @@ jobs:
         run: |
           python -c "import numpy, scipy, matplotlib; print('All packages available from cache')"
 
-  test-cross-platform:
-    name: Cross-platform Test
+  test-pixi-matrix:
+    name: Test pixi action - Matrix
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -312,8 +348,8 @@ jobs:
           python --version
           pixi list -e ${{ matrix.environment }}
 
-  test-error-scenarios:
-    name: Test Error Scenarios
+  test-pixi-error-scenarios:
+    name: Test pixi action - Error scenarios
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -387,8 +423,8 @@ jobs:
           echo "ERROR: Action should fail when activating non-existent environment"
           exit 1
 
-  test-complex-project:
-    name: Test Complex Project Setup
+  test-pixi-complex-project:
+    name: Test pixi action - Complex project setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
