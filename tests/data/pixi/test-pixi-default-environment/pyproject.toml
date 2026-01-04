@@ -1,0 +1,15 @@
+[project]
+          name = "test-default-only"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          requests = ">=2.31"
+
+          [tool.pixi.environments]
+          default = []
