@@ -7,7 +7,7 @@ inputs:
     required: false
     default: '3.12'
   install-groups:
-    description: 'uv sync groups to install (e.g., "dev", "dev docs"). Leave empty to install only core dependencies.'
+    description: 'Dependency groups (from [dependency-groups]) and/or optional dependencies (from [project.optional-dependencies]) to install. Format: "dev", "dev docs", "extra:aws extra:viz". Prefix optional dependencies with "extra:". Leave empty to install only core dependencies.'
     required: false
     default: ''
   verify-lock:
@@ -45,26 +45,45 @@ runs:
         # Start with frozen flag
         args=("--frozen")
 
+        # Initialize flags for tracking what we're installing
+        has_groups=false
+        has_extras=false
+
         # Check if install-groups is provided
         if [[ -n "${{ inputs.install-groups }}" ]]; then
-          echo "Installing with groups: ${{ inputs.install-groups }}"
-
-          # Exclude default dependency groups
-          args+=("--no-default-groups")
+          echo "Processing install-groups: ${{ inputs.install-groups }}"
 
           # Split groups on space and comma
-          IFS=' ,' read -r -a groups <<< "${{ inputs.install-groups }}"
+          IFS=' ,' read -r -a items <<< "${{ inputs.install-groups }}"
 
-          # Add all requested groups
-          for group in "${groups[@]}"; do
+          # Process each item
+          for item in "${items[@]}"; do
             # Remove leading/trailing whitespace
-            group=$(echo "$group" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-            if [[ -n "$group" ]]; then
-              args+=("--group" "$group")
+            item=$(echo "$item" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            if [[ -n "$item" ]]; then
+              # Check if this is an optional dependency (prefixed with "extra:")
+              if [[ "$item" == extra:* ]]; then
+                # Extract the extra name after "extra:"
+                extra_name="${item#extra:}"
+                args+=("--extra" "$extra_name")
+                has_extras=true
+                echo "  - Adding optional dependency (extra): $extra_name"
+              else
+                # Regular dependency group
+                args+=("--group" "$item")
+                has_groups=true
+                echo "  - Adding dependency group: $item"
+              fi
             fi
           done
+
+          # Only add --no-default-groups if we have dependency groups
+          if [[ "$has_groups" == true ]]; then
+            # Insert --no-default-groups after --frozen but before any --group flags
+            args=("--frozen" "--no-default-groups" "${args[@]:1}")
+          fi
         else
-          echo "Installing core dependencies only (no optional groups)"
+          echo "Installing core dependencies only (no optional groups or extras)"
           # Install without any optional groups
           args+=("--no-default-groups")
         fi

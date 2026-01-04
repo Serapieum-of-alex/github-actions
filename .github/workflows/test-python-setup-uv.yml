@@ -499,3 +499,97 @@ jobs:
         shell: bash
         run: |
           python -c "import httpx; print('[OK] Dev group explicitly installed')"
+
+  test-uv-optional-dependencies:
+    name: Test uv action - Optional dependencies (extras)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Create test project with optional dependencies
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-extras"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+
+          [project.optional-dependencies]
+          aws = ["boto3", "s3fs"]
+          viz = ["matplotlib", "seaborn"]
+
+          [dependency-groups]
+          dev = ["httpx"]
+          test = ["pytest"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with optional dependencies only
+        uses: ./actions/python-setup/uv
+        with:
+          install-groups: 'extra:aws extra:viz'
+
+      - name: Verify optional dependencies installed
+        shell: bash
+        run: |
+          uv pip list
+          # Verify core dependencies are installed
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          # Verify optional dependencies are installed
+          python -c "import boto3; import s3fs; print('[OK] AWS extras installed')"
+          python -c "import matplotlib; import seaborn; print('[OK] Viz extras installed')"
+          # Verify dev group is NOT installed
+          if python -c "import httpx" 2>/dev/null; then
+            echo "[ERROR] httpx should not be installed"
+            exit 1
+          else
+            echo "[OK] Dev group not installed as expected"
+          fi
+
+  test-uv-mixed-groups-and-extras:
+    name: Test uv action - Mixed groups and extras
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-mixed"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+
+          [project.optional-dependencies]
+          aws = ["boto3"]
+          viz = ["matplotlib"]
+
+          [dependency-groups]
+          dev = ["httpx"]
+          test = ["pytest"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with mixed groups and extras
+        uses: ./actions/python-setup/uv
+        with:
+          install-groups: 'dev extra:aws test extra:viz'
+
+      - name: Verify mixed installation
+        shell: bash
+        run: |
+          uv pip list
+          # Verify all requested dependencies are installed
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import httpx; print('[OK] Dev group installed')"
+          python -c "import pytest; print('[OK] Test group installed')"
+          python -c "import boto3; print('[OK] AWS extra installed')"
+          python -c "import matplotlib; print('[OK] Viz extra installed')"
