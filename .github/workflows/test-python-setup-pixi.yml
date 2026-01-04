@@ -4,6 +4,320 @@ on:
   push:
 
 jobs:
+  test-pixi-basic:
+    name: Test pixi action - defaults
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-project"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          numpy = ">=1.26"
+
+          [tool.pixi.feature.test.dependencies]
+          pytest = ">=7.0"
+
+          [tool.pixi.environments]
+          default = ["test"]
+          EOF
+
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
+      - name: Test pixi setup with defaults
+        uses: ./actions/python-setup/pixi
+        with:
+          cache: "false"
+        id: setup
+
+      - name: Verify installation
+        run: |
+          echo "Testing pixi command..."
+          pixi --version
+          
+          echo "Testing Python..."
+          python --version
+          
+          echo "Testing installed packages..."
+          python -c "import numpy; print(f'NumPy version: {numpy.__version__}')"
+          python -c "import pytest; print(f'Pytest version: {pytest.__version__}')"
+
+  test-pixi-default-environment:
+    name: Test pixi action - Default environment only
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml with default environment
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-default-only"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          requests = ">=2.31"
+
+          [tool.pixi.environments]
+          default = []
+          EOF
+
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
+      - name: Test pixi action with defaults (should use default environment)
+        uses: ./actions/python-setup/pixi
+        with:
+          cache: "false"
+
+      - name: Verify default environment installation
+        run: |
+          python --version
+          python -c "import requests; print('[OK] Default environment installed')"
+          pixi info
+
+  test-pixi-multiple-environments:
+    name: Test pixi action - Multiple environments
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml with multiple environments
+        shell: python
+        run: |
+          with open('pyproject.toml', 'w') as f:
+              f.write('''[project]
+          name = "multi-env-project"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+
+          [tool.pixi.feature.py311.dependencies]
+          python = "3.11.*"
+          pandas = ">=2.0"
+
+          [tool.pixi.feature.py312.dependencies]
+          python = "3.12.*"
+          scikit-learn = ">=1.3"
+
+          [tool.pixi.environments]
+          py311 = ["py311"]
+          py312 = ["py312"]
+          ''')
+
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
+      - name: Test pixi setup with multiple environments
+        uses: ./actions/python-setup/pixi
+        with:
+          environments: "py311 py312"
+          activate-environment: "py311"
+          cache: "false"
+
+      - name: Verify active environment
+        run: |
+          echo "Current Python version:"
+          python --version
+          
+          echo "Testing py311 specific package..."
+          python -c "import pandas; print(f'Pandas version: {pandas.__version__}')"
+
+      - name: List environments
+        run: |
+          pixi info
+          pixi list -e py311
+          pixi list -e py312
+
+  test-pixi-environment-activation:
+    name: Test pixi action - Environment activation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "env-activation-test"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+
+          [tool.pixi.feature.prod.dependencies]
+          flask = ">=3.0"
+
+          [tool.pixi.feature.dev.dependencies]
+          pytest = ">=7.0"
+          black = ">=23.0"
+
+          [tool.pixi.environments]
+          prod = ["prod"]
+          dev = ["dev"]
+          EOF
+
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
+      - name: Test pixi setup with dev environment activation
+        uses: ./actions/python-setup/pixi
+        with:
+          environments: "prod dev"
+          activate-environment: "dev"
+          cache: "false"
+
+      - name: Verify dev environment is active
+        run: |
+          echo "Testing dev packages..."
+          python -c "import pytest; print('Pytest available in dev')"
+          python -c "import black; print('Black available in dev')"
+          
+          echo "Testing that prod packages are not in dev environment..."
+          python -c "import flask" 2>/dev/null && echo "ERROR: Flask should not be in dev!" && exit 1 || echo "Good: Flask not in dev environment"
+
+  test-pixi-lock-verification-valid:
+    name: Test pixi action - Lock file verification (valid)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "lock-test"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          numpy = ">=1.26"
+          EOF
+
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
+      - name: Test with valid lock file (should pass)
+        uses: ./actions/python-setup/pixi
+        with:
+          cache: "false"
+
+  test-pixi-lock-verification-outdated:
+    name: Test pixi action - Lock file verification (outdated)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "lock-test"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          numpy = ">=1.26"
+          EOF
+
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
+      - name: Modify pyproject.toml to make lock outdated
+        run: |
+          cat >> pyproject.toml << 'EOF'
+
+          [tool.pixi.dependencies.pandas]
+          version = ">=2.0"
+          EOF
+
+      - name: Test with outdated lock file (should fail)
+        id: outdated-lock-test
+        continue-on-error: true
+        uses: ./actions/python-setup/pixi
+        with:
+          cache: "false"
+
+      - name: Verify lock verification failed
+        if: steps.outdated-lock-test.outcome != 'failure'
+        run: |
+          echo "ERROR: Lock verification should have failed with outdated lock file"
+          exit 1
+
+  test-pixi-lock-verification-disabled:
+    name: Test pixi action - Lock file verification (disabled)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "lock-test"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          numpy = ">=1.26"
+          pandas = ">=2.0"
+          EOF
+
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
+      - name: Test with verify-lock disabled
+        uses: ./actions/python-setup/pixi
+        with:
+          verify-lock: "false"
+          cache: "false"
 
   test-pixi-lock-verification-validation:
     name: Test pixi action - Lock verification validation (should fail without lock file)
@@ -47,6 +361,82 @@ jobs:
         run: |
           echo "✓ Validation correctly failed when verify-lock was enabled without lock file"
 
+  test-pixi-caching-populate:
+    name: Test pixi action - Caching (populate)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "cache-test"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          numpy = ">=1.26"
+          scipy = ">=1.11"
+          matplotlib = ">=3.8"
+          EOF
+
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
+      - name: Run with cache enabled - should populate cache
+        id: populate-cache
+        uses: ./actions/python-setup/pixi
+        with:
+          cache: "true"
+
+      - name: Verify packages are installed
+        run: |
+          python -c "import numpy, scipy, matplotlib; print('All packages installed successfully')"
+
+  test-pixi-caching-retrieve:
+    name: Test pixi action - Caching (retrieve)
+    runs-on: ubuntu-latest
+    needs: test-pixi-caching-populate
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "cache-test"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          numpy = ">=1.26"
+          scipy = ">=1.11"
+          matplotlib = ">=3.8"
+          EOF
+
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
+      - name: Run with cache - should retrieve from cache
+        id: second-run
+        uses: ./actions/python-setup/pixi
+        with:
+          cache: "true"
+
+      - name: Verify packages are available from cache
+        run: |
+          python -c "import numpy, scipy, matplotlib; print('All packages available from cache')"
 
   test-pixi-caching-validation:
     name: Test pixi action - Cache validation (should fail without lock file)
@@ -89,6 +479,60 @@ jobs:
         run: |
           echo "✓ Validation correctly failed when cache was enabled without lock file"
 
+  test-pixi-matrix:
+    name: Test pixi action - Matrix
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        environment: ["default", "py311", "py312"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml
+        shell: python
+        run: |
+          with open('pyproject.toml', 'w') as f:
+              f.write('''[project]
+          name = "cross-platform-test"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+
+          [tool.pixi.feature.py311.dependencies]
+          python = "3.11.*"
+          requests = ">=2.31"
+
+          [tool.pixi.feature.py312.dependencies]
+          python = "3.12.*"
+          httpx = ">=0.25"
+
+          [tool.pixi.environments]
+          default = []
+          py311 = ["py311"]
+          py312 = ["py312"]
+          ''')
+
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
+      - name: Test pixi setup
+        uses: ./actions/python-setup/pixi
+        with:
+          environments: ${{ matrix.environment }}
+          activate-environment: ${{ matrix.environment }}
+          cache: "false"
+
+      - name: Verify Python installation
+        run: |
+          python --version
+          pixi list -e ${{ matrix.environment }}
 
   test-pixi-error-scenarios:
     name: Test pixi action - Error scenarios
@@ -100,9 +544,157 @@ jobs:
         id: no-toml-test
         continue-on-error: true
         uses: ./actions/python-setup/pixi
+        with:
+          verify-lock: "false"
+          cache: "false"
 
       - name: Verify action failed without pyproject.toml
         if: steps.no-toml-test.outcome != 'failure'
         run: |
           echo "ERROR: Action should fail without pyproject.toml"
           exit 1
+
+      - name: Create invalid pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "invalid-test"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          
+          [tool.pixi.dependencies]
+          python = ">=99.0"  # Impossible version
+          EOF
+
+      - name: Install pixi and try to generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+        id: invalid-lock-gen
+        continue-on-error: true
+
+      - name: Verify lock file generation failed
+        if: steps.invalid-lock-gen.outcome != 'failure'
+        run: |
+          echo "ERROR: Lock file generation should have failed with invalid dependencies"
+          exit 1
+
+      - name: Create pyproject.toml with non-existent environment
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "env-test"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+
+          [tool.pixi.environments]
+          default = []
+          EOF
+
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
+      - name: Test activating non-existent environment
+        id: nonexistent-env-test
+        continue-on-error: true
+        uses: ./actions/python-setup/pixi
+        with:
+          activate-environment: "nonexistent"
+          cache: "false"
+
+      - name: Verify action failed with non-existent environment
+        if: steps.nonexistent-env-test.outcome != 'failure'
+        run: |
+          echo "ERROR: Action should fail when activating non-existent environment"
+          exit 1
+
+  test-pixi-complex-project:
+    name: Test pixi action - Complex project setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create complex pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "complex-project"
+          version = "0.1.0"
+          description = "A complex project with multiple features"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge", "pytorch"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.tasks]
+          test = "pytest tests/"
+          lint = "ruff check ."
+          format = "black ."
+
+          [tool.pixi.dependencies]
+          python = ">=3.11,<3.13"
+
+          [tool.pixi.feature.core.dependencies]
+          numpy = ">=1.26"
+          pandas = ">=2.0"
+          scipy = ">=1.11"
+
+          [tool.pixi.feature.ml.dependencies]
+          scikit-learn = ">=1.3"
+          xgboost = ">=2.0"
+          pytorch = ">=2.0"
+
+          [tool.pixi.feature.viz.dependencies]
+          matplotlib = ">=3.8"
+          seaborn = ">=0.13"
+          plotly = ">=5.18"
+
+          [tool.pixi.feature.dev.dependencies]
+          pytest = ">=7.0"
+          pytest-cov = ">=4.0"
+          black = ">=23.0"
+          ruff = ">=0.1"
+          mypy = ">=1.0"
+
+          [tool.pixi.environments]
+          default = ["core", "dev"]
+          ml = ["core", "ml", "viz", "dev"]
+          prod = ["core", "ml"]
+          EOF
+
+      - name: Install pixi
+        uses: prefix-dev/setup-pixi@fef5c9568ca6c4ff7707bf840ab0692ba3f08293 # v0.9.0
+        with:
+          pixi-version: v0.49.0
+          run-install: false
+
+      - name: Generate lock file
+        run: pixi install
+
+      - name: Test complex project setup
+        uses: ./actions/python-setup/pixi
+        with:
+          environments: "default ml prod"
+          activate-environment: "ml"
+          cache: "false"
+
+      - name: Verify ML environment
+        run: |
+          echo "Testing ML environment packages..."
+          python -c "import numpy, pandas, scipy; print('Core packages OK')"
+          python -c "import sklearn, xgboost, torch; print('ML packages OK')"
+          python -c "import matplotlib, seaborn, plotly; print('Viz packages OK')"
+          python -c "import pytest, black; print('Dev packages OK')"
+          
+          echo "Environment info:"
+          pixi info
+          pixi list -e ml
