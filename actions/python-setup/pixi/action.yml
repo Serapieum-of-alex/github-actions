@@ -22,6 +22,19 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Check if pixi is already installed
+      id: pixi-check
+      shell: bash
+      run: |
+        if command -v pixi &> /dev/null; then
+          echo "already-installed=true" >> $GITHUB_OUTPUT
+          echo "✓ Pixi is already installed, skipping setup"
+          pixi --version
+        else
+          echo "already-installed=false" >> $GITHUB_OUTPUT
+          echo "Pixi not found, will proceed with installation"
+        fi
+
     - name: Validate cache configuration
       if: inputs.cache == 'true'
       shell: bash
@@ -49,7 +62,7 @@ runs:
         echo "✓ Lock file exists, verification can proceed"
 
     - name: Setup pixi (with cache)
-      if: inputs.cache == 'true'
+      if: steps.pixi-check.outputs.already-installed != 'true' && inputs.cache == 'true'
       uses: prefix-dev/setup-pixi@fef5c9568ca6c4ff7707bf840ab0692ba3f08293 # v0.9.0
       with:
         environments: ${{ inputs.environments }}
@@ -60,13 +73,21 @@ runs:
         cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
 
     - name: Setup pixi (without cache)
-      if: inputs.cache != 'true'
+      if: steps.pixi-check.outputs.already-installed != 'true' && inputs.cache != 'true'
       uses: prefix-dev/setup-pixi@fef5c9568ca6c4ff7707bf840ab0692ba3f08293 # v0.9.0
       with:
         environments: ${{ inputs.environments }}
         activate-environment: ${{ inputs.activate-environment }}
         pixi-version: v0.49.0
         cache: false
+
+    - name: Install pixi environments (if already installed)
+      if: steps.pixi-check.outputs.already-installed == 'true'
+      shell: bash
+      run: |
+        echo "::group::Installing pixi environments"
+        pixi install --environment ${{ inputs.environments }}
+        echo "::endgroup::"
 
     - name: Verify lock file is up to date
       if: inputs.verify-lock == 'true'
