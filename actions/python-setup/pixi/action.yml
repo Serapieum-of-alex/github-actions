@@ -33,7 +33,15 @@ runs:
       shell: bash
       run: |
         echo "::group::Verifying pixi.lock file is up to date"
-        pixi update --check-only
+        output=$(pixi lock 2>&1)
+          echo "$output"
+          if echo "$output" | grep -q "Lock-file was already up-to-date"; then
+            echo "✓ Lock file is up-to-date"
+          else
+            echo "✗ Lock file was out of sync and has been updated"
+            echo "Please run 'pixi lock' locally and commit the changes"
+            exit 1
+          fi
         echo "::endgroup::"
 
     - name: List environment info
