@@ -21,7 +21,7 @@ jobs:
           pip list
 
   test-pip-with-groups:
-    name: Test pip action - With dependency groups
+    name: Test pip action - With optional dependencies
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -41,10 +41,10 @@ jobs:
           docs = ["mkdocs"]
           EOF
 
-      - name: Test pip action with dependency groups
+      - name: Test pip action with optional dependencies (extras)
         uses: ./actions/python-setup/pip
         with:
-          install-groups: 'groups: dev test'
+          install-groups: 'extras: dev test'
 
       - name: Verify installations
         shell: bash
