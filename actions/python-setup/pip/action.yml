@@ -7,17 +7,18 @@ inputs:
     required: false
     default: '3.12'
   cache:
-    description: 'Cache packages dependencies (pip, pipenv, poetry), if empty no caching is performed'
+    description: 'Cache packages dependencies (pip, pipenv, poetry), if empty no caching is performed, default is empty'
+    required: false
+    default: ''
+  install-groups:
+    description: 'examples: "groups: dev test, extras: aws viz" or "groups: dev" or "extras: aws viz". Leave empty to install only core dependencies. default is empty'
     required: false
     default: ''
   architecture:
     description: 'Target architecture for Python to use (x64, x86), default is x64'
     required: false
     default: 'x64'
-  install-groups:
-    description: 'examples: "groups: dev test, extras: aws viz" or "groups: dev" or "extras: aws viz". Leave empty to install only core dependencies.'
-    required: false
-    default: ''
+
 
 runs:
   using: 'composite'
