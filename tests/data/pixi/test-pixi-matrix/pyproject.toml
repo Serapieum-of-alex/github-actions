@@ -1,10 +1,10 @@
 [project]
-          name = "invalid-test"
-          version = "0.1.0"
-          dependencies = []
+name = "invalid-test"
+version = "0.1.0"
+dependencies = []
 
-          [tool.pixi.workspace]
-          channels = ["conda-forge"]
-          
-          [tool.pixi.dependencies]
-          python = ">=99.0"  # Impossible version
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+
+[tool.pixi.dependencies]
+python = ">=99.0"  # Impossible version
