@@ -33,10 +33,12 @@ jobs:
           default = ["test"]
           EOF
 
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
       - name: Test pixi setup with defaults
         uses: ./actions/python-setup/pixi
         with:
-          verify-lock: "false"
           cache: "false"
         id: setup
 
@@ -78,10 +80,12 @@ jobs:
           default = []
           EOF
 
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
       - name: Test pixi action with defaults (should use default environment)
         uses: ./actions/python-setup/pixi
         with:
-          verify-lock: "false"
           cache: "false"
 
       - name: Verify default environment installation
@@ -128,12 +132,14 @@ jobs:
           py312 = ["py312"]
           ''')
 
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
       - name: Test pixi setup with multiple environments
         uses: ./actions/python-setup/pixi
         with:
           environments: "py311 py312"
           activate-environment: "py311"
-          verify-lock: "false"
           cache: "false"
 
       - name: Verify active environment
@@ -183,12 +189,14 @@ jobs:
           dev = ["dev"]
           EOF
 
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
       - name: Test pixi setup with dev environment activation
         uses: ./actions/python-setup/pixi
         with:
           environments: "prod dev"
           activate-environment: "dev"
-          verify-lock: "false"
           cache: "false"
 
       - name: Verify dev environment is active
@@ -223,16 +231,12 @@ jobs:
           numpy = ">=1.26"
           EOF
 
-      - name: Generate lock file first (without verification)
-        uses: ./actions/python-setup/pixi
-        with:
-          verify-lock: "false"
-          cache: "false"
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
 
       - name: Test with valid lock file (should pass)
         uses: ./actions/python-setup/pixi
         with:
-          verify-lock: "true"
           cache: "false"
 
   test-pixi-lock-verification-outdated:
@@ -258,11 +262,8 @@ jobs:
           numpy = ">=1.26"
           EOF
 
-      - name: Generate initial lock file with verify-lock disabled
-        uses: ./actions/python-setup/pixi
-        with:
-          verify-lock: "false"
-          cache: "false"
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
 
       - name: Modify pyproject.toml to make lock outdated
         run: |
@@ -277,7 +278,6 @@ jobs:
         continue-on-error: true
         uses: ./actions/python-setup/pixi
         with:
-          verify-lock: "true"
           cache: "false"
 
       - name: Verify lock verification failed
@@ -310,7 +310,10 @@ jobs:
           pandas = ">=2.0"
           EOF
 
-      - name: Test with verify-lock disabled (should pass even without lock file)
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
+      - name: Test with verify-lock disabled
         uses: ./actions/python-setup/pixi
         with:
           verify-lock: "false"
@@ -383,18 +386,14 @@ jobs:
           matplotlib = ">=3.8"
           EOF
 
-      - name: Generate lock file without cache
-        uses: ./actions/python-setup/pixi
-        with:
-          cache: "false"
-          verify-lock: "false"
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
 
-      - name: Second run with cache enabled - should populate cache
+      - name: Run with cache enabled - should populate cache
         id: populate-cache
         uses: ./actions/python-setup/pixi
         with:
           cache: "true"
-          verify-lock: "false"
 
       - name: Verify packages are installed
         run: |
@@ -426,18 +425,14 @@ jobs:
           matplotlib = ">=3.8"
           EOF
 
-      - name: Generate lock file first (without cache)
-        uses: ./actions/python-setup/pixi
-        with:
-          cache: "false"
-          verify-lock: "false"
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
 
-      - name: Second run - should use cache
+      - name: Run with cache - should retrieve from cache
         id: second-run
         uses: ./actions/python-setup/pixi
         with:
           cache: "true"
-          verify-lock: "false"
 
       - name: Verify packages are available from cache
         run: |
@@ -524,12 +519,14 @@ jobs:
           py312 = ["py312"]
           ''')
 
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
       - name: Test pixi setup
         uses: ./actions/python-setup/pixi
         with:
           environments: ${{ matrix.environment }}
           activate-environment: ${{ matrix.environment }}
-          verify-lock: "false"
           cache: "false"
 
       - name: Verify Python installation
@@ -572,18 +569,15 @@ jobs:
           python = ">=99.0"  # Impossible version
           EOF
 
-      - name: Test with invalid dependencies
-        id: invalid-deps-test
+      - name: Install pixi and try to generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+        id: invalid-lock-gen
         continue-on-error: true
-        uses: ./actions/python-setup/pixi
-        with:
-          verify-lock: "false"
-          cache: "false"
 
-      - name: Verify action failed with invalid dependencies
-        if: steps.invalid-deps-test.outcome != 'failure'
+      - name: Verify lock file generation failed
+        if: steps.invalid-lock-gen.outcome != 'failure'
         run: |
-          echo "ERROR: Action should fail with invalid dependencies"
+          echo "ERROR: Lock file generation should have failed with invalid dependencies"
           exit 1
 
       - name: Create pyproject.toml with non-existent environment
@@ -605,13 +599,15 @@ jobs:
           default = []
           EOF
 
+      - name: Install pixi and generate lock file
+        uses: ./.github/actions/setup-pixi-lock
+
       - name: Test activating non-existent environment
         id: nonexistent-env-test
         continue-on-error: true
         uses: ./actions/python-setup/pixi
         with:
           activate-environment: "nonexistent"
-          verify-lock: "false"
           cache: "false"
 
       - name: Verify action failed with non-existent environment
@@ -675,12 +671,20 @@ jobs:
           prod = ["core", "ml"]
           EOF
 
+      - name: Install pixi
+        uses: prefix-dev/setup-pixi@fef5c9568ca6c4ff7707bf840ab0692ba3f08293 # v0.9.0
+        with:
+          pixi-version: v0.49.0
+          run-install: false
+
+      - name: Generate lock file
+        run: pixi install
+
       - name: Test complex project setup
         uses: ./actions/python-setup/pixi
         with:
           environments: "default ml prod"
           activate-environment: "ml"
-          verify-lock: "false"
           cache: "false"
 
       - name: Verify ML environment
