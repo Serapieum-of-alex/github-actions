@@ -52,14 +52,14 @@ steps:
 
 **Important**: Caching requires either `pyproject.toml` or `requirements.txt` in your repository root.
 
-### With Dependency Groups
+### With Optional Dependencies (Extras)
 
 ```yaml
 steps:
   - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
     with:
-      install-groups: 'dev test'
+      install-groups: 'extras: dev test'
 ```
 
 Installs your package with `pip install .[dev,test]`.
@@ -71,7 +71,7 @@ Installs your package with `pip install .[dev,test]`.
 | `python-version` | Python version to install | No | `'3.12'` | Any valid Python version (e.g., `'3.10'`, `'3.11'`, `'3.12'`) |
 | `cache` | Enable dependency caching | No | `''` (disabled) | `''`, `'pip'`, `'pipenv'`, `'poetry'` |
 | `architecture` | Target CPU architecture | No | `'x64'` | `'x64'`, `'x86'` |
-| `install-groups` | Optional dependency groups to install | No | `''` (none) | Space or comma-separated list (e.g., `'dev'`, `'dev test'`, `'dev,test,docs'`) |
+| `install-groups` | Dependency groups and/or optional dependencies to install | No | `''` (none) | Format: `'groups: name1 name2, extras: extra1 extra2'` |
 
 ### Input Details
 
@@ -96,11 +96,20 @@ Selects CPU architecture (mainly relevant for Windows):
 - `'x86'`: 32-bit Python (legacy systems)
 
 #### `install-groups`
-Specifies optional dependency groups from `[project.optional-dependencies]` in `pyproject.toml`:
-- Accepts space-separated: `'dev test docs'`
-- Accepts comma-separated: `'dev,test,docs'`
-- Accepts mixed: `'dev, test docs'`
-- Generates command: `pip install .[dev,test,docs]`
+Specifies dependency groups from `[dependency-groups]` and/or optional dependencies from `[project.optional-dependencies]` in `pyproject.toml`.
+
+**Format**: `'groups: group1 group2, extras: extra1 extra2'`
+
+**Examples**:
+- Only dependency groups: `'groups: dev test'`
+- Only optional dependencies: `'extras: aws viz'`
+- Mixed: `'groups: dev test, extras: aws viz'`
+- Legacy format (still works): `'dev test'` (interpreted as extras for backward compatibility)
+
+**Behavior**:
+- Optional dependencies (extras) use `pip install .[extra1,extra2]`
+- Dependency groups use `pip install --dependency-groups group1,group2` (requires pip with PEP 735 support)
+- If pip doesn't support `--dependency-groups`, a warning is shown and only extras are installed
 
 If `install-groups` is empty and `pyproject.toml` exists, runs `pip install .` (installs only core dependencies).
 
@@ -205,6 +214,10 @@ dependencies = ["requests"]
 dev = ["pytest", "black", "mypy"]
 test = ["pytest-cov", "pytest-mock"]
 docs = ["mkdocs", "mkdocs-material"]
+
+[dependency-groups]
+lint = ["ruff", "flake8"]
+build = ["build", "twine"]
 ```
 
 ```yaml
@@ -212,7 +225,7 @@ docs = ["mkdocs", "mkdocs-material"]
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
   with:
     cache: 'pip'
-    install-groups: 'dev test'
+    install-groups: 'extras: dev test'
 ```
 
 **What Happens**:
@@ -335,6 +348,24 @@ Total: 20-30s
 
 ## Dependency Groups
 
+### Optional Dependencies vs Dependency Groups
+
+**Key Differences**:
+
+1. **Optional Dependencies** (`[project.optional-dependencies]`):
+   - Part of PEP 621 standard, widely supported
+   - Published with your package on PyPI
+   - Installed using `pip install package[extra]` syntax
+   - Use prefix `extras:` in this action
+
+2. **Dependency Groups** (`[dependency-groups]`):
+   - Part of PEP 735 standard (newer, limited support)
+   - Development-only, not published with package
+   - Installed using `pip install --dependency-groups group` (requires recent pip)
+   - Use prefix `groups:` in this action
+
+**Note**: If your pip version doesn't support `--dependency-groups`, the action will show a warning and suggest using the uv action instead.
+
 ### Understanding Optional Dependencies
 
 `pyproject.toml` supports optional dependency groups:
@@ -353,13 +384,13 @@ all = ["pytest", "black", "pytest-cov", "mkdocs"]  # Everything
 
 ### Installing Groups
 
-| `install-groups` Value | Command Generated | What Gets Installed |
+| `install-groups` Value | Commands Generated | What Gets Installed |
 |------------------------|-------------------|---------------------|
 | `''` (empty) | `pip install .` | Core dependencies only |
-| `'dev'` | `pip install .[dev]` | Core + dev |
-| `'dev test'` | `pip install .[dev,test]` | Core + dev + test |
-| `'dev,test,docs'` | `pip install .[dev,test,docs]` | Core + dev + test + docs |
-| `'all'` | `pip install .[all]` | Everything |
+| `'extras: dev'` | `pip install .[dev]` | Core + dev extras |
+| `'extras: dev test'` | `pip install .[dev,test]` | Core + dev + test extras |
+| `'groups: lint'` | `pip install .` then `pip install --dependency-groups lint` | Core + lint group (if supported) |
+| `'groups: lint build, extras: dev'` | `pip install .[dev]` then `pip install --dependency-groups lint,build` | Core + dev extras + lint/build groups |
 
 ### Common Patterns
 
@@ -367,7 +398,7 @@ all = ["pytest", "black", "pytest-cov", "mkdocs"]  # Everything
 ```yaml
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
   with:
-    install-groups: 'test'
+    install-groups: 'extras: test'
 - run: pytest
 ```
 
@@ -375,7 +406,7 @@ all = ["pytest", "black", "pytest-cov", "mkdocs"]  # Everything
 ```yaml
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
   with:
-    install-groups: 'dev'
+    install-groups: 'extras: dev'
 - run: black --check .
 - run: mypy src/
 ```
@@ -384,7 +415,7 @@ all = ["pytest", "black", "pytest-cov", "mkdocs"]  # Everything
 ```yaml
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
   with:
-    install-groups: 'docs'
+    install-groups: 'extras: docs'
 - run: mkdocs build
 ```
 

@@ -246,7 +246,7 @@ steps:
   - uses: actions/checkout@v5
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
     with:
-      install-groups: 'test'
+      install-groups: 'groups: test'
 
   - run: pytest --cov=src --cov-report=xml
   - run: coverage report
@@ -339,7 +339,7 @@ steps:
   - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
     with:
       python-version: ${{ matrix.python-version }}
-      install-groups: 'test'
+      install-groups: 'groups: test'
 
   - run: pytest
 ```
@@ -411,6 +411,22 @@ dependencies = ["requests"]
 
 ## Dependency Groups
 
+### Dependency Groups vs Optional Dependencies
+
+**Key Differences**:
+
+1. **Dependency Groups** (`[dependency-groups]`):
+   - Part of PEP 735 standard
+   - Development-only dependencies, not published with package
+   - Installed using `--group` flag with `uv sync`
+   - Use prefix `groups:` in this action
+
+2. **Optional Dependencies** (`[project.optional-dependencies]`):
+   - Part of PEP 621 standard, widely supported
+   - Published with your package, can be installed by end users
+   - Installed using `--extra` flag with `uv sync`
+   - Use prefix `extras:` in this action
+
 ### Understanding Dependency Groups
 
 Dependency groups in `pyproject.toml` allow organizing optional dependencies:
@@ -419,6 +435,10 @@ Dependency groups in `pyproject.toml` allow organizing optional dependencies:
 [project]
 name = "myapp"
 dependencies = ["requests"]  # Core - always installed
+
+[project.optional-dependencies]
+aws = ["boto3", "s3fs"]      # Published extras
+viz = ["matplotlib", "seaborn"]  # End-user features
 
 [dependency-groups]
 dev = ["black", "mypy"]      # Development tools
