@@ -332,8 +332,8 @@ jobs:
           uv pip list
           echo "[OK] Cache should be populated for subsequent runs"
 
-  test-uv-comma-separated-groups:
-    name: Test uv action - Comma-separated groups
+  test-uv-multiple-groups:
+    name: Test uv action - Multiple dependency groups
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -343,7 +343,7 @@ jobs:
         run: |
           cat > pyproject.toml << 'EOF'
           [project]
-          name = "test-uv-comma"
+          name = "test-uv-multiple"
           version = "0.1.0"
           requires-python = ">=3.12"
           dependencies = ["requests"]
@@ -357,7 +357,7 @@ jobs:
           pip install uv
           uv lock
 
-      - name: Test uv action with comma-separated groups
+      - name: Test uv action with multiple dependency groups
         uses: ./actions/python-setup/uv
         with:
           install-groups: 'groups: dev test docs'
@@ -365,77 +365,8 @@ jobs:
       - name: Verify all groups installed
         shell: bash
         run: |
-          python -c "import httpx; import pytest_cov; import mkdocs; print('[OK] All comma-separated groups installed')"
+          python -c "import httpx; import pytest_cov; import mkdocs; print('[OK] All multiple groups installed')"
 
-  test-uv-mixed-separators:
-    name: Test uv action - Mixed separators (space and comma)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Create test project
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-uv-mixed"
-          version = "0.1.0"
-          requires-python = ">=3.12"
-          dependencies = ["requests"]
-
-          [dependency-groups]
-          dev = ["httpx"]
-          test = ["pytest-cov"]
-          docs = ["mkdocs"]
-          EOF
-
-          pip install uv
-          uv lock
-
-      - name: Test uv action with mixed separators
-        uses: ./actions/python-setup/uv
-        with:
-          install-groups: 'groups: dev test docs'
-
-      - name: Verify all groups installed
-        shell: bash
-        run: |
-          python -c "import httpx; import pytest_cov; import mkdocs; print('[OK] All mixed-separator groups installed')"
-
-  test-uv-space-separated-groups:
-    name: Test uv action - Space-separated groups
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Create test project
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-uv-space"
-          version = "0.1.0"
-          requires-python = ">=3.12"
-          dependencies = ["requests"]
-
-          [dependency-groups]
-          dev = ["httpx"]
-          test = ["pytest-cov"]
-          docs = ["mkdocs"]
-          EOF
-
-          pip install uv
-          uv lock
-
-      - name: Test uv action with space-separated groups
-        uses: ./actions/python-setup/uv
-        with:
-          install-groups: 'groups: dev test docs'
-
-      - name: Verify all groups installed
-        shell: bash
-        run: |
-          python -c "import httpx; import pytest_cov; import mkdocs; print('[OK] All space-separated groups installed')"
 
   test-uv-no-dependency-groups-section:
     name: Test uv action - No dependency-groups section
@@ -499,6 +430,75 @@ jobs:
         shell: bash
         run: |
           python -c "import httpx; print('[OK] Dev group explicitly installed')"
+
+  test-uv-empty-sections:
+    name: Test uv action - Empty groups/extras sections
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-empty"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+
+          [project.optional-dependencies]
+          aws = ["boto3"]
+
+          [dependency-groups]
+          dev = ["httpx"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with empty groups section
+        uses: ./actions/python-setup/uv
+        with:
+          install-groups: 'groups: , extras: aws'
+
+      - name: Verify empty groups handling
+        shell: bash
+        run: |
+          uv pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import boto3; print('[OK] AWS extra installed')"
+
+  test-uv-invalid-format:
+    name: Test uv action - Invalid format handling
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-uv-invalid"
+          version = "0.1.0"
+          requires-python = ">=3.12"
+          dependencies = ["requests"]
+          EOF
+
+          pip install uv
+          uv lock
+
+      - name: Test uv action with invalid format (should show warning)
+        uses: ./actions/python-setup/uv
+        with:
+          install-groups: 'invalid format without colons'
+
+      - name: Verify warning shown and core dependencies installed
+        shell: bash
+        run: |
+          uv pip list
+          python -c "import requests; print('[OK] Core dependencies installed despite invalid format')"
 
   test-uv-optional-dependencies:
     name: Test uv action - Optional dependencies (extras)

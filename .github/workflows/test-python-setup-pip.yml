@@ -217,6 +217,67 @@ jobs:
           pip install requests
           python -c "import requests; print('[OK] Can still install packages without dependency files')"
 
+  test-pip-empty-sections:
+    name: Test pip action - Empty groups/extras sections
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-pip-empty"
+          version = "0.1.0"
+          dependencies = ["requests"]
+
+          [project.optional-dependencies]
+          aws = ["boto3"]
+
+          [dependency-groups]
+          dev = ["httpx"]
+          EOF
+
+      - name: Test pip action with empty groups section
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'groups: , extras: aws'
+
+      - name: Verify empty groups handling
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import boto3; print('[OK] AWS extra installed')"
+
+  test-pip-invalid-format:
+    name: Test pip action - Invalid format handling
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-pip-invalid"
+          version = "0.1.0"
+          dependencies = ["requests"]
+          EOF
+
+      - name: Test pip action with invalid format (should show warning)
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'invalid format without colons'
+
+      - name: Verify warning shown and core dependencies installed
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed despite invalid format')"
+
   test-pip-optional-dependencies:
     name: Test pip action - Optional dependencies (extras)
     runs-on: ubuntu-latest
