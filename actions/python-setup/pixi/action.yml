@@ -35,6 +35,19 @@ runs:
         fi
         echo "✓ Lock file exists, caching can proceed"
 
+    - name: Validate lock file verification configuration
+      if: inputs.verify-lock == 'true'
+      shell: bash
+      run: |
+        if [ ! -f "pixi.lock" ]; then
+          echo "::error::❌ Lock file verification is enabled but pixi.lock file does not exist!"
+          echo "::error::To fix this issue:"
+          echo "::error:: First run 'pixi install' locally to generate pixi.lock and then commit it to your repository"
+          echo "::error::Lock file verification ensures that your pixi.lock is in sync with pyproject.toml."
+          exit 1
+        fi
+        echo "✓ Lock file exists, verification can proceed"
+
     - name: Setup pixi (with cache)
       if: inputs.cache == 'true'
       uses: prefix-dev/setup-pixi@fef5c9568ca6c4ff7707bf840ab0692ba3f08293 # v0.9.0
