@@ -10,14 +10,14 @@ inputs:
     description: 'Environment to activate after installation'
     required: false
     default: 'default'
-  verify-lock:
-    description: 'Whether to verify the lock file is up to date'
-    required: false
-    default: 'true'
   cache:
     description: 'Whether to enable caching of pixi environments'
     required: false
     default: 'false'
+  verify-lock:
+    description: 'Whether to verify the lock file is up to date'
+    required: false
+    default: 'true'
 
 runs:
   using: 'composite'
