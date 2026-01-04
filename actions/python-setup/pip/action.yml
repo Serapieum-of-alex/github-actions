@@ -103,6 +103,23 @@ runs:
               echo "::warning::No 'groups:' or 'extras:' sections found. Please use format: 'groups: name1 name2, extras: extra1 extra2'"
             fi
 
+            # Summary of what will be installed
+            echo ""
+            echo "=== Installation Summary ==="
+            if [ ${#dependency_groups[@]} -gt 0 ]; then
+              echo "✓ Dependency groups will be installed: ${dependency_groups[*]}"
+            else
+              echo "✗ No dependency groups specified"
+            fi
+            if [ ${#optional_deps[@]} -gt 0 ]; then
+              echo "✓ Optional dependencies (extras) will be installed: ${optional_deps[*]}"
+            else
+              echo "✗ No optional dependencies specified"
+            fi
+            echo "✓ Core dependencies will always be installed"
+            echo "=========================="
+            echo ""
+
             # Install the package first
             if [ ${#optional_deps[@]} -gt 0 ]; then
               # Build comma-separated list of optional dependencies for pip install .[extras]

@@ -45,9 +45,11 @@ runs:
         # Start with frozen flag
         args=("--frozen")
 
-        # Initialize flags for tracking what we're installing
+        # Initialize flags and arrays for tracking what we're installing
         has_groups=false
         has_extras=false
+        installed_groups=()
+        installed_extras=()
 
         # Check if install-groups is provided
         if [[ -n "${{ inputs.install-groups }}" ]]; then
@@ -67,6 +69,7 @@ runs:
                 if [[ -n "$group" ]]; then
                   args+=("--group" "$group")
                   has_groups=true
+                  installed_groups+=("$group")
                   echo "  - Adding dependency group: $group"
                 fi
               done
@@ -85,6 +88,7 @@ runs:
                 if [[ -n "$extra" ]]; then
                   args+=("--extra" "$extra")
                   has_extras=true
+                  installed_extras+=("$extra")
                   echo "  - Adding optional dependency (extra): $extra"
                 fi
               done
@@ -95,6 +99,23 @@ runs:
           if [[ "$has_groups" == false && "$has_extras" == false ]]; then
             echo "::warning::No 'groups:' or 'extras:' sections found. Please use format: 'groups: name1 name2, extras: extra1 extra2'"
           fi
+
+          # Summary of what will be installed
+          echo ""
+          echo "=== Installation Summary ==="
+          if [[ "$has_groups" == true ]]; then
+            echo "✓ Dependency groups will be installed: ${installed_groups[*]}"
+          else
+            echo "✗ No dependency groups specified"
+          fi
+          if [[ "$has_extras" == true ]]; then
+            echo "✓ Optional dependencies (extras) will be installed: ${installed_extras[*]}"
+          else
+            echo "✗ No optional dependencies specified"
+          fi
+          echo "✓ Core dependencies will always be installed"
+          echo "=========================="
+          echo ""
 
           # Add --no-default-groups when we have explicit groups or only extras
           # This ensures we only install what was explicitly requested
