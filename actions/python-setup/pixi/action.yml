@@ -22,15 +22,25 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Setup pixi
+    - name: Setup pixi (with cache)
+      if: inputs.cache == 'true'
       uses: prefix-dev/setup-pixi@fef5c9568ca6c4ff7707bf840ab0692ba3f08293 # v0.9.0
       with:
         environments: ${{ inputs.environments }}
         activate-environment: ${{ inputs.activate-environment }}
         pixi-version: v0.49.0
-        cache: ${{ inputs.cache == 'true' }}
+        cache: true
         cache-key: pixi-${{ hashFiles('pixi.lock') }}
         cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+
+    - name: Setup pixi (without cache)
+      if: inputs.cache != 'true'
+      uses: prefix-dev/setup-pixi@fef5c9568ca6c4ff7707bf840ab0692ba3f08293 # v0.9.0
+      with:
+        environments: ${{ inputs.environments }}
+        activate-environment: ${{ inputs.activate-environment }}
+        pixi-version: v0.49.0
+        cache: false
 
     - name: Verify lock file is up to date
       if: inputs.verify-lock == 'true'
