@@ -7,7 +7,7 @@ inputs:
     required: false
     default: '3.12'
   install-groups:
-    description: 'Format: "groups: dev test, extras: aws viz" or "groups: dev" or "extras: aws viz". Leave empty to install only core dependencies.'
+    description: 'examples: "groups: dev test, extras: aws viz" or "groups: dev" or "extras: aws viz". Leave empty to install only core dependencies.'
     required: false
     default: ''
   verify-lock:
