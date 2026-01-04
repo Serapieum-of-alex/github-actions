@@ -1,0 +1,5 @@
+[project]
+name = "test-pip-only-dependencies"
+version = "0.1.0"
+dependencies = ["requests", "click", "httpx"]
+

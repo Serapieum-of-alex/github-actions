@@ -1,0 +1,8 @@
+[project]
+name = "test-pip-single-group"
+version = "0.1.0"
+dependencies = ["requests"]
+
+[dependency-groups]
+dev = ["pytest", "black", "ruff"]
+

@@ -1,0 +1,8 @@
+[project]
+name = "test-pip-empty-extras"
+version = "0.1.0"
+dependencies = ["requests"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+

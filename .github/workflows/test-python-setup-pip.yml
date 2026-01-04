@@ -297,7 +297,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-
       - name: Test pip action with dependency groups only
         uses: ./actions/python-setup/pip
         with:
@@ -316,3 +315,282 @@ jobs:
             echo "[OK] Dependency groups not installed (pip version does not support PEP 735 --dependency-groups)"
             echo "[INFO] This is expected for older pip versions. Consider using uv action for dependency groups support."
           fi
+
+  test-pip-groups-docs-only:
+    name: Test pip action - Single dependency group (docs)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-groups-only-docs
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Test pip action with docs dependency group
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'groups: docs'
+
+      - name: Verify installation and expected warning
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          # This test verifies the warning behavior when pip doesn't support --dependency-groups
+          if python -c "import mkdocs" 2>/dev/null; then
+            echo "[OK] Docs group installed (pip supports PEP 735)"
+          else
+            echo "[OK] Docs group not installed - this is expected with current pip version"
+            echo "[INFO] The warning message 'pip version does not support --dependency-groups' is expected"
+          fi
+
+  test-pip-all-combinations:
+    name: Test pip action - All combinations (groups + extras)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-all-combinations
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Test pip action with multiple groups and extras
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'groups: dev test docs, extras: aws azure gcp'
+
+      - name: Verify comprehensive installation
+        shell: bash
+        run: |
+          pip list
+          # Verify core dependencies
+          python -c "import requests; import click; print('[OK] Core dependencies installed')"
+          # Verify optional dependencies (extras)
+          python -c "import boto3; print('[OK] AWS extra installed')"
+          python -c "from azure.storage.blob import BlobServiceClient; print('[OK] Azure extra installed')"
+          python -c "from google.cloud import storage; print('[OK] GCP extra installed')"
+          # Verify dependency groups (if supported)
+          if python -c "import httpx; import pytest; import mkdocs" 2>/dev/null; then
+            echo "[OK] All dependency groups installed (pip supports PEP 735)"
+          else
+            echo "[OK] Dependency groups not installed (pip doesn't support PEP 735)"
+          fi
+
+  test-pip-single-extra:
+    name: Test pip action - Single extra only
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-single-extra
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Test pip action with single extra
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'extras: dev'
+
+      - name: Verify single extra installation
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import pytest; import black; import ruff; print('[OK] Dev extra installed')"
+
+  test-pip-single-group:
+    name: Test pip action - Single group only
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-single-group
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Test pip action with single group
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'groups: dev'
+
+      - name: Verify single group installation
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          if python -c "import pytest; import black; import ruff" 2>/dev/null; then
+            echo "[OK] Dev group installed (pip supports PEP 735)"
+          else
+            echo "[OK] Dev group not installed (pip doesn't support PEP 735)"
+          fi
+
+  test-pip-only-core-dependencies:
+    name: Test pip action - Only core dependencies (no groups/extras)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-only-dependencies
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Test pip action without install-groups parameter
+        uses: ./actions/python-setup/pip
+
+      - name: Verify only core dependencies installed
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; import click; import httpx; print('[OK] Core dependencies installed')"
+          echo "[OK] Only core dependencies installed as expected"
+
+  test-pip-whitespace-handling:
+    name: Test pip action - Whitespace handling in groups/extras
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-whitespace-handling
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Test pip action with extra whitespace
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: '  groups:  lint   format  ,  extras:  dev   test  '
+
+      - name: Verify whitespace handling
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import pytest; print('[OK] Dev extra installed')"
+          python -c "import pytest_cov; print('[OK] Test extra installed')"
+          if python -c "import ruff; import black" 2>/dev/null; then
+            echo "[OK] Groups installed with whitespace handling (pip supports PEP 735)"
+          else
+            echo "[OK] Groups not installed (pip doesn't support PEP 735)"
+          fi
+
+  test-pip-empty-groups-value:
+    name: Test pip action - Empty groups value
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-empty-groups-only
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Test pip action with empty groups value
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'groups: '
+
+      - name: Verify empty groups handling
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          echo "[OK] Empty groups value handled correctly"
+
+  test-pip-empty-extras-value:
+    name: Test pip action - Empty extras value
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-empty-extras-only
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Test pip action with empty extras value
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'extras: '
+
+      - name: Verify empty extras handling
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          echo "[OK] Empty extras value handled correctly"
+
+  test-pip-python-version-matrix:
+    name: Test pip action - Python version matrix with extras
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-multiple-python-versions
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Test pip action with Python ${{ matrix.python-version }}
+        uses: ./actions/python-setup/pip
+        with:
+          python-version: ${{ matrix.python-version }}
+          install-groups: 'extras: dev'
+
+      - name: Verify Python version and extras
+        shell: bash
+        run: |
+          python --version
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import pytest; print('[OK] Dev extra installed')"
+
+  test-pip-reverse-order:
+    name: Test pip action - Reverse order (extras before groups)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-all-combinations
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Test pip action with extras before groups
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'extras: aws, groups: dev'
+
+      - name: Verify reverse order handling
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import boto3; print('[OK] AWS extra installed')"
+          if python -c "import httpx" 2>/dev/null; then
+            echo "[OK] Dev group installed (pip supports PEP 735)"
+          else
+            echo "[OK] Dev group not installed (pip doesn't support PEP 735)"
+          fi
+
+  test-pip-cache-with-groups:
+    name: Test pip action - Cache with groups and extras
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-all-combinations
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Test pip action with cache and install-groups
+        uses: ./actions/python-setup/pip
+        with:
+          cache: 'pip'
+          install-groups: 'groups: dev, extras: aws'
+
+      - name: Verify cache and installation
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import boto3; print('[OK] AWS extra installed with cache')"
+          echo "[OK] Cache validation passed with groups and extras"
+

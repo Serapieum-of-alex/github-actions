@@ -1,0 +1,8 @@
+[project]
+name = "test-pip-single-extra"
+version = "0.1.0"
+dependencies = ["requests"]
+
+[project.optional-dependencies]
+dev = ["pytest", "black", "ruff"]
+
