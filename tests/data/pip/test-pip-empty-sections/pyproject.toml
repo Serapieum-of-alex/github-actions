@@ -1,0 +1,11 @@
+[project]
+name = "test-pip-empty"
+version = "0.1.0"
+dependencies = ["requests"]
+
+[project.optional-dependencies]
+aws = ["boto3"]
+
+[dependency-groups]
+dev = ["httpx"]
+

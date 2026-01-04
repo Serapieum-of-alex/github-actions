@@ -23,23 +23,12 @@ jobs:
   test-pip-with-groups:
     name: Test pip action - With optional dependencies
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-with-groups
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      - name: Create test pyproject.toml
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-project"
-          version = "0.1.0"
-          dependencies = ["requests"]
-
-          [project.optional-dependencies]
-          dev = ["pytest", "black"]
-          test = ["pytest-cov"]
-          docs = ["mkdocs"]
-          EOF
 
       - name: Test pip action with optional dependencies (extras)
         uses: ./actions/python-setup/pip
@@ -58,6 +47,9 @@ jobs:
   test-pip-matrix:
     name: Test pip action - Matrix
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-matrix
     strategy:
       fail-fast: false
       matrix:
@@ -67,15 +59,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      - name: Create minimal pyproject.toml
-        shell: bash
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-matrix"
-          version = "0.1.0"
-          EOF
 
       - name: Test pip action with Python ${{ matrix.python-version }}
         uses: ./actions/python-setup/pip
@@ -97,18 +80,12 @@ jobs:
   test-pip-cache:
     name: Test pip action - Cache validation
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-cache
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      - name: Create test pyproject.toml
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-cache"
-          version = "0.1.0"
-          dependencies = ["requests", "numpy"]
-          EOF
 
       - name: First run - populate cache
         uses: ./actions/python-setup/pip
@@ -123,6 +100,9 @@ jobs:
   test-pip-architecture:
     name: Test pip action - Architecture
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-architecture
     strategy:
       matrix:
         architecture: [x64, x86]
@@ -130,15 +110,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      - name: Create minimal pyproject.toml
-        shell: bash
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-architecture"
-          version = "0.1.0"
-          EOF
 
       - name: Test pip action with ${{ matrix.architecture }}
         uses: ./actions/python-setup/pip
@@ -176,16 +147,12 @@ jobs:
   test-pip-cache-with-requirements:
     name: Test pip action - Cache with requirements.txt
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-cache-with-requirements
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      - name: Create requirements.txt
-        run: |
-          cat > requirements.txt << 'EOF'
-          requests==2.31.0
-          numpy==1.26.0
-          EOF
 
       - name: Test pip action with cache and requirements.txt
         uses: ./actions/python-setup/pip
@@ -220,24 +187,12 @@ jobs:
   test-pip-empty-sections:
     name: Test pip action - Empty groups/extras sections
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-empty-sections
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      - name: Create test project
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-pip-empty"
-          version = "0.1.0"
-          dependencies = ["requests"]
-
-          [project.optional-dependencies]
-          aws = ["boto3"]
-
-          [dependency-groups]
-          dev = ["httpx"]
-          EOF
 
       - name: Test pip action with empty groups section
         uses: ./actions/python-setup/pip
@@ -254,18 +209,12 @@ jobs:
   test-pip-invalid-format:
     name: Test pip action - Invalid format handling
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-invalid-format
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      - name: Create test project
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-pip-invalid"
-          version = "0.1.0"
-          dependencies = ["requests"]
-          EOF
 
       - name: Test pip action with invalid format (should show warning)
         uses: ./actions/python-setup/pip
@@ -281,26 +230,12 @@ jobs:
   test-pip-optional-dependencies:
     name: Test pip action - Optional dependencies (extras)
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-optional-dependencies
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      - name: Create test project with optional dependencies
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-pip-extras"
-          version = "0.1.0"
-          dependencies = ["requests"]
-
-          [project.optional-dependencies]
-          aws = ["boto3"]
-          viz = ["matplotlib"]
-
-          [dependency-groups]
-          dev = ["httpx"]
-          test = ["pytest"]
-          EOF
 
       - name: Test pip action with optional dependencies only
         uses: ./actions/python-setup/pip
@@ -326,24 +261,12 @@ jobs:
   test-pip-mixed-groups-and-extras:
     name: Test pip action - Mixed groups and extras
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-mixed-groups-and-extras
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      - name: Create test project
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-pip-mixed"
-          version = "0.1.0"
-          dependencies = ["requests"]
-
-          [project.optional-dependencies]
-          aws = ["boto3"]
-
-          [dependency-groups]
-          dev = ["httpx"]
-          EOF
 
       - name: Test pip action with mixed groups and extras
         uses: ./actions/python-setup/pip
@@ -367,22 +290,13 @@ jobs:
   test-pip-dependency-groups-only:
     name: Test pip action - Dependency groups only
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/data/pip/test-pip-dependency-groups-only
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Create test project with dependency groups
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-pip-dep-groups"
-          version = "0.1.0"
-          dependencies = ["requests"]
-
-          [dependency-groups]
-          dev = ["httpx"]
-          test = ["pytest"]
-          EOF
 
       - name: Test pip action with dependency groups only
         uses: ./actions/python-setup/pip
