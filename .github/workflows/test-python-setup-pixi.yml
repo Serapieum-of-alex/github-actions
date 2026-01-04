@@ -1,4 +1,4 @@
-name: Test Python Setup with pixi
+name: Test python-setup/pixi
 
 on:
   push:
