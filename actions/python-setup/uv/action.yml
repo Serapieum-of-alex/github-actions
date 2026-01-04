@@ -3,11 +3,15 @@ description: 'Setup Python environment with uv package manager and install depen
 
 inputs:
   python-version:
-    description: 'Python version to install'
+    description: 'Python version to install, default is 3.12'
     required: false
     default: '3.12'
+  cache:
+    description: 'Enable caching of uv dependencies. Set to "false" to disable caching. default is "true"'
+    required: false
+    default: 'true'
   install-groups:
-    description: 'examples: "groups: dev test, extras: aws viz" or "groups: dev" or "extras: aws viz". Leave empty to install only core dependencies.'
+    description: 'examples: "groups: dev test, extras: aws viz" or "groups: dev" or "extras: aws viz". Leave empty to install only core dependencies. default is empty'
     required: false
     default: ''
   verify-lock:
@@ -26,7 +30,7 @@ runs:
     - name: Install uv
       uses: astral-sh/setup-uv@v4
       with:
-        enable-cache: true
+        enable-cache: ${{ inputs.cache == 'true' }}
         cache-dependency-glob: uv.lock
 
     - name: Verify lock file is up to date
