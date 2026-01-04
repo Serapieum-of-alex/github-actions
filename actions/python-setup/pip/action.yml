@@ -3,15 +3,15 @@ description: 'Setup Python environment with pip package manager for pyproject.to
 
 inputs:
   python-version:
-    description: 'Python version to install'
+    description: 'Python version to install, default is 3.12'
     required: false
     default: '3.12'
   cache:
-    description: 'Cache packages dependencies (pip, pipenv, poetry)'
+    description: 'Cache packages dependencies (pip, pipenv, poetry), if empty no caching is performed'
     required: false
     default: ''
   architecture:
-    description: 'Target architecture for Python to use (x64, x86)'
+    description: 'Target architecture for Python to use (x64, x86), default is x64'
     required: false
     default: 'x64'
   install-groups:
