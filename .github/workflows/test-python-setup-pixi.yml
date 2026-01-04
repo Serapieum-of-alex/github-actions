@@ -16,10 +16,10 @@ jobs:
           cp tests/data/pixi/test-pixi-basic/pixi.lock .
 
       - name: Test pixi setup with defaults
+        id: setup
         uses: ./actions/python-setup/pixi
         with:
           cache: "false"
-        id: setup
 
       - name: Verify installation
         run: |
@@ -239,27 +239,10 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Create test pyproject.toml
+      - name: Copy test fixture files
         run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "cache-test"
-          version = "0.1.0"
-          dependencies = []
-
-          [tool.pixi.workspace]
-          channels = ["conda-forge"]
-          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
-
-          [tool.pixi.dependencies]
-          python = ">=3.11"
-          numpy = ">=1.26"
-          scipy = ">=1.11"
-          matplotlib = ">=3.8"
-          EOF
-
-      - name: Install pixi and generate lock file
-        uses: ./.github/actions/setup-pixi-lock
+          cp tests/data/pixi/test-pixi-caching-retrieve/pyproject.toml .
+          cp tests/data/pixi/test-pixi-caching-retrieve/pixi.lock .
 
       - name: Run with cache - should retrieve from cache
         id: second-run
@@ -345,67 +328,46 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Test without pyproject.toml
-        id: no-toml-test
+      - name: Test without lock file (should fail with validation error)
+        id: no-lock-test
+        continue-on-error: true
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          EOF
+
+          # This should fail in the composite action before trying to use pixi
+          cd ${{ github.workspace }}
+
+      - name: Try action without lock file
+        if: always()
+        id: action-without-lock
         continue-on-error: true
         uses: ./actions/python-setup/pixi
         with:
           verify-lock: "false"
           cache: "false"
 
-      - name: Verify action failed without pyproject.toml
-        if: steps.no-toml-test.outcome != 'failure'
+      - name: Verify action failed without lock file
+        if: steps.action-without-lock.outcome != 'failure'
         run: |
-          echo "ERROR: Action should fail without pyproject.toml"
+          echo "ERROR: Action should fail without lock file"
           exit 1
 
-      - name: Create invalid pyproject.toml
+      - name: Copy fixture for non-existent environment test
         run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "invalid-test"
-          version = "0.1.0"
-          dependencies = []
-
-          [tool.pixi.workspace]
-          channels = ["conda-forge"]
-          
-          [tool.pixi.dependencies]
-          python = ">=99.0"  # Impossible version
-          EOF
-
-      - name: Install pixi and try to generate lock file
-        uses: ./.github/actions/setup-pixi-lock
-        id: invalid-lock-gen
-        continue-on-error: true
-
-      - name: Verify lock file generation failed
-        if: steps.invalid-lock-gen.outcome != 'failure'
-        run: |
-          echo "ERROR: Lock file generation should have failed with invalid dependencies"
-          exit 1
-
-      - name: Create pyproject.toml with non-existent environment
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "env-test"
-          version = "0.1.0"
-          dependencies = []
-
-          [tool.pixi.workspace]
-          channels = ["conda-forge"]
-          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
-
-          [tool.pixi.dependencies]
-          python = ">=3.11"
-
-          [tool.pixi.environments]
-          default = []
-          EOF
-
-      - name: Install pixi and generate lock file
-        uses: ./.github/actions/setup-pixi-lock
+          cp tests/data/pixi/test-pixi-basic/pyproject.toml .
+          cp tests/data/pixi/test-pixi-basic/pixi.lock .
 
       - name: Test activating non-existent environment
         id: nonexistent-env-test
@@ -413,6 +375,7 @@ jobs:
         uses: ./actions/python-setup/pixi
         with:
           activate-environment: "nonexistent"
+          verify-lock: "false"
           cache: "false"
 
       - name: Verify action failed with non-existent environment
@@ -427,63 +390,10 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Create complex pyproject.toml
+      - name: Copy test fixture files
         run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "complex-project"
-          version = "0.1.0"
-          description = "A complex project with multiple features"
-          dependencies = []
-
-          [tool.pixi.workspace]
-          channels = ["conda-forge", "pytorch"]
-          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
-
-          [tool.pixi.tasks]
-          test = "pytest tests/"
-          lint = "ruff check ."
-          format = "black ."
-
-          [tool.pixi.dependencies]
-          python = ">=3.11,<3.13"
-
-          [tool.pixi.feature.core.dependencies]
-          numpy = ">=1.26"
-          pandas = ">=2.0"
-          scipy = ">=1.11"
-
-          [tool.pixi.feature.ml.dependencies]
-          scikit-learn = ">=1.3"
-          xgboost = ">=2.0"
-          pytorch = ">=2.0"
-
-          [tool.pixi.feature.viz.dependencies]
-          matplotlib = ">=3.8"
-          seaborn = ">=0.13"
-          plotly = ">=5.18"
-
-          [tool.pixi.feature.dev.dependencies]
-          pytest = ">=7.0"
-          pytest-cov = ">=4.0"
-          black = ">=23.0"
-          ruff = ">=0.1"
-          mypy = ">=1.0"
-
-          [tool.pixi.environments]
-          default = ["core", "dev"]
-          ml = ["core", "ml", "viz", "dev"]
-          prod = ["core", "ml"]
-          EOF
-
-      - name: Install pixi
-        uses: prefix-dev/setup-pixi@fef5c9568ca6c4ff7707bf840ab0692ba3f08293 # v0.9.0
-        with:
-          pixi-version: v0.49.0
-          run-install: false
-
-      - name: Generate lock file
-        run: pixi install
+          cp tests/data/pixi/test-pixi-complex-project/pyproject.toml .
+          cp tests/data/pixi/test-pixi-complex-project/pixi.lock .
 
       - name: Test complex project setup
         uses: ./actions/python-setup/pixi
