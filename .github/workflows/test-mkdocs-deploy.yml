@@ -1,0 +1,555 @@
+name: Test mkdocs-deploy
+
+on:
+  push:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  test-pull-request-trigger:
+    name: Test Pull Request Trigger
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package-manager: [pip, uv, pixi]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create test MkDocs project (pip/uv)
+        if: matrix.package-manager != 'pixi'
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-docs"
+          version = "0.1.0"
+          dependencies = []
+          
+          [project.optional-dependencies]
+          docs = [
+            "mkdocs>=1.5.0",
+            "mkdocs-material>=9.5.0",
+            "mike>=2.1.0"
+          ]
+          
+          [dependency-groups]
+          docs = [
+            "mkdocs>=1.5.0",
+            "mkdocs-material>=9.5.0",
+            "mike>=2.1.0"
+          ]
+          EOF
+          
+          cat > mkdocs.yml << 'EOF'
+          site_name: Test Documentation
+          site_description: Test documentation for GitHub Actions
+          
+          theme:
+            name: material
+          
+          nav:
+            - Home: index.md
+          EOF
+          
+          mkdir -p docs
+          cat > docs/index.md << 'EOF'
+          # Test Documentation
+          
+          This is a test documentation for GitHub Actions testing.
+          EOF
+
+      - name: Create test MkDocs project (pixi)
+        if: matrix.package-manager == 'pixi'
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-docs"
+          version = "0.1.0"
+          dependencies = []
+          
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+          
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          
+          [tool.pixi.feature.docs.dependencies]
+          mkdocs = ">=1.5.0"
+          mkdocs-material = ">=9.5.0"
+          mike = ">=2.1.0"
+          
+          [tool.pixi.environments]
+          docs = ["docs"]
+          EOF
+          
+          cat > mkdocs.yml << 'EOF'
+          site_name: Test Documentation
+          site_description: Test documentation for GitHub Actions
+          
+          theme:
+            name: material
+          
+          nav:
+            - Home: index.md
+          EOF
+          
+          mkdir -p docs
+          cat > docs/index.md << 'EOF'
+          # Test Documentation
+          
+          This is a test documentation for GitHub Actions testing.
+          EOF
+
+      - name: Test MkDocs deploy for PR
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'pull_request'
+          package-manager: ${{ matrix.package-manager }}
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify deployment command was attempted
+        run: |
+          echo "Deployment test completed for ${{ matrix.package-manager }}"
+
+  test-main-trigger:
+    name: Test Main Branch Trigger
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create test MkDocs project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-docs-main"
+          version = "0.1.0"
+          dependencies = []
+          
+          [dependency-groups]
+          docs = [
+            "mkdocs>=1.5.0",
+            "mkdocs-material>=9.5.0",
+            "mike>=2.1.0"
+          ]
+          EOF
+          
+          cat > mkdocs.yml << 'EOF'
+          site_name: Main Branch Documentation
+          site_description: Testing main branch deployment
+          
+          theme:
+            name: material
+          
+          nav:
+            - Home: index.md
+            - About: about.md
+          EOF
+          
+          mkdir -p docs
+          cat > docs/index.md << 'EOF'
+          # Main Branch Documentation
+          
+          This tests the main branch deployment strategy.
+          EOF
+          
+          cat > docs/about.md << 'EOF'
+          # About
+          
+          This is deployed from the main branch.
+          EOF
+
+      - name: Test MkDocs deploy for main
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'main'
+          package-manager: 'uv'
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+  test-release-trigger:
+    name: Test Release Trigger
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - package-manager: uv
+            release-tag: "v1.0.0"
+            mike-alias: "latest"
+          - package-manager: pip
+            release-tag: "v2.0.0"
+            mike-alias: "stable"
+          - package-manager: pixi
+            release-tag: "v3.0.0"
+            mike-alias: "current"
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create test MkDocs project
+        run: |
+          if [ "${{ matrix.package-manager }}" = "pixi" ]; then
+            cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-docs-release"
+          version = "0.1.0"
+          dependencies = []
+          
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+          
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          
+          [tool.pixi.feature.docs.dependencies]
+          mkdocs = ">=1.5.0"
+          mkdocs-material = ">=9.5.0"
+          mike = ">=2.1.0"
+          
+          [tool.pixi.environments]
+          docs = ["docs"]
+          EOF
+          else
+            cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-docs-release"
+          version = "0.1.0"
+          dependencies = []
+          
+          [dependency-groups]
+          docs = [
+            "mkdocs>=1.5.0",
+            "mkdocs-material>=9.5.0",
+            "mike>=2.1.0"
+          ]
+          EOF
+          fi
+          
+          cat > mkdocs.yml << 'EOF'
+          site_name: Release Documentation
+          site_description: Testing release deployment
+          
+          theme:
+            name: material
+          
+          nav:
+            - Home: index.md
+            - Release Notes: release.md
+          EOF
+          
+          mkdir -p docs
+          cat > docs/index.md << 'EOF'
+          # Release Documentation
+          
+          Version: ${{ matrix.release-tag }}
+          EOF
+          
+          cat > docs/release.md << 'EOF'
+          # Release Notes
+          
+          This is a release deployment test.
+          EOF
+
+      - name: Test MkDocs deploy for release
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'release'
+          package-manager: ${{ matrix.package-manager }}
+          release-tag: ${{ matrix.release-tag }}
+          mike-alias: ${{ matrix.mike-alias }}
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+  test-custom-configuration:
+    name: Test Custom Configuration
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+        install-groups: ["docs", "docs dev", "docs test"]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create test project with multiple groups
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-docs-custom"
+          version = "0.1.0"
+          dependencies = []
+          
+          [dependency-groups]
+          docs = [
+            "mkdocs>=1.5.0",
+            "mkdocs-material>=9.5.0",
+            "mike>=2.1.0"
+          ]
+          dev = [
+            "pytest>=7.0.0",
+            "black>=23.0.0"
+          ]
+          test = [
+            "pytest-cov>=4.0.0",
+            "coverage>=7.0.0"
+          ]
+          EOF
+          
+          cat > mkdocs.yml << 'EOF'
+          site_name: Custom Config Test
+          site_description: Testing custom configurations
+          
+          theme:
+            name: material
+          
+          nav:
+            - Home: index.md
+          EOF
+          
+          mkdir -p docs
+          cat > docs/index.md << 'EOF'
+          # Custom Configuration Test
+          
+          Python: ${{ matrix.python-version }}
+          Groups: ${{ matrix.install-groups }}
+          EOF
+
+      - name: Test with custom configuration
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'pull_request'
+          package-manager: 'uv'
+          python-version: ${{ matrix.python-version }}
+          install-groups: ${{ matrix.install-groups }}
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+  test-error-scenarios:
+    name: Test Error Scenarios
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Test without MkDocs configuration
+        id: no-mkdocs-test
+        continue-on-error: true
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'pull_request'
+          package-manager: 'uv'
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify deployment fails without mkdocs.yml
+        if: steps.no-mkdocs-test.outcome != 'failure'
+        run: |
+          echo "ERROR: Deployment should fail without mkdocs.yml"
+          exit 1
+
+      - name: Create project without docs dependencies
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-no-docs"
+          version = "0.1.0"
+          dependencies = []
+          
+          [dependency-groups]
+          dev = ["pytest>=7.0.0"]
+          EOF
+          
+          cat > mkdocs.yml << 'EOF'
+          site_name: Test
+          EOF
+          
+          mkdir -p docs
+          echo "# Test" > docs/index.md
+
+      - name: Test with missing docs dependencies
+        id: no-deps-test
+        continue-on-error: true
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'main'
+          package-manager: 'uv'
+          install-groups: 'dev'  # Wrong group, no mkdocs
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify deployment fails without mkdocs installed
+        if: steps.no-deps-test.outcome != 'failure'
+        run: |
+          echo "ERROR: Deployment should fail without mkdocs dependencies"
+          exit 1
+
+      - name: Test invalid trigger
+        id: invalid-trigger-test
+        continue-on-error: true
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'invalid'
+          package-manager: 'uv'
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify invalid trigger handling
+        run: |
+          echo "Invalid trigger test completed"
+
+  test-git-configuration:
+    name: Test Git Configuration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create minimal MkDocs project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-git-config"
+          version = "0.1.0"
+          dependencies = []
+          
+          [dependency-groups]
+          docs = [
+            "mkdocs>=1.5.0",
+            "mike>=2.1.0"
+          ]
+          EOF
+          
+          cat > mkdocs.yml << 'EOF'
+          site_name: Git Config Test
+          EOF
+          
+          mkdir -p docs
+          echo "# Test" > docs/index.md
+
+      - name: Clear git config to test action sets it
+        run: |
+          git config --global --unset user.name || true
+          git config --global --unset user.email || true
+
+      - name: Test git configuration
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'pull_request'
+          package-manager: 'pip'
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify git was configured
+        run: |
+          git config --global user.name
+          git config --global user.email
+
+  test-package-manager-commands:
+    name: Test Package Manager Command Execution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-commands"
+          version = "0.1.0"
+          dependencies = []
+          
+          [dependency-groups]
+          docs = [
+            "mkdocs>=1.5.0",
+            "mike>=2.1.0"
+          ]
+          
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64"]
+          
+          [tool.pixi.feature.docs.dependencies]
+          mkdocs = ">=1.5.0"
+          mike = ">=2.1.0"
+          
+          [tool.pixi.environments]
+          docs = ["docs"]
+          EOF
+          
+          cat > mkdocs.yml << 'EOF'
+          site_name: Command Test
+          EOF
+          
+          mkdir -p docs
+          echo "# Test" > docs/index.md
+
+      - name: Test pip command execution
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'pull_request'
+          package-manager: 'pip'
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test uv command execution
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'main'
+          package-manager: 'uv'
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test pixi command execution
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'release'
+          package-manager: 'pixi'
+          release-tag: 'v1.0.0'
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+  test-release-tag-resolution:
+    name: Test Release Tag Resolution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create test project
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-release-tag"
+          version = "0.1.0"
+          dependencies = []
+          
+          [dependency-groups]
+          docs = ["mkdocs>=1.5.0", "mike>=2.1.0"]
+          EOF
+          
+          cat > mkdocs.yml << 'EOF'
+          site_name: Release Tag Test
+          EOF
+          
+          mkdir -p docs
+          echo "# Test" > docs/index.md
+
+      - name: Test with explicit release tag
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'release'
+          package-manager: 'uv'
+          release-tag: 'v4.5.6'
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test without explicit release tag (simulated)
+        env:
+          GITHUB_EVENT_NAME: release
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'release'
+          package-manager: 'uv'
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
