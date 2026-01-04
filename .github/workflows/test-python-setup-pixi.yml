@@ -426,12 +426,18 @@ jobs:
           matplotlib = ">=3.8"
           EOF
 
+      - name: Generate lock file first (without cache)
+        uses: ./actions/python-setup/pixi
+        with:
+          cache: "false"
+          verify-lock: "false"
+
       - name: Second run - should use cache
+        id: second-run
         uses: ./actions/python-setup/pixi
         with:
           cache: "true"
           verify-lock: "false"
-        id: second-run
 
       - name: Verify packages are available from cache
         run: |
