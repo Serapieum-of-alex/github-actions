@@ -44,7 +44,8 @@ runs:
         cache: true
         cache-key: pixi-${{ hashFiles('pixi.lock') }}
         cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
-        frozen: true
+        locked: ${{ inputs.verify-lock == 'true' }}
+        frozen: ${{ inputs.verify-lock != 'true' }}
 
     - name: Setup pixi (without cache)
       if: inputs.cache != 'true'
@@ -54,24 +55,8 @@ runs:
         activate-environment: ${{ inputs.activate-environment }}
         pixi-version: v0.49.0
         cache: false
-        frozen: true
-
-
-    - name: Verify lock file is up to date
-      if: inputs.verify-lock == 'true'
-      shell: bash
-      run: |
-        echo "::group::Verifying pixi.lock file is up to date"
-        output=$(pixi lock 2>&1)
-          echo "$output"
-          if echo "$output" | grep -q "Lock-file was already up-to-date"; then
-            echo "✓ Lock file is up-to-date"
-          else
-            echo "✗ Lock file was out of sync and has been updated"
-            echo "Please run 'pixi lock' locally and commit the changes"
-            exit 1
-          fi
-        echo "::endgroup::"
+        locked: ${{ inputs.verify-lock == 'true' }}
+        frozen: ${{ inputs.verify-lock != 'true' }}
 
     - name: List environment info
       shell: bash
