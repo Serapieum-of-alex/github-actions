@@ -35,6 +35,9 @@ jobs:
 
       - name: Test pixi setup with defaults
         uses: ./actions/python-setup/pixi
+        with:
+          verify-lock: "false"
+          cache: "false"
         id: setup
 
       - name: Verify installation
@@ -77,7 +80,9 @@ jobs:
 
       - name: Test pixi action with defaults (should use default environment)
         uses: ./actions/python-setup/pixi
-        # No inputs provided - should use defaults
+        with:
+          verify-lock: "false"
+          cache: "false"
 
       - name: Verify default environment installation
         run: |
@@ -127,6 +132,8 @@ jobs:
         with:
           environments: "py311 py312"
           activate-environment: "py311"
+          verify-lock: "false"
+          cache: "false"
 
       - name: Verify active environment
         run: |
@@ -180,6 +187,8 @@ jobs:
         with:
           environments: "prod dev"
           activate-environment: "dev"
+          verify-lock: "false"
+          cache: "false"
 
       - name: Verify dev environment is active
         run: |
@@ -213,10 +222,17 @@ jobs:
           numpy = ">=1.26"
           EOF
 
+      - name: Generate lock file first (without verification)
+        uses: ./actions/python-setup/pixi
+        with:
+          verify-lock: "false"
+          cache: "false"
+
       - name: Test with valid lock file (should pass)
         uses: ./actions/python-setup/pixi
         with:
           verify-lock: "true"
+          cache: "false"
 
   test-pixi-lock-verification-outdated:
     name: Test pixi action - Lock file verification (outdated)
@@ -245,6 +261,7 @@ jobs:
         uses: ./actions/python-setup/pixi
         with:
           verify-lock: "false"
+          cache: "false"
 
       - name: Modify pyproject.toml to make lock outdated
         run: |
@@ -260,6 +277,7 @@ jobs:
         uses: ./actions/python-setup/pixi
         with:
           verify-lock: "true"
+          cache: "false"
 
       - name: Verify lock verification failed
         if: steps.outdated-lock-test.outcome != 'failure'
@@ -295,6 +313,49 @@ jobs:
         uses: ./actions/python-setup/pixi
         with:
           verify-lock: "false"
+          cache: "false"
+
+  test-pixi-lock-verification-validation:
+    name: Test pixi action - Lock verification validation (should fail without lock file)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "lock-verification-validation-test"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          numpy = ">=1.26"
+          EOF
+
+      - name: Test verify-lock without lock file (should fail)
+        id: verify-lock-without-lock
+        continue-on-error: true
+        uses: ./actions/python-setup/pixi
+        with:
+          verify-lock: "true"
+          cache: "false"
+
+      - name: Verify validation failed
+        if: steps.verify-lock-without-lock.outcome != 'failure'
+        run: |
+          echo "ERROR: Lock verification validation should have failed without lock file"
+          exit 1
+
+      - name: Verify error message is helpful
+        if: steps.verify-lock-without-lock.outcome == 'failure'
+        run: |
+          echo "✓ Validation correctly failed when verify-lock was enabled without lock file"
 
   test-pixi-caching-populate:
     name: Test pixi action - Caching (populate)
@@ -321,11 +382,18 @@ jobs:
           matplotlib = ">=3.8"
           EOF
 
-      - name: First run - populate cache
+      - name: Generate lock file without cache
+        uses: ./actions/python-setup/pixi
+        with:
+          cache: "false"
+          verify-lock: "false"
+
+      - name: Second run with cache enabled - should populate cache
+        id: populate-cache
         uses: ./actions/python-setup/pixi
         with:
           cache: "true"
-        id: first-run
+          verify-lock: "false"
 
       - name: Verify packages are installed
         run: |
@@ -361,11 +429,53 @@ jobs:
         uses: ./actions/python-setup/pixi
         with:
           cache: "true"
+          verify-lock: "false"
         id: second-run
 
       - name: Verify packages are available from cache
         run: |
           python -c "import numpy, scipy, matplotlib; print('All packages available from cache')"
+
+  test-pixi-caching-validation:
+    name: Test pixi action - Cache validation (should fail without lock file)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create test pyproject.toml
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "cache-validation-test"
+          version = "0.1.0"
+          dependencies = []
+
+          [tool.pixi.workspace]
+          channels = ["conda-forge"]
+          platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+          [tool.pixi.dependencies]
+          python = ">=3.11"
+          numpy = ">=1.26"
+          EOF
+
+      - name: Test cache without lock file (should fail)
+        id: cache-without-lock
+        continue-on-error: true
+        uses: ./actions/python-setup/pixi
+        with:
+          cache: "true"
+
+      - name: Verify validation failed
+        if: steps.cache-without-lock.outcome != 'failure'
+        run: |
+          echo "ERROR: Cache validation should have failed without lock file"
+          exit 1
+
+      - name: Verify error message is helpful
+        if: steps.cache-without-lock.outcome == 'failure'
+        run: |
+          echo "✓ Validation correctly failed when cache was enabled without lock file"
 
   test-pixi-matrix:
     name: Test pixi action - Matrix
@@ -411,6 +521,8 @@ jobs:
         with:
           environments: ${{ matrix.environment }}
           activate-environment: ${{ matrix.environment }}
+          verify-lock: "false"
+          cache: "false"
 
       - name: Verify Python installation
         run: |
@@ -427,6 +539,9 @@ jobs:
         id: no-toml-test
         continue-on-error: true
         uses: ./actions/python-setup/pixi
+        with:
+          verify-lock: "false"
+          cache: "false"
 
       - name: Verify action failed without pyproject.toml
         if: steps.no-toml-test.outcome != 'failure'
@@ -453,6 +568,9 @@ jobs:
         id: invalid-deps-test
         continue-on-error: true
         uses: ./actions/python-setup/pixi
+        with:
+          verify-lock: "false"
+          cache: "false"
 
       - name: Verify action failed with invalid dependencies
         if: steps.invalid-deps-test.outcome != 'failure'
@@ -485,6 +603,8 @@ jobs:
         uses: ./actions/python-setup/pixi
         with:
           activate-environment: "nonexistent"
+          verify-lock: "false"
+          cache: "false"
 
       - name: Verify action failed with non-existent environment
         if: steps.nonexistent-env-test.outcome != 'failure'
@@ -552,6 +672,8 @@ jobs:
         with:
           environments: "default ml prod"
           activate-environment: "ml"
+          verify-lock: "false"
+          cache: "false"
 
       - name: Verify ML environment
         run: |
