@@ -1,5 +1,5 @@
 [project]
-name = "cross-platform-test"
+name = "env-activation-test"
 version = "0.1.0"
 dependencies = []
 
@@ -10,15 +10,13 @@ platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 [tool.pixi.dependencies]
 python = ">=3.11"
 
-[tool.pixi.feature.py311.dependencies]
-python = "3.11.*"
-requests = ">=2.31"
+[tool.pixi.feature.prod.dependencies]
+flask = ">=3.0"
 
-[tool.pixi.feature.py312.dependencies]
-python = "3.12.*"
-httpx = ">=0.25"
+[tool.pixi.feature.dev.dependencies]
+pytest = ">=7.0"
+black = ">=23.0"
 
 [tool.pixi.environments]
-default = []
-py311 = ["py311"]
-py312 = ["py312"]
+prod = ["prod"]
+dev = ["dev"]
