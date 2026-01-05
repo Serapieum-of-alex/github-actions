@@ -1,8 +1,9 @@
 [project]
+
+[project.optional-dependencies]
 docs = ["mkdocs"]
 test = ["pytest-cov"]
 dev = ["pytest", "black"]
-[project.optional-dependencies]
 
 dependencies = ["requests"]
 version = "0.1.0"
