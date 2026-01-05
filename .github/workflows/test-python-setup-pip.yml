@@ -23,12 +23,12 @@ jobs:
   test-pip-with-groups:
     name: Test pip action - With optional dependencies
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-with-groups
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-with-groups/pyproject.toml .
 
       - name: Test pip action with optional dependencies (extras)
         uses: ./actions/python-setup/pip
@@ -47,9 +47,6 @@ jobs:
   test-pip-matrix:
     name: Test pip action - Matrix
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-matrix
     strategy:
       fail-fast: false
       matrix:
@@ -59,6 +56,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        shell: bash
+        run: cp tests/data/pip/test-pip-matrix/pyproject.toml .
 
       - name: Test pip action with Python ${{ matrix.python-version }}
         uses: ./actions/python-setup/pip
@@ -80,12 +81,12 @@ jobs:
   test-pip-cache:
     name: Test pip action - Cache validation
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-cache
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-cache/pyproject.toml .
 
       - name: First run - populate cache
         uses: ./actions/python-setup/pip
@@ -100,9 +101,6 @@ jobs:
   test-pip-architecture:
     name: Test pip action - Architecture
     runs-on: windows-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-architecture
     strategy:
       matrix:
         architecture: [x64, x86]
@@ -110,6 +108,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        shell: bash
+        run: cp tests/data/pip/test-pip-architecture/pyproject.toml .
 
       - name: Test pip action with ${{ matrix.architecture }}
         uses: ./actions/python-setup/pip
@@ -147,12 +149,12 @@ jobs:
   test-pip-cache-with-requirements:
     name: Test pip action - Cache with requirements.txt
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-cache-with-requirements
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-cache-with-requirements/requirements.txt .
 
       - name: Test pip action with cache and requirements.txt
         uses: ./actions/python-setup/pip
@@ -187,12 +189,12 @@ jobs:
   test-pip-empty-sections:
     name: Test pip action - Empty groups/extras sections
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-empty-sections
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-empty-sections/pyproject.toml .
 
       - name: Test pip action with empty groups section
         uses: ./actions/python-setup/pip
@@ -209,12 +211,12 @@ jobs:
   test-pip-invalid-format:
     name: Test pip action - Invalid format handling
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-invalid-format
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-invalid-format/pyproject.toml .
 
       - name: Test pip action with invalid format (should show warning)
         uses: ./actions/python-setup/pip
@@ -230,12 +232,12 @@ jobs:
   test-pip-optional-dependencies:
     name: Test pip action - Optional dependencies (extras)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-optional-dependencies
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-optional-dependencies/pyproject.toml .
 
       - name: Test pip action with optional dependencies only
         uses: ./actions/python-setup/pip
@@ -261,12 +263,12 @@ jobs:
   test-pip-mixed-groups-and-extras:
     name: Test pip action - Mixed groups and extras
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-mixed-groups-and-extras
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-mixed-groups-and-extras/pyproject.toml .
 
       - name: Test pip action with mixed groups and extras
         uses: ./actions/python-setup/pip
@@ -290,12 +292,12 @@ jobs:
   test-pip-dependency-groups-only:
     name: Test pip action - Dependency groups only
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-dependency-groups-only
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-dependency-groups-only/pyproject.toml .
 
       - name: Test pip action with dependency groups only
         uses: ./actions/python-setup/pip
@@ -319,12 +321,12 @@ jobs:
   test-pip-groups-docs-only:
     name: Test pip action - Single dependency group (docs)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-groups-only-docs
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-groups-only-docs/pyproject.toml .
 
       - name: Test pip action with docs dependency group
         uses: ./actions/python-setup/pip
@@ -347,12 +349,12 @@ jobs:
   test-pip-all-combinations:
     name: Test pip action - All combinations (groups + extras)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-all-combinations
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-all-combinations/pyproject.toml .
 
       - name: Test pip action with multiple groups and extras
         uses: ./actions/python-setup/pip
@@ -379,12 +381,12 @@ jobs:
   test-pip-single-extra:
     name: Test pip action - Single extra only
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-single-extra
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-single-extra/pyproject.toml .
 
       - name: Test pip action with single extra
         uses: ./actions/python-setup/pip
@@ -401,12 +403,12 @@ jobs:
   test-pip-single-group:
     name: Test pip action - Single group only
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-single-group
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-single-group/pyproject.toml .
 
       - name: Test pip action with single group
         uses: ./actions/python-setup/pip
@@ -427,12 +429,12 @@ jobs:
   test-pip-only-core-dependencies:
     name: Test pip action - Only core dependencies (no groups/extras)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-only-dependencies
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-only-dependencies/pyproject.toml .
 
       - name: Test pip action without install-groups parameter
         uses: ./actions/python-setup/pip
@@ -447,12 +449,12 @@ jobs:
   test-pip-whitespace-handling:
     name: Test pip action - Whitespace handling in groups/extras
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-whitespace-handling
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-whitespace-handling/pyproject.toml .
 
       - name: Test pip action with extra whitespace
         uses: ./actions/python-setup/pip
@@ -475,12 +477,12 @@ jobs:
   test-pip-empty-groups-value:
     name: Test pip action - Empty groups value
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-empty-groups-only
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-empty-groups-only/pyproject.toml .
 
       - name: Test pip action with empty groups value
         uses: ./actions/python-setup/pip
@@ -497,12 +499,12 @@ jobs:
   test-pip-empty-extras-value:
     name: Test pip action - Empty extras value
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-empty-extras-only
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-empty-extras-only/pyproject.toml .
 
       - name: Test pip action with empty extras value
         uses: ./actions/python-setup/pip
@@ -519,15 +521,15 @@ jobs:
   test-pip-python-version-matrix:
     name: Test pip action - Python version matrix with extras
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-multiple-python-versions
     strategy:
       matrix:
         python-version: ['3.11', '3.12', '3.13']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-multiple-python-versions/pyproject.toml .
 
       - name: Test pip action with Python ${{ matrix.python-version }}
         uses: ./actions/python-setup/pip
@@ -546,12 +548,12 @@ jobs:
   test-pip-reverse-order:
     name: Test pip action - Reverse order (extras before groups)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-all-combinations
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-all-combinations/pyproject.toml .
 
       - name: Test pip action with extras before groups
         uses: ./actions/python-setup/pip
@@ -573,12 +575,12 @@ jobs:
   test-pip-cache-with-groups:
     name: Test pip action - Cache with groups and extras
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/data/pip/test-pip-all-combinations
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-all-combinations/pyproject.toml .
 
       - name: Test pip action with cache and install-groups
         uses: ./actions/python-setup/pip
