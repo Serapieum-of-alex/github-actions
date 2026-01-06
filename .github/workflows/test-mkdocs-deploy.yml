@@ -381,7 +381,7 @@ jobs:
             echo "groups=groups: docs" >> $GITHUB_OUTPUT
           fi
 
-      - name: Test with default install-groups (groups: docs)
+      - name: Test with default install-groups (groups docs)
         uses: ./actions/mkdocs-deploy
         with:
           trigger: 'pull_request'
