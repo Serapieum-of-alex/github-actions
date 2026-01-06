@@ -125,8 +125,24 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.11", "3.12"]
-        install-groups: ["docs", "docs dev", "docs test"]
+        include:
+          # Test different install-groups formats with uv
+          - python-version: "3.11"
+            install-groups: "groups: docs"
+            package-manager: "uv"
+          - python-version: "3.12"
+            install-groups: "groups: docs dev"
+            package-manager: "uv"
+          - python-version: "3.12"
+            install-groups: "extras: docs"
+            package-manager: "uv"
+          # Test pip with different formats
+          - python-version: "3.11"
+            install-groups: "groups: docs"
+            package-manager: "pip"
+          - python-version: "3.12"
+            install-groups: "extras: docs"
+            package-manager: "pip"
     steps:
       - uses: actions/checkout@v5
         with:
@@ -142,7 +158,7 @@ jobs:
         uses: ./actions/mkdocs-deploy
         with:
           trigger: 'pull_request'
-          package-manager: 'uv'
+          package-manager: ${{ matrix.package-manager }}
           python-version: ${{ matrix.python-version }}
           install-groups: ${{ matrix.install-groups }}
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
@@ -306,3 +322,155 @@ jobs:
           trigger: 'release'
           package-manager: 'uv'
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+  test-default-install-groups:
+    name: Test Default install-groups Value
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package-manager: [pip, uv, pixi]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Copy test fixture files (pip/uv)
+        if: matrix.package-manager != 'pixi'
+        run: |
+          cp tests/mkdocs-deploy/test-pull-request-pip-uv/pyproject.toml .
+          cp tests/mkdocs-deploy/test-pull-request-pip-uv/mkdocs.yml .
+          cp -r tests/mkdocs-deploy/test-pull-request-pip-uv/docs .
+
+      - name: Copy test fixture files (pixi)
+        if: matrix.package-manager == 'pixi'
+        run: |
+          cp tests/mkdocs-deploy/test-pull-request-pixi/pyproject.toml .
+          cp tests/mkdocs-deploy/test-pull-request-pixi/mkdocs.yml .
+          cp -r tests/mkdocs-deploy/test-pull-request-pixi/docs .
+          if [ -f tests/mkdocs-deploy/test-pull-request-pixi/pixi.lock ]; then
+            cp tests/mkdocs-deploy/test-pull-request-pixi/pixi.lock .
+          fi
+
+      - name: Test with default install-groups (groups: docs)
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'pull_request'
+          package-manager: ${{ matrix.package-manager }}
+          # install-groups not specified, should use default 'groups: docs'
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify default behavior
+        run: |
+          echo "Default install-groups test completed for ${{ matrix.package-manager }}"
+
+  test-pixi-environment-parsing:
+    name: Test Pixi Environment Name Parsing
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        install-groups:
+          - "groups: docs"
+          - "extras: docs"
+          - "docs"
+          - "groups: dev"
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Copy test fixture files
+        run: |
+          cp tests/mkdocs-deploy/test-pull-request-pixi/pyproject.toml .
+          cp tests/mkdocs-deploy/test-pull-request-pixi/mkdocs.yml .
+          cp -r tests/mkdocs-deploy/test-pull-request-pixi/docs .
+          if [ -f tests/mkdocs-deploy/test-pull-request-pixi/pixi.lock ]; then
+            cp tests/mkdocs-deploy/test-pull-request-pixi/pixi.lock .
+          fi
+
+      - name: Test pixi environment parsing with "${{ matrix.install-groups }}"
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'pull_request'
+          package-manager: 'pixi'
+          install-groups: ${{ matrix.install-groups }}
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify parsing succeeded
+        run: |
+          echo "Pixi environment parsing test completed for: ${{ matrix.install-groups }}"
+
+  test-python-version-matrix:
+    name: Test Python Version Compatibility
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        package-manager: [pip, uv]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Copy test fixture files
+        run: |
+          cp tests/mkdocs-deploy/test-pull-request-pip-uv/pyproject.toml .
+          cp tests/mkdocs-deploy/test-pull-request-pip-uv/mkdocs.yml .
+          cp -r tests/mkdocs-deploy/test-pull-request-pip-uv/docs .
+
+      - name: Test with Python ${{ matrix.python-version }}
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'pull_request'
+          package-manager: ${{ matrix.package-manager }}
+          python-version: ${{ matrix.python-version }}
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify Python version
+        run: |
+          python --version
+          echo "Python ${{ matrix.python-version }} test completed for ${{ matrix.package-manager }}"
+
+  test-install-groups-variations:
+    name: Test install-groups Format Variations
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          # Test groups prefix
+          - install-groups: "groups: docs"
+            package-manager: "uv"
+          - install-groups: "groups: docs dev"
+            package-manager: "uv"
+          - install-groups: "groups: docs test"
+            package-manager: "pip"
+          # Test extras prefix
+          - install-groups: "extras: docs"
+            package-manager: "uv"
+          - install-groups: "extras: docs"
+            package-manager: "pip"
+          # Test mixed
+          - install-groups: "groups: docs, extras: aws"
+            package-manager: "uv"
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Copy test fixture files
+        run: |
+          cp tests/mkdocs-deploy/test-custom-configuration/pyproject.toml .
+          cp tests/mkdocs-deploy/test-custom-configuration/mkdocs.yml .
+          cp -r tests/mkdocs-deploy/test-custom-configuration/docs .
+
+      - name: Test install-groups format "${{ matrix.install-groups }}"
+        uses: ./actions/mkdocs-deploy
+        with:
+          trigger: 'pull_request'
+          package-manager: ${{ matrix.package-manager }}
+          install-groups: ${{ matrix.install-groups }}
+          deploy-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify format parsing
+        run: |
+          echo "install-groups format test completed: ${{ matrix.install-groups }}"
+
