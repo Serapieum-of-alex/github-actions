@@ -1,11 +1,15 @@
 [project]
+name = "test-project"
+version = "0.1.0"
+
+dependencies = ["requests"]
 
 [project.optional-dependencies]
 docs = ["mkdocs"]
 test = ["pytest-cov"]
 dev = ["pytest", "black"]
 
-dependencies = ["requests"]
-version = "0.1.0"
-name = "test-project"
+
+
+
 
