@@ -14,7 +14,7 @@ inputs:
     required: false
     default: '3.12'
   install-groups:
-    description: 'Dependency groups to install, e.g., "groups: docs", or "exras: docs"'
+    description: 'Dependency groups to install. For pip/uv: use "groups: docs" or "extras: docs". For pixi: pass environment name directly like "docs"'
     required: false
     default: 'groups: docs'
   deploy-token:

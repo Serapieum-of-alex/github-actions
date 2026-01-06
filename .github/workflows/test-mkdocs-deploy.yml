@@ -44,6 +44,7 @@ jobs:
         with:
           trigger: 'pull_request'
           package-manager: ${{ matrix.package-manager }}
+          install-groups: ${{ matrix.package-manager == 'pixi' && 'docs' || 'groups: docs' }}
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify deployment command was attempted
@@ -116,6 +117,7 @@ jobs:
         with:
           trigger: 'release'
           package-manager: ${{ matrix.package-manager }}
+          install-groups: ${{ matrix.package-manager == 'pixi' && 'docs' || 'groups: docs' }}
           release-tag: ${{ matrix.release-tag }}
           mike-alias: ${{ matrix.mike-alias }}
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
@@ -289,6 +291,7 @@ jobs:
         with:
           trigger: 'release'
           package-manager: 'pixi'
+          install-groups: 'docs'
           release-tag: 'v1.0.0'
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -351,12 +354,12 @@ jobs:
             cp tests/mkdocs-deploy/test-pull-request-pixi/pixi.lock .
           fi
 
-      - name: Test with default install-groups (groups docs)
+      - name: Test with default install-groups (groups: docs)
         uses: ./actions/mkdocs-deploy
         with:
           trigger: 'pull_request'
           package-manager: ${{ matrix.package-manager }}
-          # install-groups not specified, should use default 'groups: docs'
+          install-groups: ${{ matrix.package-manager == 'pixi' && 'docs' || 'groups: docs' }}
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify default behavior
@@ -364,15 +367,13 @@ jobs:
           echo "Default install-groups test completed for ${{ matrix.package-manager }}"
 
   test-pixi-environment-parsing:
-    name: Test Pixi Environment Name Parsing
+    name: Test Pixi Environment Names
     runs-on: ubuntu-latest
     strategy:
       matrix:
         install-groups:
-          - "groups: docs"
-          - "extras: docs"
-          - "docs"
-          - "groups: dev"
+          - "docs"       # Direct environment name
+          - "default"    # Default environment
     steps:
       - uses: actions/checkout@v5
         with:
@@ -387,7 +388,7 @@ jobs:
             cp tests/mkdocs-deploy/test-pull-request-pixi/pixi.lock .
           fi
 
-      - name: Test pixi environment parsing with "${{ matrix.install-groups }}"
+      - name: Test pixi with environment "${{ matrix.install-groups }}"
         uses: ./actions/mkdocs-deploy
         with:
           trigger: 'pull_request'
@@ -395,9 +396,9 @@ jobs:
           install-groups: ${{ matrix.install-groups }}
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Verify parsing succeeded
+      - name: Verify environment succeeded
         run: |
-          echo "Pixi environment parsing test completed for: ${{ matrix.install-groups }}"
+          echo "Pixi environment test completed for: ${{ matrix.install-groups }}"
 
   test-python-version-matrix:
     name: Test Python Version Compatibility
