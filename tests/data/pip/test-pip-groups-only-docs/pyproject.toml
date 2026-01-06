@@ -1,8 +1,8 @@
 [project]
-docs = ["mkdocs", "mkdocs-material"]
-[dependency-groups]
-
-dependencies = ["requests"]
-version = "0.1.0"
 name = "test-pip-groups-docs"
+version = "0.1.0"
+dependencies = ["requests"]
+
+[dependency-groups]
+docs = ["mkdocs", "mkdocs-material"]
 
