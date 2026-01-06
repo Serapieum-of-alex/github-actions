@@ -14,9 +14,9 @@ inputs:
     required: false
     default: '3.12'
   install-groups:
-    description: 'Dependency groups to install'
+    description: 'Dependency groups to install, e.g., "groups: docs", or "exras: docs"'
     required: false
-    default: 'docs'
+    default: 'groups: docs'
   deploy-token:
     description: 'GitHub token for deployment'
     required: true
