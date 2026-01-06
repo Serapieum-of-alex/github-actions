@@ -161,20 +161,32 @@ All actions are grouped in GitHub Actions logs for better readability:
 
 ## Usage Scenarios
 
-### Scenario 1: No Dependency Files (Development/Testing)
+### Scenario 1: Basic Install (No Dependency Files)
 
-**Use Case**: Testing the action itself, or simple scripts without dependencies.
+**Use Case**: Testing the action itself, simple scripts without dependencies, or when you'll install dependencies manually.
 
+**Workflow:**
 ```yaml
-- uses: actions/checkout@v5
-- uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
-# No cache needed, no pyproject.toml required
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+
+      - name: Verify Python installation
+        run: |
+          python --version
+          pip --version
 ```
 
 **What Happens**:
-- Python installed
-- Pip upgraded
+- Python 3.12 installed (default)
+- Pip upgraded to latest
 - No dependencies installed (logs "No pyproject.toml found - skipping package installation")
+- Cache disabled by default
+
+**When to use**: Quick scripts, action testing, or when you prefer manual `pip install` commands
 
 ### Scenario 2: Basic Project with pyproject.toml
 
@@ -289,19 +301,296 @@ numpy==1.26.0
     cache: 'pip'
 ```
 
-### Scenario 7: Poetry/Pipenv Projects
+### Scenario 7: Mixed Groups and Extras
 
-**Use Case**: Using alternative package managers.
+**Use Case**: Installing both dependency groups (PEP 735) and optional dependencies (extras) together.
 
-```yaml
-- uses: actions/checkout@v5
-- uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
-  with:
-    cache: 'poetry'  # or 'pipenv'
+**`pyproject.toml`:**
+```toml
+[project]
+name = "my-package"
+dependencies = ["requests"]
 
-- name: Install with Poetry
-  run: poetry install
+[project.optional-dependencies]
+aws = ["boto3", "s3fs"]
+
+[dependency-groups]
+dev = ["httpx", "pytest"]
 ```
+
+**Workflow:**
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          cache: 'pip'
+          install-groups: 'groups: dev, extras: aws'
+
+      - name: Verify installation
+        shell: bash
+        run: |
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import boto3; print('[OK] AWS extra installed')"
+          # Dev group depends on pip version
+          if python -c "import httpx" 2>/dev/null; then
+            echo "[OK] Dev group installed (pip supports --dependency-groups)"
+          else
+            echo "[OK] Dev group not installed (pip version limitation)"
+          fi
+```
+
+**What Happens**:
+- Core dependencies: `requests` (always installed)
+- Optional dependencies (extras): `boto3`, `s3fs` (always works with pip)
+- Dependency groups: `httpx`, `pytest` (requires pip with PEP 735 support)
+- Shows warning if pip doesn't support `--dependency-groups`
+
+### Scenario 8: Poetry/Pipenv Projects
+
+**Use Case**: Using alternative package managers with their specific lock files.
+
+**With Poetry:**
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          cache: 'poetry'
+
+      - name: Install with Poetry
+        run: |
+          pip install poetry
+          poetry install
+```
+
+**With Pipenv:**
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          cache: 'pipenv'
+
+      - name: Install with Pipenv
+        run: |
+          pip install pipenv
+          pipenv install
+```
+
+### Scenario 9: Empty Groups/Extras Handling
+
+**Use Case**: Testing edge cases with empty values in install-groups.
+
+**Workflow:**
+```yaml
+jobs:
+  test-empty-groups:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          install-groups: 'groups: , extras: aws'
+
+      - name: Verify handling
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies')"
+          python -c "import boto3; print('[OK] AWS extra despite empty groups')"
+```
+
+**What Happens**:
+- Empty groups section is gracefully ignored
+- Core dependencies still installed
+- AWS extra installs normally
+
+### Scenario 10: Invalid Format Handling
+
+**Use Case**: Understanding how the action handles malformed input.
+
+**Workflow:**
+```yaml
+jobs:
+  test-invalid:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          install-groups: 'invalid format without colons'
+
+      - name: Verify warning shown
+        shell: bash
+        run: |
+          # Action will show warning but still install core dependencies
+          python -c "import requests; print('[OK] Core dependencies installed despite invalid format')"
+```
+
+**What Happens**:
+- Warning logged: "No 'groups:' or 'extras:' sections found"
+- Core dependencies still installed
+- Workflow continues (doesn't fail)
+
+### Scenario 11: Whitespace Handling
+
+**Use Case**: Flexible formatting with extra whitespace in install-groups.
+
+**Workflow:**
+```yaml
+jobs:
+  test-whitespace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          install-groups: '  groups:  dev   test  ,  extras:  aws   viz  '
+
+      - name: Verify whitespace handling
+        shell: bash
+        run: |
+          python -c "import boto3; print('[OK] AWS extra installed')"
+          python -c "import matplotlib; print('[OK] Viz extra installed')"
+```
+
+**What Happens**:
+- Leading/trailing whitespace trimmed
+- Multiple spaces between groups handled correctly
+- Groups parsed: `dev`, `test`, `aws`, `viz`
+
+### Scenario 12: Only Core Dependencies
+
+**Use Case**: Installing just the package without any optional groups or extras.
+
+**`pyproject.toml`:**
+```toml
+[project]
+name = "my-package"
+dependencies = ["requests", "click", "httpx"]
+
+[project.optional-dependencies]
+dev = ["pytest", "black"]
+
+[dependency-groups]
+test = ["pytest-cov"]
+```
+
+**Workflow:**
+```yaml
+jobs:
+  production-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        # No install-groups parameter
+
+      - name: Verify only core installed
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests, click, httpx; print('[OK] Core dependencies')"
+          echo "[OK] Only core dependencies installed as expected"
+```
+
+**What Happens**:
+- Runs `pip install .` without any extras or groups
+- Only `dependencies` from `[project]` section installed
+- Optional dependencies and groups not installed
+
+### Scenario 13: All Combinations (Comprehensive Test)
+
+**Use Case**: Installing multiple groups and extras simultaneously.
+
+**`pyproject.toml`:**
+```toml
+[project]
+name = "enterprise-app"
+dependencies = ["requests", "click"]
+
+[project.optional-dependencies]
+aws = ["boto3", "s3fs"]
+azure = ["azure-storage-blob"]
+gcp = ["google-cloud-storage"]
+
+[dependency-groups]
+dev = ["httpx", "black", "mypy"]
+test = ["pytest", "pytest-cov"]
+docs = ["mkdocs", "mkdocstrings"]
+```
+
+**Workflow:**
+```yaml
+jobs:
+  comprehensive-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          cache: 'pip'
+          install-groups: 'groups: dev test docs, extras: aws azure gcp'
+
+      - name: Verify comprehensive installation
+        shell: bash
+        run: |
+          # Verify core
+          python -c "import requests, click; print('[OK] Core dependencies')"
+          # Verify all extras
+          python -c "import boto3; print('[OK] AWS extra')"
+          python -c "from azure.storage.blob import BlobServiceClient; print('[OK] Azure extra')"
+          python -c "from google.cloud import storage; print('[OK] GCP extra')"
+          # Verify groups (if pip supports)
+          if python -c "import httpx, pytest, mkdocs" 2>/dev/null; then
+            echo "[OK] All dependency groups installed"
+          else
+            echo "[OK] Dependency groups not installed (pip doesn't support PEP 735)"
+          fi
+```
+
+**What Happens**:
+- Core: `requests`, `click`
+- Extras: All cloud provider SDKs
+- Groups: Dev, test, docs tools (if pip supports PEP 735)
+
+### Scenario 14: Reverse Order (Extras Before Groups)
+
+**Use Case**: Verifying order doesn't matter.
+
+**Workflow:**
+```yaml
+jobs:
+  test-order:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          install-groups: 'extras: aws, groups: dev'
+
+      - name: Verify order handling
+        shell: bash
+        run: |
+          python -c "import boto3; print('[OK] AWS extra installed')"
+          if python -c "import httpx" 2>/dev/null; then
+            echo "[OK] Dev group installed"
+          fi
+```
+
+**What Happens**:
+- Action parses both sections regardless of order
+- Same result as `'groups: dev, extras: aws'`
 
 ## Cache Configuration
 
@@ -353,22 +642,26 @@ Total: 20-30s
 **Key Differences**:
 
 1. **Optional Dependencies** (`[project.optional-dependencies]`):
-   - Part of PEP 621 standard, widely supported
+   - Part of PEP 621 standard, **widely supported** by all pip versions
    - Published with your package on PyPI
    - Installed using `pip install package[extra]` syntax
    - Use prefix `extras:` in this action
+   - **Always works reliably**
 
 2. **Dependency Groups** (`[dependency-groups]`):
-   - Part of PEP 735 standard (newer, limited support)
-   - Development-only, not published with package
+   - Part of PEP 735 standard (**newer, limited support**)
+   - Development-only, **not published** with package
    - Installed using `pip install --dependency-groups group` (requires recent pip)
    - Use prefix `groups:` in this action
+   - **May show warning** if pip version doesn't support PEP 735
 
-**Note**: If your pip version doesn't support `--dependency-groups`, the action will show a warning and suggest using the uv action instead.
+**Recommendation**: Use optional dependencies (extras) for maximum compatibility. Use dependency groups only if you need PEP 735 features.
 
-### Understanding Optional Dependencies
+**Note**: If your pip version doesn't support `--dependency-groups`, the action will show a warning and suggest using the uv action instead, which has full PEP 735 support.
 
-`pyproject.toml` supports optional dependency groups:
+### Understanding Optional Dependencies (Extras)
+
+`pyproject.toml` supports optional dependency groups using extras:
 
 ```toml
 [project]
@@ -379,62 +672,268 @@ dependencies = ["requests"]  # Core dependencies (always installed)
 dev = ["pytest", "black"]      # Development tools
 test = ["pytest-cov"]          # Testing tools
 docs = ["mkdocs"]              # Documentation tools
-all = ["pytest", "black", "pytest-cov", "mkdocs"]  # Everything
+aws = ["boto3", "s3fs"]        # AWS integration
+viz = ["matplotlib", "seaborn"]  # Visualization
+all = ["pytest", "black", "pytest-cov", "mkdocs", "boto3", "s3fs", "matplotlib", "seaborn"]  # Everything
 ```
 
-### Installing Groups
+### Understanding Dependency Groups (PEP 735)
+
+Dependency groups are an alternative for development-only dependencies:
+
+```toml
+[project]
+name = "myapp"
+dependencies = ["requests"]
+
+[dependency-groups]
+dev = ["httpx>=0.25", "rich>=13.0"]
+test = ["pytest>=7.0", "pytest-cov>=4.0"]
+docs = ["mkdocs>=1.5", "mkdocstrings>=0.24"]
+```
+
+### Installing Groups and Extras
 
 | `install-groups` Value | Commands Generated | What Gets Installed |
 |------------------------|-------------------|---------------------|
 | `''` (empty) | `pip install .` | Core dependencies only |
 | `'extras: dev'` | `pip install .[dev]` | Core + dev extras |
 | `'extras: dev test'` | `pip install .[dev,test]` | Core + dev + test extras |
-| `'groups: lint'` | `pip install .` then `pip install --dependency-groups lint` | Core + lint group (if supported) |
+| `'groups: lint'` | `pip install .` then `pip install --dependency-groups lint` (if supported) | Core + lint group |
 | `'groups: lint build, extras: dev'` | `pip install .[dev]` then `pip install --dependency-groups lint,build` | Core + dev extras + lint/build groups |
+| `'extras: aws viz, groups: dev'` | `pip install .[aws,viz]` then `pip install --dependency-groups dev` | Core + AWS/viz extras + dev group |
+
+### PEP 735 Support and Warnings
+
+**When pip supports `--dependency-groups`:**
+```
+=== Installation Summary ===
+✓ Dependency groups will be installed: dev test
+✓ Optional dependencies (extras) will be installed: aws
+✓ Core dependencies will always be installed
+==========================
+
+Installing package with optional dependencies: pip install .[aws]
+Installing dependency groups: pip install --dependency-groups dev,test
+```
+
+**When pip doesn't support `--dependency-groups`:**
+```
+Warning: pip version does not support --dependency-groups flag (PEP 735). Dependency groups will be ignored: dev test
+Warning: Please use a newer version of pip or consider using the uv action instead.
+```
+
+The action will still install core dependencies and extras successfully, but dependency groups will be skipped.
 
 ### Common Patterns
 
-**Test Workflow**:
+**Test Workflow (using extras for compatibility)**:
 ```yaml
-- uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
-  with:
-    install-groups: 'extras: test'
-- run: pytest
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          install-groups: 'extras: test'
+      - run: pytest --cov=src
 ```
 
-**Lint Workflow**:
+**Lint Workflow (using extras)**:
 ```yaml
-- uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
-  with:
-    install-groups: 'extras: dev'
-- run: black --check .
-- run: mypy src/
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          install-groups: 'extras: dev'
+      - run: black --check .
+      - run: mypy src/
 ```
 
 **Documentation Workflow**:
 ```yaml
-- uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          install-groups: 'extras: docs'
+      - run: mkdocs build
+      - run: mkdocs gh-deploy --force
+```
+
+**Combined Workflow (extras + groups)**:
+```yaml
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          install-groups: 'groups: dev test, extras: aws'
+      - run: black --check .
+      - run: pytest
+```
+
+**Production Installation (core only)**:
+```yaml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        # No install-groups = core only
+      - run: python app.py
+```
+
+### Migrating from Dependency Groups to Extras
+
+If you encounter warnings about unsupported `--dependency-groups`, consider:
+
+**Option 1: Use optional dependencies (extras) instead**
+```toml
+# Before (dependency groups - limited support)
+[dependency-groups]
+dev = ["pytest", "black"]
+
+# After (optional dependencies - universal support)
+[project.optional-dependencies]
+dev = ["pytest", "black"]
+```
+
+**Option 2: Use the uv action** (has full PEP 735 support)
+```yaml
+# Instead of pip action
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
   with:
-    install-groups: 'extras: docs'
-- run: mkdocs build
+    install-groups: 'groups: dev test'  # Full PEP 735 support
 ```
 
 ## Testing Guide
 
-This action is tested across multiple scenarios. Reference the test workflow at `.github/workflows/test-actions.yml`.
+This action is comprehensively tested across multiple scenarios to ensure reliability. Reference the test workflow at `.github/workflows/test-python-setup-pip.yml`.
 
-### Test Coverage
+### Test Coverage Matrix
 
-| Test Job | Purpose | Key Validations |
-|----------|---------|-----------------|
-| `test-pip-basic` | Default behavior without cache | Python installed, no cache validation |
-| `test-pip-with-groups` | Dependency groups installation | Multiple groups installed correctly |
-| `test-pip-matrix` | Cross-platform compatibility | Works on Linux/Windows/macOS with Python 3.10/3.11/3.12 |
-| `test-pip-cache` | Cache functionality | Dependencies cached and restored |
-| `test-pip-cache-validation-error` | Cache validation error handling | Fails gracefully when cache enabled without files |
-| `test-pip-cache-with-requirements` | requirements.txt support | Cache validation passes with requirements.txt |
-| `test-pip-no-dependency-file` | No dependency files | Works without pyproject.toml/requirements.txt when cache disabled |
-| `test-pip-architecture` | Architecture selection | x64 and x86 work correctly on Windows |
+| Test Job | Purpose | Key Validations | Fixture |
+|----------|---------|-----------------|---------|
+| `test-pip-basic` | Default behavior without cache | Python installed, no cache validation | - |
+| `test-pip-with-groups` | Optional dependencies (extras) | Multiple extras installed correctly | `test-pip-with-groups/` |
+| `test-pip-matrix` | Cross-platform compatibility | Works on Linux/Windows/macOS with Python 3.11/3.12/3.13/3.14 | `test-pip-matrix/` |
+| `test-pip-cache` | Cache functionality | Dependencies cached and restored | `test-pip-cache/` |
+| `test-pip-architecture` | Architecture selection | x64 and x86 work correctly on Windows | `test-pip-architecture/` |
+| `test-pip-cache-validation-error` | Cache validation error handling | Fails gracefully when cache enabled without files | - |
+| `test-pip-cache-with-requirements` | requirements.txt support | Cache validation passes with requirements.txt | `test-pip-cache-with-requirements/` |
+| `test-pip-no-dependency-file` | No dependency files | Works without pyproject.toml/requirements.txt when cache disabled | - |
+| `test-pip-empty-sections` | Empty groups/extras sections | Empty groups handled gracefully | `test-pip-empty-sections/` |
+| `test-pip-invalid-format` | Invalid format handling | Shows warning, continues with core deps | `test-pip-invalid-format/` |
+| `test-pip-optional-dependencies` | Optional dependencies (extras) | Extras installed, groups show warning | `test-pip-optional-dependencies/` |
+| `test-pip-mixed-groups-and-extras` | Mixed groups and extras | Both types install (groups if supported) | `test-pip-mixed-groups-and-extras/` |
+| `test-pip-dependency-groups-only` | Dependency groups only | Groups install if pip supports PEP 735 | `test-pip-dependency-groups-only/` |
+| `test-pip-groups-docs-only` | Single dependency group (docs) | Shows expected warning for unsupported pip | `test-pip-groups-only-docs/` |
+| `test-pip-all-combinations` | All combinations (groups + extras) | Comprehensive installation of multiple groups/extras | `test-pip-all-combinations/` |
+| `test-pip-single-extra` | Single extra only | Single extra installs correctly | `test-pip-single-extra/` |
+| `test-pip-single-group` | Single group only | Single group installs if supported | `test-pip-single-group/` |
+| `test-pip-only-core-dependencies` | Core dependencies only | Only core deps, no groups/extras | `test-pip-only-dependencies/` |
+| `test-pip-whitespace-handling` | Whitespace handling | Extra whitespace trimmed correctly | `test-pip-whitespace-handling/` |
+| `test-pip-empty-groups-value` | Empty groups value | Empty `groups:` handled gracefully | `test-pip-empty-groups-only/` |
+| `test-pip-empty-extras-value` | Empty extras value | Empty `extras:` handled gracefully | `test-pip-empty-extras-only/` |
+| `test-pip-python-version-matrix` | Python version matrix | Works with multiple Python versions | `test-pip-multiple-python-versions/` |
+| `test-pip-reverse-order` | Reverse order (extras before groups) | Order doesn't matter | `test-pip-all-combinations/` |
+| `test-pip-cache-with-groups` | Cache with groups and extras | Caching works with install-groups | `test-pip-all-combinations/` |
+
+### Test Fixtures Location
+
+All test fixtures are located in `tests/data/pip/` directory:
+```
+tests/data/pip/
+├── test-pip-with-groups/
+│   └── pyproject.toml
+├── test-pip-matrix/
+│   └── pyproject.toml
+├── test-pip-cache/
+│   └── pyproject.toml
+├── test-pip-architecture/
+│   └── pyproject.toml
+├── test-pip-cache-with-requirements/
+│   └── requirements.txt
+├── test-pip-empty-sections/
+│   └── pyproject.toml
+├── test-pip-invalid-format/
+│   └── pyproject.toml
+├── test-pip-optional-dependencies/
+│   └── pyproject.toml
+├── test-pip-mixed-groups-and-extras/
+│   └── pyproject.toml
+├── test-pip-dependency-groups-only/
+│   └── pyproject.toml
+├── test-pip-groups-only-docs/
+│   └── pyproject.toml
+├── test-pip-all-combinations/
+│   └── pyproject.toml
+├── test-pip-single-extra/
+│   └── pyproject.toml
+├── test-pip-single-group/
+│   └── pyproject.toml
+├── test-pip-only-dependencies/
+│   └── pyproject.toml
+├── test-pip-whitespace-handling/
+│   └── pyproject.toml
+├── test-pip-empty-groups-only/
+│   └── pyproject.toml
+├── test-pip-empty-extras-only/
+│   └── pyproject.toml
+└── test-pip-multiple-python-versions/
+    └── pyproject.toml
+```
+
+### Example Test Fixtures
+
+**test-pip-with-groups/pyproject.toml:**
+```toml
+[project]
+name = "test-pip-with-groups"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest", "black"]
+test = ["pytest-cov"]
+```
+
+**test-pip-all-combinations/pyproject.toml:**
+```toml
+[project]
+name = "test-pip-all-combinations"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["requests", "click"]
+
+[project.optional-dependencies]
+aws = ["boto3"]
+azure = ["azure-storage-blob"]
+gcp = ["google-cloud-storage"]
+
+[dependency-groups]
+dev = ["httpx", "black", "mypy"]
+test = ["pytest", "pytest-cov"]
+docs = ["mkdocs"]
+```
+
+**test-pip-cache-with-requirements/requirements.txt:**
+```
+requests==2.31.0
+numpy>=1.26.0
+```
 
 ### Running Tests Locally
 
@@ -443,15 +942,20 @@ Use `act` to test locally:
 ```bash
 # Install act (if needed)
 # Windows: choco install act-cli
+# macOS: brew install act
 
-# Run all tests
+# Run specific test
 act -j test-pip-basic
 act -j test-pip-with-groups
 act -j test-pip-matrix
+
+# Run all pip tests
+act -j test-pip-*
 ```
 
 ### Testing in Your Own Workflow
 
+**Basic Test:**
 ```yaml
 # .github/workflows/test-pip-action.yml
 name: Test pip action
@@ -463,11 +967,112 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@main
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
         with:
           cache: 'pip'
-          install-groups: 'dev test'
+          install-groups: 'extras: dev test'
       - run: pytest
+```
+
+**Matrix Test:**
+```yaml
+name: Matrix Test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          install-groups: 'extras: test'
+      - run: pytest
+```
+
+**Cache Test:**
+```yaml
+name: Cache Test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      
+      - name: First run (populate cache)
+        uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+        with:
+          cache: 'pip'
+      
+      - name: Verify cache
+        run: pip list
+      
+      # On subsequent runs, cache will be restored automatically
+```
+
+### Expected Test Behaviors
+
+**PEP 735 Support Detection:**
+Tests verify that when pip doesn't support `--dependency-groups`:
+- Warning is shown
+- Core dependencies still install
+- Optional dependencies (extras) still work
+- Workflow doesn't fail
+
+**Cache Validation:**
+Tests verify that:
+- Cache enabled without dependency files → fails with clear error
+- Cache with pyproject.toml → works
+- Cache with requirements.txt → works
+- Cache disabled → always works
+
+**Cross-Platform:**
+Tests verify that:
+- Shell commands work on Windows (PowerShell), Linux (bash), macOS (bash)
+- File paths handled correctly
+- Architecture selection works on Windows (x64, x86)
+
+**Whitespace Handling:**
+Tests verify that:
+- Leading/trailing whitespace ignored
+- Multiple spaces between groups handled
+- Mixed formatting accepted
+
+### Debugging Failed Tests
+
+**Check action logs:**
+```yaml
+- name: Debug installation
+  run: |
+    cat pyproject.toml
+    pip list
+    pip show pytest
+```
+
+**Verify Python version:**
+```yaml
+- name: Check Python
+  run: |
+    python --version
+    python -c "import sys; print(sys.version_info)"
+```
+
+**Test dependency imports:**
+```yaml
+- name: Test imports
+  run: |
+    python -c "import pytest; print('pytest OK')"
+    python -c "import black; print('black OK')"
 ```
 
 ## Troubleshooting
