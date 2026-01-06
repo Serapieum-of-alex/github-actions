@@ -44,7 +44,7 @@ jobs:
         with:
           trigger: 'pull_request'
           package-manager: ${{ matrix.package-manager }}
-          install-groups: ${{ matrix.package-manager == 'pixi' && 'docs' || 'groups: docs' }}
+          install-groups: ${{ matrix.package-manager == 'pixi' && 'docs' || format('groups: docs') }}
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify deployment command was attempted
@@ -117,7 +117,7 @@ jobs:
         with:
           trigger: 'release'
           package-manager: ${{ matrix.package-manager }}
-          install-groups: ${{ matrix.package-manager == 'pixi' && 'docs' || 'groups: docs' }}
+          install-groups: ${{ matrix.package-manager == 'pixi' && 'docs' || format('groups: docs') }}
           release-tag: ${{ matrix.release-tag }}
           mike-alias: ${{ matrix.mike-alias }}
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
@@ -359,7 +359,7 @@ jobs:
         with:
           trigger: 'pull_request'
           package-manager: ${{ matrix.package-manager }}
-          install-groups: ${{ matrix.package-manager == 'pixi' && 'docs' || 'groups: docs' }}
+          install-groups: ${{ matrix.package-manager == 'pixi' && 'docs' || format('groups: docs') }}
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify default behavior
