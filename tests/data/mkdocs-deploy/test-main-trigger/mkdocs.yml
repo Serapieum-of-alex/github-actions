@@ -1,0 +1,10 @@
+site_name: Main Branch Documentation
+site_description: Testing main branch deployment
+
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - About: about.md
+

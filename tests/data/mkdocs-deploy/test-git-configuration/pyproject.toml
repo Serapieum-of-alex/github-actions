@@ -1,0 +1,10 @@
+[project]
+name = "test-git-config"
+version = "0.1.0"
+dependencies = []
+
+[dependency-groups]
+docs = [
+  "mkdocs>=1.5.0",
+  "mike>=2.1.0"
+]
