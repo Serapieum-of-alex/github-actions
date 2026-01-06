@@ -39,12 +39,21 @@ jobs:
             cp tests/data/mkdocs-deploy/test-pull-request-pixi/pixi.lock .
           fi
 
+      - name: Set install-groups for package manager
+        id: set-groups
+        run: |
+          if [ "${{ matrix.package-manager }}" = "pixi" ]; then
+            echo "groups=docs" >> $GITHUB_OUTPUT
+          else
+            echo "groups=groups: docs" >> $GITHUB_OUTPUT
+          fi
+
       - name: Test MkDocs deploy for PR
         uses: ./actions/mkdocs-deploy
         with:
           trigger: 'pull_request'
           package-manager: ${{ matrix.package-manager }}
-          install-groups: ${{ matrix.package-manager == 'pixi' && 'docs' || format('groups: docs') }}
+          install-groups: ${{ steps.set-groups.outputs.groups }}
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify deployment command was attempted
@@ -354,12 +363,21 @@ jobs:
             cp tests/data/mkdocs-deploy/test-pull-request-pixi/pixi.lock .
           fi
 
+      - name: Set install-groups for package manager
+        id: set-groups
+        run: |
+          if [ "${{ matrix.package-manager }}" = "pixi" ]; then
+            echo "groups=docs" >> $GITHUB_OUTPUT
+          else
+            echo "groups=groups: docs" >> $GITHUB_OUTPUT
+          fi
+
       - name: Test with default install-groups (groups: docs)
         uses: ./actions/mkdocs-deploy
         with:
           trigger: 'pull_request'
           package-manager: ${{ matrix.package-manager }}
-          install-groups: ${{ matrix.package-manager == 'pixi' && 'docs' || format('groups: docs') }}
+          install-groups: ${{ steps.set-groups.outputs.groups }}
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify default behavior
