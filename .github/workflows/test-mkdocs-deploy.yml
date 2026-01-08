@@ -51,7 +51,7 @@ jobs:
           fi
 
       - name: Setup fake git remote for testing
-        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
 
       - name: Test MkDocs deploy for PR
         uses: ./actions/mkdocs-deploy
@@ -80,7 +80,7 @@ jobs:
           cp -r tests/data/mkdocs-deploy/test-main-trigger/docs .
 
       - name: Setup fake git remote for testing
-        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
 
       - name: Test MkDocs deploy for main
         uses: ./actions/mkdocs-deploy
@@ -139,7 +139,7 @@ jobs:
           fi
 
       - name: Setup fake git remote for testing
-        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
 
       - name: Test MkDocs deploy for release
         uses: ./actions/mkdocs-deploy
@@ -186,7 +186,7 @@ jobs:
           cp -r tests/data/mkdocs-deploy/test-custom-configuration/docs .
 
       - name: Setup fake git remote for testing
-        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
 
       - name: Test with custom configuration
         uses: ./actions/mkdocs-deploy
@@ -275,7 +275,7 @@ jobs:
           git config --global --unset user.email || true
 
       - name: Setup fake git remote for testing
-        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
 
       - name: Test git configuration
         uses: ./actions/mkdocs-deploy
@@ -308,7 +308,7 @@ jobs:
           fi
 
       - name: Setup fake git remote for testing
-        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
 
       - name: Test pip command execution
         uses: ./actions/mkdocs-deploy
@@ -348,7 +348,7 @@ jobs:
           cp -r tests/data/mkdocs-deploy/test-release-tag-resolution/docs .
 
       - name: Setup fake git remote for testing
-        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
 
       - name: Test with explicit release tag
         uses: ./actions/mkdocs-deploy
@@ -405,7 +405,7 @@ jobs:
           fi
 
       - name: Setup fake git remote for testing
-        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
 
       - name: Test with default install-groups (groups docs)
         uses: ./actions/mkdocs-deploy
@@ -442,7 +442,7 @@ jobs:
           fi
 
       - name: Setup fake git remote for testing
-        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
 
       - name: Test pixi with environment "${{ matrix.install-groups }}"
         uses: ./actions/mkdocs-deploy
@@ -475,7 +475,7 @@ jobs:
           cp -r tests/data/mkdocs-deploy/test-pull-request-pip-uv/docs .
 
       - name: Setup fake git remote for testing
-        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
 
       - name: Test with Python ${{ matrix.python-version }}
         uses: ./actions/mkdocs-deploy
@@ -523,7 +523,7 @@ jobs:
           cp -r tests/data/mkdocs-deploy/test-custom-configuration/docs .
 
       - name: Setup fake git remote for testing
-        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
 
       - name: Test install-groups format "${{ matrix.install-groups }}"
         uses: ./actions/mkdocs-deploy
