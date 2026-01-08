@@ -154,12 +154,13 @@ runs:
               
               # Check if pip supports --dependency-groups (PEP 735)
               if pip install --help | grep -q "dependency-groups"; then
-                dep_groups_cmd="pip install --dependency-groups $groups_list"
+                dep_groups_cmd="pip install --dependency-groups=$groups_list ."
                 echo "Installing dependency groups: $dep_groups_cmd"
                 eval "$dep_groups_cmd"
               else
                 echo "::warning::pip version does not support --dependency-groups flag (PEP 735). Dependency groups will be ignored: $groups_list"
-                echo "::warning::Please use a newer version of pip or consider using the uv action instead."
+                echo "::warning::Please upgrade pip to version >= 24.2 or consider using the uv action instead."
+                echo "::warning::Suggested workaround: Add 'python -m pip install --upgrade pip' before this action."
               fi
             fi
           else
