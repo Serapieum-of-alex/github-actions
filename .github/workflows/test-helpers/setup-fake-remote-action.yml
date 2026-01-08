@@ -1,0 +1,27 @@
+name: 'Setup Fake Git Remote'
+description: 'Configure a local git remote for testing to prevent pushing to actual repository'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup fake git remote for testing
+      shell: bash
+      run: |
+        # Create a bare repository to act as fake remote
+        mkdir -p /tmp/fake-remote.git
+        cd /tmp/fake-remote.git
+        git init --bare
+
+        # Reconfigure origin to point to fake remote
+        cd $GITHUB_WORKSPACE
+        git remote set-url origin file:///tmp/fake-remote.git
+
+        # Create gh-pages branch in fake remote to allow pushes
+        git checkout --orphan gh-pages-temp
+        git rm -rf . || true
+        echo "# Test Docs" > README.md
+        git add README.md
+        git commit -m "Initial gh-pages" || true
+        git push origin gh-pages-temp:gh-pages || true
+        git checkout -
+

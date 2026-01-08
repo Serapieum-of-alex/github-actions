@@ -50,6 +50,9 @@ jobs:
             echo "groups=groups: docs" >> $GITHUB_OUTPUT
           fi
 
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+
       - name: Test MkDocs deploy for PR
         uses: ./actions/mkdocs-deploy
         with:
@@ -75,6 +78,9 @@ jobs:
           cp tests/data/mkdocs-deploy/test-main-trigger/pyproject.toml .
           cp tests/data/mkdocs-deploy/test-main-trigger/mkdocs.yml .
           cp -r tests/data/mkdocs-deploy/test-main-trigger/docs .
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
 
       - name: Test MkDocs deploy for main
         uses: ./actions/mkdocs-deploy
@@ -132,6 +138,9 @@ jobs:
             echo "groups=groups: docs" >> $GITHUB_OUTPUT
           fi
 
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+
       - name: Test MkDocs deploy for release
         uses: ./actions/mkdocs-deploy
         with:
@@ -175,6 +184,9 @@ jobs:
           cp tests/data/mkdocs-deploy/test-custom-configuration/pyproject.toml .
           cp tests/data/mkdocs-deploy/test-custom-configuration/mkdocs.yml .
           cp -r tests/data/mkdocs-deploy/test-custom-configuration/docs .
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
 
       - name: Test with custom configuration
         uses: ./actions/mkdocs-deploy
@@ -262,6 +274,9 @@ jobs:
           git config --global --unset user.name || true
           git config --global --unset user.email || true
 
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+
       - name: Test git configuration
         uses: ./actions/mkdocs-deploy
         with:
@@ -291,6 +306,9 @@ jobs:
           if [ -f tests/data/mkdocs-deploy/test-package-manager-commands/pixi.lock ]; then
             cp tests/data/mkdocs-deploy/test-package-manager-commands/pixi.lock .
           fi
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
 
       - name: Test pip command execution
         uses: ./actions/mkdocs-deploy
@@ -328,6 +346,9 @@ jobs:
           cp tests/data/mkdocs-deploy/test-release-tag-resolution/pyproject.toml .
           cp tests/data/mkdocs-deploy/test-release-tag-resolution/mkdocs.yml .
           cp -r tests/data/mkdocs-deploy/test-release-tag-resolution/docs .
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
 
       - name: Test with explicit release tag
         uses: ./actions/mkdocs-deploy
@@ -383,6 +404,9 @@ jobs:
             echo "groups=groups: docs" >> $GITHUB_OUTPUT
           fi
 
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+
       - name: Test with default install-groups (groups docs)
         uses: ./actions/mkdocs-deploy
         with:
@@ -417,6 +441,9 @@ jobs:
             cp tests/data/mkdocs-deploy/test-pull-request-pixi/pixi.lock .
           fi
 
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
+
       - name: Test pixi with environment "${{ matrix.install-groups }}"
         uses: ./actions/mkdocs-deploy
         with:
@@ -446,6 +473,9 @@ jobs:
           cp tests/data/mkdocs-deploy/test-pull-request-pip-uv/pyproject.toml .
           cp tests/data/mkdocs-deploy/test-pull-request-pip-uv/mkdocs.yml .
           cp -r tests/data/mkdocs-deploy/test-pull-request-pip-uv/docs .
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
 
       - name: Test with Python ${{ matrix.python-version }}
         uses: ./actions/mkdocs-deploy
@@ -491,6 +521,9 @@ jobs:
           cp tests/data/mkdocs-deploy/test-custom-configuration/pyproject.toml .
           cp tests/data/mkdocs-deploy/test-custom-configuration/mkdocs.yml .
           cp -r tests/data/mkdocs-deploy/test-custom-configuration/docs .
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote-action.yml
 
       - name: Test install-groups format "${{ matrix.install-groups }}"
         uses: ./actions/mkdocs-deploy
