@@ -158,7 +158,8 @@ runs:
                 echo "Installing dependency groups: $dep_groups_cmd"
                 eval "$dep_groups_cmd"
               else
-                echo "::warning::pip version does not support --dependency-groups flag (PEP 735). Dependency groups will be ignored: $groups_list"
+                pip_version=$(pip --version | awk '{print $2}')
+                echo "::warning::pip version $pip_version does not support --dependency-groups flag (PEP 735). Dependency groups will be ignored: $groups_list"
                 echo "::warning::Please upgrade pip to version >= 24.2 or consider using the uv action instead."
                 echo "::warning::Suggested workaround: Add 'python -m pip install --upgrade pip' before this action."
               fi
