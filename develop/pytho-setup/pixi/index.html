@@ -1,0 +1,3286 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Test documentation for GitHub Actions">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Pixi - Test Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#table-of-contents" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Test Documentation" class="md-header__button md-logo" aria-label="Test Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Test Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Pixi
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Test Documentation" class="md-nav__button md-logo" aria-label="Test Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Test Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage-default-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage (Default Environment)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-multiple-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With Multiple Environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-caching-enabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With Caching Enabled
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inputs-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inputs Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inputs Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Details
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#activate-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        activate-environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cache
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-lock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        verify-lock
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-automatic-lock-file-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Automatic Lock File Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-dual-mode-installation-locked-vs-frozen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Dual Mode Installation: Locked vs Frozen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-environment-information-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Environment Information Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-intelligent-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Intelligent Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-cross-platform-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cross-Platform Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-multiple-environment-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Multiple Environment Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Scenarios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Scenarios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple Environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-activation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Activation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matrix-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matrix Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complex-projects-with-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complex Projects with Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#without-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-without-lock-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Without Lock File
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lock-file-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lock File Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lock File Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lock-file-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lock File Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frozen-vs-locked-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frozen vs Locked Modes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Frozen vs Locked Modes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#locked-mode-verify-lock-true-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Locked Mode (verify-lock: 'true' - Default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frozen-mode-verify-lock-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frozen Mode (verify-lock: 'false')
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison Table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-each-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Each Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updating-lock-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating Lock Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-pixi-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Pixi Environments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Pixi Environments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-features-dependency-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Features (Dependency Groups)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-environments-feature-combinations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Environments (Feature Combinations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-activation-runtime-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Activation (Runtime Selection)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caching-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caching Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-caching-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Caching Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-invalidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Invalidation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-coverage-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Coverage Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-fixtures-location" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Fixtures Location
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-test-fixtures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Test Fixtures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-test-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Test Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matrix-testing-multiple-python-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matrix Testing: Multiple Python Versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matrix-testing-multiple-operating-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matrix Testing: Multiple Operating Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matrix-testing-combined" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matrix Testing: Combined
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-multiple-environments-in-one-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Multiple Environments in One Job
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lock-file-verification-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lock File Verification Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lock File Verification Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-valid-lock-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Valid Lock File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-outdated-lock-file-should-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Outdated Lock File (Should Fail)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-without-lock-file-should-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Without Lock File (Should Fail)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caching-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caching Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-cache-population" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Cache Population
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-cache-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Cache Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-pixilock-file-does-not-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "pixi.lock file does not exist"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-lock-file-is-outdated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "Lock file is outdated"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-cache-not-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Cache not working
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-environment-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "Environment not found"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-package-not-found-after-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Package not found after setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-different-versions-locally-vs-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Different versions locally vs CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-windows-specific-path-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Windows-specific path issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-slow-installation-even-with-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Slow installation even with cache
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debug Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-always-commit-lock-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Always Commit Lock Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-use-locked-mode-in-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Use Locked Mode in CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-enable-caching-for-stable-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Enable Caching for Stable Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-use-minimal-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Use Minimal Environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-one-environment-activation-per-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. One Environment Activation Per Job
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-organize-dependencies-by-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Organize Dependencies by Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-use-descriptive-environment-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Use Descriptive Environment Names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-document-environment-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Document Environment Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-pin-major-python-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Pin Major Python Version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-test-lock-file-verification-in-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Test Lock File Verification in CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Migration Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-setup-python-pip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From setup-python + pip
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-setup-python-conda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From setup-python + conda
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-mamba-orgsetup-micromamba" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From mamba-org/setup-micromamba
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples Repository
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>Pixi</h1>
+
+<p>te a# Python Setup with pixi - Complete Guide</p>
+<p>Composite GitHub Action for setting up Python environments with the pixi package manager, designed for projects using conda-forge packages and cross-platform development with <code>pyproject.toml</code>.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#inputs-reference">Inputs Reference</a></li>
+<li><a href="#features">Features</a></li>
+<li><a href="#usage-scenarios">Usage Scenarios</a></li>
+<li><a href="#basic-setup">Basic Setup</a></li>
+<li><a href="#multiple-environments">Multiple Environments</a></li>
+<li><a href="#environment-activation">Environment Activation</a></li>
+<li><a href="#matrix-testing">Matrix Testing</a></li>
+<li><a href="#complex-projects-with-features">Complex Projects with Features</a></li>
+<li><a href="#caching">Caching</a></li>
+<li><a href="#lock-file-management">Lock File Management</a></li>
+<li><a href="#lock-file-verification">Lock File Verification</a></li>
+<li><a href="#frozen-vs-locked-modes">Frozen vs Locked Modes</a></li>
+<li><a href="#environment-architecture">Environment Architecture</a></li>
+<li><a href="#caching-strategy">Caching Strategy</a></li>
+<li><a href="#testing-guide">Testing Guide</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+</ul>
+<h2 id="overview">Overview</h2>
+<p>This action provides a complete Python environment setup using <a href="https://prefix.dev/">pixi</a>, a fast package manager built on top of conda. It automatically:</p>
+<ul>
+<li>Installs pixi package manager</li>
+<li>Validates lock file existence</li>
+<li>Sets up one or more pixi environments</li>
+<li>Activates a specified environment</li>
+<li>Optionally caches environments for faster CI runs</li>
+<li>Verifies lock file integrity (configurable)</li>
+</ul>
+<p><strong>Key Features:</strong>
+- ✅ Support for conda-forge and other conda channels
+- ✅ Cross-platform compatibility (Linux, macOS, Windows)
+- ✅ Multiple environment support
+- ✅ Feature-based dependency management
+- ✅ Intelligent caching with lock file validation
+- ✅ Lock file verification modes (locked/frozen)</p>
+<p><strong>Location</strong>: <code>Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1</code></p>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="basic-usage-default-environment">Basic Usage (Default Environment)</h3>
+<pre><code class="language-yaml">steps:
+  - uses: actions/checkout@v5
+  - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+
+  # The default environment is automatically activated!
+  - run: python --version
+  - run: pytest
+</code></pre>
+<h3 id="with-multiple-environments">With Multiple Environments</h3>
+<pre><code class="language-yaml">steps:
+  - uses: actions/checkout@v5
+  - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+    with:
+      environments: 'dev test prod'
+      activate-environment: 'dev'
+
+  - run: pytest  # Runs in dev environment
+</code></pre>
+<h3 id="with-caching-enabled">With Caching Enabled</h3>
+<pre><code class="language-yaml">steps:
+  - uses: actions/checkout@v5
+  - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+    with:
+      cache: 'true'
+
+  - run: python --version  # Much faster on subsequent runs!
+</code></pre>
+<h2 id="inputs-reference">Inputs Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Description</th>
+<th>Required</th>
+<th>Default</th>
+<th>Valid Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>environments</code></td>
+<td>Pixi environments to install</td>
+<td>No</td>
+<td><code>'default'</code></td>
+<td>Space-separated list (e.g., <code>'py311'</code>, <code>'dev test prod'</code>)</td>
+</tr>
+<tr>
+<td><code>activate-environment</code></td>
+<td>Environment to activate after installation</td>
+<td>No</td>
+<td><code>'default'</code></td>
+<td>Any environment name from your <code>pyproject.toml</code></td>
+</tr>
+<tr>
+<td><code>cache</code></td>
+<td>Enable caching of pixi environments</td>
+<td>No</td>
+<td><code>'false'</code></td>
+<td><code>'true'</code>, <code>'false'</code></td>
+</tr>
+<tr>
+<td><code>verify-lock</code></td>
+<td>Verify lock file is up to date</td>
+<td>No</td>
+<td><code>'true'</code></td>
+<td><code>'true'</code>, <code>'false'</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="input-details">Input Details</h3>
+<h4 id="environments"><code>environments</code></h4>
+<p>Specifies which pixi environments from <code>[tool.pixi.environments]</code> in <code>pyproject.toml</code> to install.</p>
+<p><strong>Default behavior (<code>'default'</code>)</strong>: Installs only the default environment.</p>
+<p><strong>When specified</strong>: Installs all specified environments. This is useful when you need to prepare multiple environments or when running matrix tests.</p>
+<p><strong>Formats supported:</strong>
+- Single environment: <code>'dev'</code>
+- Space-separated: <code>'dev test prod'</code>
+- Multiple runs: You can call the action multiple times with different environments (though not recommended - see best practices)</p>
+<p><strong>Example <code>pyproject.toml</code>:</strong></p>
+<pre><code class="language-toml">[tool.pixi.environments]
+default = [&quot;core&quot;]
+dev = [&quot;core&quot;, &quot;dev-tools&quot;]
+test = [&quot;core&quot;, &quot;test-tools&quot;]
+prod = [&quot;core&quot;]
+</code></pre>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-yaml"># Install only dev environment
+environments: 'dev'
+
+# Install dev and test environments
+environments: 'dev test'
+
+# Install all environments
+environments: 'default dev test prod'
+</code></pre>
+<h4 id="activate-environment"><code>activate-environment</code></h4>
+<p>Specifies which environment to activate in the GitHub Actions PATH after installation.</p>
+<p><strong>Default behavior (<code>'default'</code>)</strong>: Activates the default environment.</p>
+<p><strong>Important</strong>: This should be ONE of the environments listed in the <code>environments</code> input. If you specify an environment that wasn't installed, the action will fail.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-yaml"># Install multiple environments but activate only 'dev'
+with:
+  environments: 'dev test prod'
+  activate-environment: 'dev'
+</code></pre>
+<p>After activation:
+- Python and packages from the activated environment are available in PATH
+- All subsequent steps use this environment
+- You can run <code>pixi run -e &lt;env&gt;</code> to run commands in other environments</p>
+<h4 id="cache"><code>cache</code></h4>
+<p>Controls whether to cache the pixi environments directory (<code>.pixi</code>) for faster CI runs.</p>
+<p><strong>Default: <code>'false'</code></strong> - No caching by default to ensure clean environments unless explicitly requested.</p>
+<p><strong>When <code>'true'</code></strong>:
+- Caches the <code>.pixi</code> directory based on <code>pixi.lock</code> hash
+- Cache is only written on <code>push</code> events to the <code>main</code> branch
+- Significantly speeds up subsequent CI runs (from minutes to seconds)
+- <strong>Requires <code>pixi.lock</code> file</strong> - will fail with a clear error if missing</p>
+<p><strong>Cache key structure</strong>: <code>pixi-&lt;hash-of-pixi.lock&gt;</code></p>
+<p><strong>Cache write behavior</strong>: Only writes cache when:
+- <code>cache: 'true'</code> is set
+- Event is <code>push</code> (not PR)
+- Branch is <code>main</code></p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-yaml"># Enable caching (recommended for production)
+cache: 'true'
+
+# Disable caching (useful for debugging)
+cache: 'false'
+</code></pre>
+<h4 id="verify-lock"><code>verify-lock</code></h4>
+<p>Controls lock file verification behavior and pixi installation mode.</p>
+<p><strong>Default: <code>'true'</code></strong> - Always verify lock file is up to date.</p>
+<p><strong>When <code>'true'</code> (locked mode)</strong>:
+- Uses <code>pixi install --locked</code>
+- Verifies that <code>pixi.lock</code> matches <code>pyproject.toml</code>
+- <strong>Fails if lock file is outdated</strong> - prevents installing mismatched dependencies
+- Recommended for CI/CD to catch lock file drift</p>
+<p><strong>When <code>'false'</code> (frozen mode)</strong>:
+- Uses <code>pixi install --frozen</code>
+- Uses lock file as-is without verification
+- Faster but won't catch outdated lock files
+- Useful when you're certain the lock file is correct</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-yaml"># Verify lock file (default, recommended for CI)
+verify-lock: 'true'
+
+# Skip verification (faster, use cautiously)
+verify-lock: 'false'
+</code></pre>
+<h2 id="features">Features</h2>
+<h3 id="1-automatic-lock-file-validation">1. Automatic Lock File Validation</h3>
+<p>The action <strong>always requires a <code>pixi.lock</code> file</strong> to be present in your repository. This ensures reproducible builds across all environments.</p>
+<p><strong>What happens:</strong>
+1. ✅ Checks if <code>pixi.lock</code> exists
+2. ❌ Fails with a clear error message if missing
+3. 📝 Provides instructions on how to generate the lock file locally</p>
+<p><strong>Error message when lock file is missing:</strong></p>
+<pre><code>❌ pixi.lock file does not exist!
+To fix this issue:
+ Run 'pixi install' locally to generate pixi.lock and commit it to your repository
+This action requires a committed lock file and will never generate it in CI.
+</code></pre>
+<p><strong>Why this design?</strong>
+- Lock files should be generated on the developer's machine, not in CI
+- Ensures all developers and CI use the same dependency versions
+- Prevents CI from making commits or masking dependency conflicts
+- Makes dependency updates explicit and reviewable</p>
+<h3 id="2-dual-mode-installation-locked-vs-frozen">2. Dual Mode Installation: Locked vs Frozen</h3>
+<p>The action supports two installation modes controlled by the <code>verify-lock</code> input:</p>
+<p><strong>Locked Mode (<code>verify-lock: 'true'</code> - default):</strong></p>
+<pre><code class="language-bash">pixi install --locked
+</code></pre>
+<ul>
+<li>Verifies <code>pixi.lock</code> matches <code>pyproject.toml</code></li>
+<li>Fails if dependencies were added/removed without updating lock file</li>
+<li><strong>Best for</strong>: CI/CD pipelines, ensuring strict reproducibility</li>
+</ul>
+<p><strong>Frozen Mode (<code>verify-lock: 'false'</code>):</strong></p>
+<pre><code class="language-bash">pixi install --frozen
+</code></pre>
+<ul>
+<li>Uses <code>pixi.lock</code> without verification</li>
+<li>Faster but won't detect lock file drift</li>
+<li><strong>Best for</strong>: Local development, trusted environments</li>
+</ul>
+<p><strong>Comparison:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Flag</th>
+<th>Verifies Lock</th>
+<th>Speed</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Locked</td>
+<td><code>--locked</code></td>
+<td>✅ Yes</td>
+<td>Slower</td>
+<td>CI/CD, production</td>
+</tr>
+<tr>
+<td>Frozen</td>
+<td><code>--frozen</code></td>
+<td>❌ No</td>
+<td>Faster</td>
+<td>Development, trusted deploys</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-environment-information-logging">3. Environment Information Logging</h3>
+<p>After installation, the action automatically logs environment information:</p>
+<p><strong>Pixi Information:</strong></p>
+<pre><code>Active environment: dev
+Available environments:
+  - default
+  - dev
+  - test
+  - prod
+</code></pre>
+<p><strong>Installed Packages:</strong></p>
+<pre><code>Installed packages summary:
+  python 3.11.7
+  numpy 1.26.2
+  pandas 2.1.4
+  pytest 7.4.3
+  ...
+</code></pre>
+<p>This appears in collapsible sections in GitHub Actions logs for easy debugging.</p>
+<h3 id="4-intelligent-caching">4. Intelligent Caching</h3>
+<p>When <code>cache: 'true'</code> is enabled:</p>
+<p><strong>Cache Behavior:</strong>
+- <strong>Key</strong>: <code>pixi-&lt;hash(pixi.lock)&gt;</code>
+- <strong>Cached</strong>: <code>.pixi/</code> directory (all environments)
+- <strong>Write</strong>: Only on <code>push</code> to <code>main</code> branch
+- <strong>Read</strong>: All runs (including PRs)</p>
+<p><strong>Performance Impact:</strong>
+- 🐌 First run: ~5-10 minutes (install all packages)
+- 🚀 Cached run: ~30 seconds (restore cache + verification)</p>
+<p><strong>Cache Invalidation:</strong>
+- Automatic when <code>pixi.lock</code> changes
+- Manual: bump version in <code>pyproject.toml</code> or clear GitHub cache</p>
+<h3 id="5-cross-platform-support">5. Cross-Platform Support</h3>
+<p>The action works seamlessly across:
+- 🐧 <strong>Linux</strong> (ubuntu-latest)
+- 🍎 <strong>macOS</strong> (macos-latest, macos-13, macos-14)
+- 🪟 <strong>Windows</strong> (windows-latest)</p>
+<p>Shell commands automatically adapt to the platform (bash on Linux/macOS, PowerShell on Windows).</p>
+<h3 id="6-multiple-environment-management">6. Multiple Environment Management</h3>
+<p>Install and manage multiple environments in a single workflow:</p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+  with:
+    environments: 'py311 py312 py313'
+    activate-environment: 'py311'
+
+# py311 is active by default
+- run: python --version  # Python 3.11
+
+# Switch to another environment for specific commands
+- run: pixi run -e py312 python --version  # Python 3.12
+- run: pixi run -e py313 pytest  # Run tests in Python 3.13
+</code></pre>
+<h2 id="usage-scenarios">Usage Scenarios</h2>
+<h3 id="basic-setup">Basic Setup</h3>
+<p><strong>Scenario</strong>: Simple project with a single environment.</p>
+<p><strong><code>pyproject.toml</code>:</strong></p>
+<pre><code class="language-toml">[project]
+name = &quot;my-project&quot;
+version = &quot;0.1.0&quot;
+
+[tool.pixi.workspace]
+channels = [&quot;conda-forge&quot;]
+platforms = [&quot;linux-64&quot;, &quot;osx-64&quot;, &quot;win-64&quot;]
+
+[tool.pixi.dependencies]
+python = &quot;&gt;=3.11&quot;
+numpy = &quot;&gt;=1.26&quot;
+pytest = &quot;&gt;=7.0&quot;
+</code></pre>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">name: Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Python with pixi
+        uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          cache: 'false'
+
+      - name: Run tests
+        run: pytest
+
+      - name: Verify installation
+        run: |
+          python --version
+          python -c &quot;import numpy; print(f'NumPy {numpy.__version__}')&quot;
+</code></pre>
+<p><strong>Result</strong>: Default environment is installed and activated, all packages available.</p>
+<h3 id="multiple-environments">Multiple Environments</h3>
+<p><strong>Scenario</strong>: Project with separate development and production environments.</p>
+<p><strong><code>pyproject.toml</code>:</strong></p>
+<pre><code class="language-toml">[tool.pixi.workspace]
+channels = [&quot;conda-forge&quot;]
+platforms = [&quot;linux-64&quot;, &quot;osx-64&quot;, &quot;win-64&quot;]
+
+[tool.pixi.dependencies]
+python = &quot;&gt;=3.11&quot;
+
+[tool.pixi.feature.core.dependencies]
+numpy = &quot;&gt;=1.26&quot;
+pandas = &quot;&gt;=2.0&quot;
+
+[tool.pixi.feature.dev.dependencies]
+pytest = &quot;&gt;=7.0&quot;
+black = &quot;&gt;=23.0&quot;
+ruff = &quot;&gt;=0.1&quot;
+
+[tool.pixi.feature.prod.dependencies]
+gunicorn = &quot;&gt;=21.0&quot;
+
+[tool.pixi.environments]
+default = [&quot;core&quot;]
+dev = [&quot;core&quot;, &quot;dev&quot;]
+prod = [&quot;core&quot;, &quot;prod&quot;]
+</code></pre>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup dev environment
+        uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          environments: 'dev'
+          activate-environment: 'dev'
+          cache: 'false'
+
+      - name: Run linting
+        run: |
+          black --check .
+          ruff check .
+
+      - name: Run tests
+        run: pytest
+
+  deploy-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup prod environment
+        uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          environments: 'prod'
+          activate-environment: 'prod'
+          cache: 'false'
+
+      - name: Verify prod dependencies
+        run: |
+          python -c &quot;import gunicorn&quot;
+          python -c &quot;import numpy, pandas&quot;
+</code></pre>
+<p><strong>Result</strong>: Different jobs use different environments with appropriate dependencies.</p>
+<h3 id="environment-activation">Environment Activation</h3>
+<p><strong>Scenario</strong>: Install multiple environments but work primarily in one.</p>
+<p><strong><code>pyproject.toml</code>:</strong></p>
+<pre><code class="language-toml">[tool.pixi.feature.core.dependencies]
+python = &quot;&gt;=3.11&quot;
+requests = &quot;&gt;=2.31&quot;
+
+[tool.pixi.feature.dev.dependencies]
+pytest = &quot;&gt;=7.0&quot;
+black = &quot;&gt;=23.0&quot;
+
+[tool.pixi.feature.test.dependencies]
+pytest = &quot;&gt;=7.0&quot;
+pytest-cov = &quot;&gt;=4.0&quot;
+hypothesis = &quot;&gt;=6.0&quot;
+
+[tool.pixi.environments]
+default = [&quot;core&quot;]
+dev = [&quot;core&quot;, &quot;dev&quot;]
+test = [&quot;core&quot;, &quot;test&quot;]
+</code></pre>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup all environments
+        uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          environments: 'dev test'
+          activate-environment: 'dev'  # Dev is active by default
+          cache: 'false'
+
+      - name: Run linting (uses active dev environment)
+        run: black --check .
+
+      - name: Run tests (switch to test environment)
+        run: pixi run -e test pytest --cov
+
+      - name: Check coverage (in test environment)
+        run: pixi run -e test coverage report
+</code></pre>
+<p><strong>Result</strong>: Multiple environments available, explicit control over which is active.</p>
+<h3 id="matrix-testing">Matrix Testing</h3>
+<p><strong>Scenario</strong>: Test across multiple Python versions or OS combinations.</p>
+<p><strong><code>pyproject.toml</code>:</strong></p>
+<pre><code class="language-toml">[tool.pixi.workspace]
+channels = [&quot;conda-forge&quot;]
+platforms = [&quot;linux-64&quot;, &quot;osx-64&quot;, &quot;osx-arm64&quot;, &quot;win-64&quot;]
+
+[tool.pixi.dependencies]
+python = &quot;&gt;=3.11&quot;
+
+[tool.pixi.feature.py311.dependencies]
+python = &quot;3.11.*&quot;
+pandas = &quot;&gt;=2.0&quot;
+
+[tool.pixi.feature.py312.dependencies]
+python = &quot;3.12.*&quot;
+scikit-learn = &quot;&gt;=1.3&quot;
+
+[tool.pixi.environments]
+default = []
+py311 = [&quot;py311&quot;]
+py312 = [&quot;py312&quot;]
+</code></pre>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  test-matrix:
+    name: Test Python ${{ matrix.python-env }} on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-env: ['py311', 'py312']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Python environment
+        uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          environments: ${{ matrix.python-env }}
+          activate-environment: ${{ matrix.python-env }}
+          cache: 'false'
+
+      - name: Run tests
+        run: |
+          python --version
+          pytest
+</code></pre>
+<p><strong>Result</strong>: Tests run on 6 combinations (3 OS × 2 Python versions), each with correct environment.</p>
+<h3 id="complex-projects-with-features">Complex Projects with Features</h3>
+<p><strong>Scenario</strong>: Large project with multiple feature sets (ML, visualization, development tools).</p>
+<p><strong><code>pyproject.toml</code>:</strong></p>
+<pre><code class="language-toml">[project]
+name = &quot;complex-ml-project&quot;
+version = &quot;0.1.0&quot;
+
+[tool.pixi.workspace]
+channels = [&quot;conda-forge&quot;, &quot;pytorch&quot;]
+platforms = [&quot;linux-64&quot;, &quot;osx-64&quot;, &quot;osx-arm64&quot;, &quot;win-64&quot;]
+
+[tool.pixi.tasks]
+test = &quot;pytest tests/&quot;
+lint = &quot;ruff check .&quot;
+train = &quot;python scripts/train.py&quot;
+
+[tool.pixi.dependencies]
+python = &quot;&gt;=3.11,&lt;3.13&quot;
+
+[tool.pixi.feature.core.dependencies]
+numpy = &quot;&gt;=1.26&quot;
+pandas = &quot;&gt;=2.0&quot;
+scipy = &quot;&gt;=1.11&quot;
+
+[tool.pixi.feature.ml.dependencies]
+scikit-learn = &quot;&gt;=1.3&quot;
+xgboost = &quot;&gt;=2.0&quot;
+pytorch = &quot;&gt;=2.0&quot;
+
+[tool.pixi.feature.viz.dependencies]
+matplotlib = &quot;&gt;=3.8&quot;
+seaborn = &quot;&gt;=0.13&quot;
+plotly = &quot;&gt;=5.18&quot;
+
+[tool.pixi.feature.dev.dependencies]
+pytest = &quot;&gt;=7.0&quot;
+pytest-cov = &quot;&gt;=4.0&quot;
+black = &quot;&gt;=23.0&quot;
+ruff = &quot;&gt;=0.1&quot;
+mypy = &quot;&gt;=1.0&quot;
+
+[tool.pixi.environments]
+default = [&quot;core&quot;, &quot;dev&quot;]
+ml = [&quot;core&quot;, &quot;ml&quot;, &quot;viz&quot;, &quot;dev&quot;]
+prod = [&quot;core&quot;, &quot;ml&quot;]
+ci = [&quot;core&quot;, &quot;ml&quot;, &quot;dev&quot;]
+</code></pre>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup CI environment
+        uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          environments: 'ci'
+          activate-environment: 'ci'
+          cache: 'true'  # Enable caching for complex environments
+
+      - name: Lint code
+        run: |
+          black --check .
+          ruff check .
+          mypy src/
+
+      - name: Run tests
+        run: pytest --cov=src tests/
+
+      - name: Test ML models
+        run: |
+          python -c &quot;import sklearn, xgboost, torch&quot;
+          python scripts/test_model.py
+
+  train-model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup ML environment
+        uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          environments: 'ml'
+          activate-environment: 'ml'
+          cache: 'true'
+
+      - name: Train model
+        run: python scripts/train.py
+
+      - name: Generate visualizations
+        run: python scripts/visualize.py
+</code></pre>
+<p><strong>Result</strong>: Different jobs use optimized environments with only necessary dependencies.</p>
+<h3 id="caching">Caching</h3>
+<p><strong>Scenario</strong>: Speed up CI by caching the pixi environment.</p>
+<h4 id="without-caching">Without Caching</h4>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          cache: 'false'  # No caching
+
+      - name: Run tests
+        run: pytest
+</code></pre>
+<p><strong>Time</strong>: ~5-10 minutes per run (full package installation each time)</p>
+<h4 id="with-caching">With Caching</h4>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Python with caching
+        uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          cache: 'true'  # Enable caching
+
+      - name: Run tests
+        run: pytest
+</code></pre>
+<p><strong>Time</strong>:
+- First run: ~5-10 minutes (installs packages + saves cache)
+- Subsequent runs: ~30 seconds (restores cache)
+- After lock file change: ~5-10 minutes (cache miss, rebuilds)</p>
+<p><strong>Cache behavior:</strong>
+- ✅ <strong>Reads cache</strong>: All runs (PRs, pushes, manual)
+- ✏️ <strong>Writes cache</strong>: Only on <code>push</code> to <code>main</code> branch
+- 🔄 <strong>Updates cache</strong>: When <code>pixi.lock</code> changes</p>
+<h4 id="validation-without-lock-file">Validation Without Lock File</h4>
+<p>The action will fail if you enable caching without a lock file:</p>
+<p><strong>Workflow (will fail):</strong></p>
+<pre><code class="language-yaml">- name: Setup Python with caching
+  uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+  with:
+    cache: 'true'  # ❌ Will fail - no pixi.lock!
+</code></pre>
+<p><strong>Error:</strong></p>
+<pre><code>❌ Cache is enabled but pixi.lock file does not exist!
+To fix this issue:
+ First run 'pixi install' locally to generate pixi.lock and then commit it to your repository
+</code></pre>
+<p><strong>How to fix:</strong></p>
+<pre><code class="language-bash"># On your local machine
+pixi install  # Generates pixi.lock
+git add pixi.lock
+git commit -m &quot;Add pixi lock file&quot;
+git push
+</code></pre>
+<h2 id="lock-file-management">Lock File Management</h2>
+<h3 id="lock-file-verification">Lock File Verification</h3>
+<p>The action implements a <strong>lock-file-first</strong> approach:</p>
+<ol>
+<li><strong>Lock file is mandatory</strong>: Action fails immediately if <code>pixi.lock</code> doesn't exist</li>
+<li><strong>Generated locally</strong>: Developers run <code>pixi install</code> on their machines</li>
+<li><strong>Committed to repository</strong>: Lock file is version-controlled</li>
+<li><strong>Verified in CI</strong>: Action validates (optionally) that lock matches dependencies</li>
+</ol>
+<p><strong>Benefits:</strong>
+- 🔒 <strong>Reproducibility</strong>: Everyone uses exact same versions
+- 👀 <strong>Visibility</strong>: Lock file changes are reviewable in PRs
+- 🚫 <strong>No surprises</strong>: CI doesn't install different versions than local
+- ⚡ <strong>Speed</strong>: No lock resolution in CI</p>
+<h3 id="frozen-vs-locked-modes">Frozen vs Locked Modes</h3>
+<p>The <code>verify-lock</code> input controls how pixi uses the lock file:</p>
+<h4 id="locked-mode-verify-lock-true-default">Locked Mode (<code>verify-lock: 'true'</code> - Default)</h4>
+<p><strong>Command used</strong>: <code>pixi install --locked</code></p>
+<p><strong>Behavior:</strong>
+1. Reads <code>pixi.lock</code>
+2. Compares with <code>pyproject.toml</code>
+3. ❌ <strong>Fails if mismatch</strong> (dependencies added/changed without updating lock)
+4. ✅ Installs exact versions from lock file</p>
+<p><strong>Use when:</strong>
+- Running CI/CD pipelines
+- You want strict reproducibility
+- You want to catch lock file drift</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-yaml">- name: Setup with verification
+  uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+  with:
+    verify-lock: 'true'  # Default
+</code></pre>
+<p><strong>What it catches:</strong></p>
+<pre><code class="language-toml"># pyproject.toml - added pandas
+[tool.pixi.dependencies]
+python = &quot;&gt;=3.11&quot;
+numpy = &quot;&gt;=1.26&quot;
+pandas = &quot;&gt;=2.0&quot;  # ⚠️ NEW!
+
+# pixi.lock - doesn't have pandas
+# ❌ Action fails: &quot;Lock file is outdated!&quot;
+</code></pre>
+<h4 id="frozen-mode-verify-lock-false">Frozen Mode (<code>verify-lock: 'false'</code>)</h4>
+<p><strong>Command used</strong>: <code>pixi install --frozen</code></p>
+<p><strong>Behavior:</strong>
+1. Reads <code>pixi.lock</code>
+2. Installs exact versions from lock file
+3. ✅ <strong>No verification</strong> - trusts lock file is correct
+4. Faster (skips verification step)</p>
+<p><strong>Use when:</strong>
+- You're certain the lock file is up to date
+- You want faster CI runs
+- Lock file is updated automatically by bots/tools</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-yaml">- name: Setup without verification
+  uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+  with:
+    verify-lock: 'false'
+</code></pre>
+<p><strong>Warning</strong>: Won't catch lock file drift, so use carefully.</p>
+<h4 id="comparison-table">Comparison Table</h4>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Locked Mode</th>
+<th>Frozen Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Command</strong></td>
+<td><code>--locked</code></td>
+<td><code>--frozen</code></td>
+</tr>
+<tr>
+<td><strong>Verifies lock</strong></td>
+<td>✅ Yes</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td><strong>Fails on drift</strong></td>
+<td>✅ Yes</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td><strong>Speed</strong></td>
+<td>Slower (verification)</td>
+<td>Faster</td>
+</tr>
+<tr>
+<td><strong>Safety</strong></td>
+<td>Safer</td>
+<td>Less safe</td>
+</tr>
+<tr>
+<td><strong>Best for</strong></td>
+<td>CI/CD</td>
+<td>Trusted environments</td>
+</tr>
+<tr>
+<td><strong>Default</strong></td>
+<td>✅ Yes</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h4 id="when-to-use-each-mode">When to Use Each Mode</h4>
+<p><strong>Use Locked Mode (<code>verify-lock: 'true'</code>) when:</strong>
+- ✅ Running CI/CD pipelines
+- ✅ Multiple contributors updating dependencies
+- ✅ You want to enforce lock file updates
+- ✅ Security is important (catch unexpected changes)</p>
+<p><strong>Use Frozen Mode (<code>verify-lock: 'false'</code>) when:</strong>
+- ✅ Lock file is auto-updated (Dependabot, Renovate)
+- ✅ Single developer project
+- ✅ Speed is critical (many CI runs)
+- ✅ You have other verification mechanisms</p>
+<h4 id="updating-lock-files">Updating Lock Files</h4>
+<p><strong>Recommended workflow:</strong></p>
+<ol>
+<li><strong>Update dependencies locally:</strong>
+   ```bash
+   # Edit pyproject.toml
+   vim pyproject.toml</li>
+</ol>
+<p># Update lock file
+   pixi install</p>
+<p># Verify it works
+   pixi run pytest
+   ```</p>
+<ol>
+<li>
+<p><strong>Commit both files:</strong>
+   <code>bash
+   git add pyproject.toml pixi.lock
+   git commit -m "Update numpy to 2.0"
+   git push</code></p>
+</li>
+<li>
+<p><strong>CI validates:</strong></p>
+</li>
+<li>PR runs with <code>verify-lock: 'true'</code></li>
+<li>✅ Passes because lock file matches</li>
+<li>Reviewers see both files changed</li>
+</ol>
+<p><strong>What NOT to do:</strong></p>
+<pre><code class="language-bash"># ❌ Don't edit only pyproject.toml without updating lock
+vim pyproject.toml
+git add pyproject.toml  # Missing pixi.lock!
+git commit -m &quot;Update numpy&quot;
+# CI will fail with &quot;Lock file is outdated&quot;
+</code></pre>
+<h2 id="environment-architecture">Environment Architecture</h2>
+<h3 id="understanding-pixi-environments">Understanding Pixi Environments</h3>
+<p>Pixi uses a feature-based system to compose environments:</p>
+<p><strong>Features</strong> → <strong>Environments</strong> → <strong>Activation</strong></p>
+<h4 id="1-features-dependency-groups">1. Features (Dependency Groups)</h4>
+<p>Features define groups of related dependencies:</p>
+<pre><code class="language-toml">[tool.pixi.feature.core.dependencies]
+python = &quot;&gt;=3.11&quot;
+numpy = &quot;&gt;=1.26&quot;
+
+[tool.pixi.feature.dev.dependencies]
+pytest = &quot;&gt;=7.0&quot;
+black = &quot;&gt;=23.0&quot;
+
+[tool.pixi.feature.ml.dependencies]
+scikit-learn = &quot;&gt;=1.3&quot;
+pytorch = &quot;&gt;=2.0&quot;
+</code></pre>
+<p><strong>Think of features as:</strong>
+- 📦 Reusable dependency sets
+- 🧩 Building blocks for environments
+- 🎯 Logical groupings (core, dev, ML, viz, etc.)</p>
+<h4 id="2-environments-feature-combinations">2. Environments (Feature Combinations)</h4>
+<p>Environments combine multiple features:</p>
+<pre><code class="language-toml">[tool.pixi.environments]
+default = [&quot;core&quot;]                    # Just core
+dev = [&quot;core&quot;, &quot;dev&quot;]                 # Core + dev tools
+ml = [&quot;core&quot;, &quot;ml&quot;]                   # Core + ML packages
+full = [&quot;core&quot;, &quot;dev&quot;, &quot;ml&quot;]          # Everything
+</code></pre>
+<p><strong>Think of environments as:</strong>
+- 🎭 Different use cases (dev, test, prod)
+- 🔧 Job-specific setups
+- 📊 Matrix test configurations</p>
+<h4 id="3-activation-runtime-selection">3. Activation (Runtime Selection)</h4>
+<p>The action installs environments and activates one:</p>
+<pre><code class="language-yaml">environments: 'dev ml'           # Installs both
+activate-environment: 'dev'      # Activates dev (adds to PATH)
+</code></pre>
+<p><strong>After activation:</strong>
+- ✅ <code>python</code> → Python from activated environment
+- ✅ <code>pytest</code> → If in activated environment
+- ✅ Package imports work from activated environment
+- ❌ Packages from other environments not in PATH (but can use <code>pixi run -e</code>)</p>
+<h3 id="environment-lifecycle">Environment Lifecycle</h3>
+<p><strong>Step-by-step what happens:</strong></p>
+<ol>
+<li><strong>Validation</strong>: Check <code>pixi.lock</code> exists</li>
+<li><strong>Installation</strong>: Install pixi (if not cached)</li>
+<li><strong>Lock Check</strong> (if <code>verify-lock: 'true'</code>): Verify lock matches pyproject.toml</li>
+<li><strong>Environment Creation</strong>: Install specified environments
+   <code>bash
+   pixi install --locked  # or --frozen
+   # Creates .pixi/envs/dev/, .pixi/envs/ml/, etc.</code></li>
+<li><strong>Activation</strong>: Add environment to PATH
+   <code>bash
+   # Adds .pixi/envs/dev/bin to PATH</code></li>
+<li><strong>Verification</strong>: Log environment info</li>
+</ol>
+<h3 id="directory-structure">Directory Structure</h3>
+<p>After installation, your project looks like:</p>
+<pre><code>my-project/
+├── pyproject.toml
+├── pixi.lock
+├── .pixi/                      # Created by pixi
+│   ├── envs/
+│   │   ├── default/            # Each environment
+│   │   │   ├── bin/
+│   │   │   ├── lib/
+│   │   │   └── ...
+│   │   ├── dev/
+│   │   │   ├── bin/
+│   │   │   └── ...
+│   │   └── ml/
+│   │       └── ...
+│   └── bin/
+│       └── pixi                # Pixi binary
+├── src/
+└── tests/
+</code></pre>
+<p><strong>Caching caches</strong>: The entire <code>.pixi/</code> directory</p>
+<h2 id="caching-strategy">Caching Strategy</h2>
+<h3 id="how-caching-works">How Caching Works</h3>
+<p><strong>Cache Key</strong>: <code>pixi-&lt;hash(pixi.lock)&gt;</code></p>
+<p><strong>What's cached</strong>: Entire <code>.pixi/</code> directory containing:
+- All installed environments
+- Pixi binary
+- Package metadata</p>
+<p><strong>Cache flow:</strong></p>
+<pre><code>┌─────────────────┐
+│  Run starts     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Hash pixi.lock  │ ← Generate cache key
+└────────┬────────┘
+         │
+         ▼
+    ┌────────┐
+    │ Cache  │
+    │ hit?   │
+    └───┬────┘
+        │
+    ┌───┴────┐
+    │        │
+   YES      NO
+    │        │
+    ▼        ▼
+┌────────┐ ┌──────────────┐
+│Restore │ │Install fresh │
+│cache   │ │              │
+└───┬────┘ └──────┬───────┘
+    │             │
+    │             ▼
+    │      ┌──────────────┐
+    │      │ Is push to   │
+    │      │ main branch? │
+    │      └──────┬───────┘
+    │             │
+    │         ┌───┴───┐
+    │         │       │
+    │        YES     NO
+    │         │       │
+    │         ▼       ▼
+    │   ┌─────────┐ ┌────────┐
+    │   │  Save   │ │  Skip  │
+    │   │  cache  │ │  save  │
+    │   └─────────┘ └────────┘
+    │
+    └──────────┬──────────────┘
+               │
+               ▼
+         ┌──────────┐
+         │   Done   │
+         └──────────┘
+</code></pre>
+<h3 id="cache-performance">Cache Performance</h3>
+<p><strong>Typical timings:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Time</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>No cache, small project</strong></td>
+<td>1-2 min</td>
+<td>Few packages</td>
+</tr>
+<tr>
+<td><strong>No cache, large project</strong></td>
+<td>5-10 min</td>
+<td>Many packages (ML libs)</td>
+</tr>
+<tr>
+<td><strong>Cache hit</strong></td>
+<td>20-40 sec</td>
+<td>Restore + verify</td>
+</tr>
+<tr>
+<td><strong>Cache miss</strong></td>
+<td>5-10 min</td>
+<td>Full install + save</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Factors affecting speed:</strong>
+- Number of packages
+- Package size (pytorch is large!)
+- Number of environments
+- Network speed (first install)</p>
+<h3 id="cache-invalidation">Cache Invalidation</h3>
+<p><strong>Automatic invalidation when:</strong>
+- ✅ <code>pixi.lock</code> changes (new hash → new key)
+- ✅ GitHub clears old caches (7 days unused)</p>
+<p><strong>Manual invalidation:</strong>
+- Clear cache via GitHub UI (Settings → Actions → Caches)
+- Change cache key (modify action or add version to <code>pyproject.toml</code>)</p>
+<p><strong>Cache won't invalidate when:</strong>
+- ❌ Only <code>pyproject.toml</code> changes (lock file unchanged)
+- ❌ Code changes
+- ❌ Non-dependency configuration changes</p>
+<h3 id="cache-best-practices">Cache Best Practices</h3>
+<p><strong>DO:</strong>
+- ✅ Enable caching for stable projects
+- ✅ Use caching in production CI
+- ✅ Monitor cache hit rates
+- ✅ Include lock file in commits</p>
+<p><strong>DON'T:</strong>
+- ❌ Enable caching when debugging dependency issues
+- ❌ Rely on cache without lock file verification
+- ❌ Cache in fork PRs (limited cache space)</p>
+<p><strong>Optimal configuration:</strong></p>
+<pre><code class="language-yaml"># Main branch - write cache
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+  with:
+    cache: 'true'
+    verify-lock: 'true'  # Verify even with cache
+
+# PR branches - read cache only (automatic)
+# Same configuration, but cache-write is disabled automatically
+</code></pre>
+<h2 id="testing-guide">Testing Guide</h2>
+<p>This action is comprehensively tested across multiple scenarios to ensure reliability. Reference the test workflow at <code>.github/workflows/test-python-setup-pixi.yml</code>.</p>
+<h3 id="test-coverage-matrix">Test Coverage Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Test Job</th>
+<th>Purpose</th>
+<th>Key Validations</th>
+<th>Fixture</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test-pixi-basic</code></td>
+<td>Default behavior</td>
+<td>Pixi and Python installed, packages available</td>
+<td><code>test-pixi-basic/</code></td>
+</tr>
+<tr>
+<td><code>test-pixi-default-environment</code></td>
+<td>Default environment only</td>
+<td>Only default environment installed</td>
+<td><code>test-pixi-default-environment/</code></td>
+</tr>
+<tr>
+<td><code>test-pixi-multiple-environments</code></td>
+<td>Multiple environments</td>
+<td>Multiple envs installed, correct one activated</td>
+<td><code>test-pixi-multiple-environments/</code></td>
+</tr>
+<tr>
+<td><code>test-pixi-environment-activation</code></td>
+<td>Environment activation</td>
+<td>Specific environment activated correctly</td>
+<td><code>test-pixi-environment-activation/</code></td>
+</tr>
+<tr>
+<td><code>test-pixi-lock-verification-valid</code></td>
+<td>Valid lock file</td>
+<td>Lock verification passes</td>
+<td><code>test-pixi-lock-verification-valid/</code></td>
+</tr>
+<tr>
+<td><code>test-pixi-lock-verification-outdated</code></td>
+<td>Outdated lock handling</td>
+<td>Fails with outdated lock file</td>
+<td><code>test-pixi-lock-verification-outdated/</code></td>
+</tr>
+<tr>
+<td><code>test-pixi-lock-verification-disabled</code></td>
+<td>Skip lock check</td>
+<td>Works with <code>verify-lock: 'false'</code></td>
+<td><code>test-pixi-lock-verification-disabled/</code></td>
+</tr>
+<tr>
+<td><code>test-pixi-lock-verification-validation</code></td>
+<td>Missing lock file</td>
+<td>Fails without lock file</td>
+<td><code>test-pixi-lock-verification-validation/</code></td>
+</tr>
+<tr>
+<td><code>test-pixi-caching-populate</code></td>
+<td>Cache population</td>
+<td>Cache created and packages installed</td>
+<td><code>test-pixi-caching-populate/</code></td>
+</tr>
+<tr>
+<td><code>test-pixi-caching-retrieve</code></td>
+<td>Cache retrieval</td>
+<td>Cache restored on subsequent runs</td>
+<td><code>test-pixi-caching-retrieve/</code></td>
+</tr>
+<tr>
+<td><code>test-pixi-caching-validation</code></td>
+<td>Cache without lock</td>
+<td>Fails when cache enabled without lock</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>test-pixi-matrix</code></td>
+<td>Cross-platform matrix</td>
+<td>Works on Linux/Windows/macOS with multiple environments</td>
+<td><code>test-pixi-matrix/</code></td>
+</tr>
+<tr>
+<td><code>test-pixi-error-scenarios</code></td>
+<td>Error handling</td>
+<td>Proper errors for missing lock, wrong environment</td>
+<td><code>test-pixi-basic/</code></td>
+</tr>
+<tr>
+<td><code>test-pixi-complex-project</code></td>
+<td>Complex setup</td>
+<td>Multiple features and environments</td>
+<td><code>test-pixi-complex-project/</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="test-fixtures-location">Test Fixtures Location</h3>
+<p>All test fixtures are located in <code>tests/data/pixi/</code> directory:</p>
+<pre><code>tests/data/pixi/
+├── test-pixi-basic/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-default-environment/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-multiple-environments/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-environment-activation/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-lock-verification-valid/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-lock-verification-outdated/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-lock-verification-disabled/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-lock-verification-validation/
+│   └── pyproject.toml  # No lock file (intentional)
+├── test-pixi-caching-populate/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-caching-retrieve/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-matrix/
+│   ├── pyproject.toml
+│   └── pixi.lock
+└── test-pixi-complex-project/
+    ├── pyproject.toml
+    └── pixi.lock
+</code></pre>
+<h3 id="example-test-fixtures">Example Test Fixtures</h3>
+<p><strong>test-pixi-basic/pyproject.toml:</strong></p>
+<pre><code class="language-toml">[project]
+name = &quot;test-pixi-basic&quot;
+version = &quot;0.1.0&quot;
+dependencies = []
+
+[tool.pixi.workspace]
+channels = [&quot;conda-forge&quot;]
+platforms = [&quot;linux-64&quot;, &quot;osx-64&quot;, &quot;osx-arm64&quot;, &quot;win-64&quot;]
+
+[tool.pixi.dependencies]
+python = &quot;&gt;=3.11&quot;
+numpy = &quot;&gt;=1.26&quot;
+pytest = &quot;&gt;=7.0&quot;
+</code></pre>
+<p><strong>test-pixi-multiple-environments/pyproject.toml:</strong></p>
+<pre><code class="language-toml">[project]
+name = &quot;test-multi-env&quot;
+version = &quot;0.1.0&quot;
+
+[tool.pixi.workspace]
+channels = [&quot;conda-forge&quot;]
+platforms = [&quot;linux-64&quot;, &quot;osx-64&quot;, &quot;osx-arm64&quot;, &quot;win-64&quot;]
+
+[tool.pixi.feature.core.dependencies]
+python = &quot;&gt;=3.11&quot;
+numpy = &quot;&gt;=1.26&quot;
+
+[tool.pixi.feature.py311.dependencies]
+python = &quot;3.11.*&quot;
+pandas = &quot;&gt;=2.0&quot;
+
+[tool.pixi.feature.py312.dependencies]
+python = &quot;3.12.*&quot;
+pandas = &quot;&gt;=2.0&quot;
+
+[tool.pixi.environments]
+default = [&quot;core&quot;]
+py311 = [&quot;core&quot;, &quot;py311&quot;]
+py312 = [&quot;core&quot;, &quot;py312&quot;]
+</code></pre>
+<p><strong>test-pixi-complex-project/pyproject.toml:</strong></p>
+<pre><code class="language-toml">[project]
+name = &quot;test-complex&quot;
+version = &quot;0.1.0&quot;
+
+[tool.pixi.workspace]
+channels = [&quot;conda-forge&quot;]
+platforms = [&quot;linux-64&quot;, &quot;osx-64&quot;, &quot;osx-arm64&quot;, &quot;win-64&quot;]
+
+[tool.pixi.feature.core.dependencies]
+python = &quot;&gt;=3.11&quot;
+requests = &quot;&gt;=2.31&quot;
+
+[tool.pixi.feature.ml.dependencies]
+numpy = &quot;&gt;=1.26&quot;
+scikit-learn = &quot;&gt;=1.3&quot;
+
+[tool.pixi.feature.dev.dependencies]
+pytest = &quot;&gt;=7.0&quot;
+black = &quot;&gt;=23.0&quot;
+
+[tool.pixi.environments]
+default = [&quot;core&quot;, &quot;dev&quot;]
+ml = [&quot;core&quot;, &quot;ml&quot;, &quot;dev&quot;]
+prod = [&quot;core&quot;, &quot;ml&quot;]
+</code></pre>
+<h3 id="basic-test-setup">Basic Test Setup</h3>
+<pre><code class="language-yaml">name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          cache: 'false'
+
+      - run: pytest tests/
+</code></pre>
+<h3 id="matrix-testing-multiple-python-versions">Matrix Testing: Multiple Python Versions</h3>
+<pre><code class="language-yaml">jobs:
+  test:
+    strategy:
+      matrix:
+        python-env: ['py310', 'py311', 'py312']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          environments: ${{ matrix.python-env }}
+          activate-environment: ${{ matrix.python-env }}
+          cache: 'false'
+
+      - run: pytest
+</code></pre>
+<h3 id="matrix-testing-multiple-operating-systems">Matrix Testing: Multiple Operating Systems</h3>
+<pre><code class="language-yaml">jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          cache: 'false'
+
+      - run: pytest
+</code></pre>
+<h3 id="matrix-testing-combined">Matrix Testing: Combined</h3>
+<pre><code class="language-yaml">jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-env: ['py311', 'py312']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          environments: ${{ matrix.python-env }}
+          activate-environment: ${{ matrix.python-env }}
+          cache: 'false'
+
+      - run: pytest
+</code></pre>
+<h3 id="testing-multiple-environments-in-one-job">Testing Multiple Environments in One Job</h3>
+<pre><code class="language-yaml">jobs:
+  test-all:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          environments: 'dev test'
+          activate-environment: 'dev'
+          cache: 'false'
+
+      - name: Lint with dev environment
+        run: |
+          black --check .
+          ruff check .
+
+      - name: Test with test environment
+        run: pixi run -e test pytest --cov
+</code></pre>
+<h3 id="lock-file-verification-tests">Lock File Verification Tests</h3>
+<h4 id="test-valid-lock-file">Test Valid Lock File</h4>
+<pre><code class="language-yaml">jobs:
+  test-valid-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          verify-lock: 'true'  # Should pass
+          cache: 'false'
+
+      - run: pytest
+</code></pre>
+<h4 id="test-outdated-lock-file-should-fail">Test Outdated Lock File (Should Fail)</h4>
+<pre><code class="language-yaml">jobs:
+  test-outdated-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Modify pyproject.toml to make lock outdated
+      - run: |
+          echo &quot;&quot; &gt;&gt; pyproject.toml
+          echo &quot;[tool.pixi.dependencies]&quot; &gt;&gt; pyproject.toml
+          echo &quot;newpackage = \&quot;&gt;=1.0\&quot;&quot; &gt;&gt; pyproject.toml
+
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        id: setup
+        continue-on-error: true
+        with:
+          verify-lock: 'true'  # Should fail
+          cache: 'false'
+
+      - name: Verify it failed
+        if: steps.setup.outcome != 'failure'
+        run: |
+          echo &quot;ERROR: Should have failed with outdated lock&quot;
+          exit 1
+</code></pre>
+<h4 id="test-without-lock-file-should-fail">Test Without Lock File (Should Fail)</h4>
+<pre><code class="language-yaml">jobs:
+  test-no-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - run: rm pixi.lock  # Remove lock file
+
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        id: setup
+        continue-on-error: true
+        with:
+          cache: 'false'
+
+      - name: Verify it failed
+        if: steps.setup.outcome != 'failure'
+        run: |
+          echo &quot;ERROR: Should have failed without lock file&quot;
+          exit 1
+</code></pre>
+<h3 id="caching-tests">Caching Tests</h3>
+<h4 id="test-cache-population">Test Cache Population</h4>
+<pre><code class="language-yaml">jobs:
+  cache-populate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          cache: 'true'
+
+      - run: pytest
+</code></pre>
+<h4 id="test-cache-retrieval">Test Cache Retrieval</h4>
+<pre><code class="language-yaml">jobs:
+  cache-populate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        with:
+          cache: 'true'
+
+      - run: pytest
+
+  cache-retrieve:
+    runs-on: ubuntu-latest
+    needs: cache-populate
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+        id: setup
+        with:
+          cache: 'true'
+
+      # Second run should be much faster
+      - run: pytest
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues">Common Issues</h3>
+<h4 id="issue-pixilock-file-does-not-exist">Issue: "pixi.lock file does not exist"</h4>
+<p><strong>Error message:</strong></p>
+<pre><code>❌ pixi.lock file does not exist!
+To fix this issue:
+ Run 'pixi install' locally to generate pixi.lock and commit it to your repository
+</code></pre>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-bash"># On your local machine
+pixi install
+git add pixi.lock
+git commit -m &quot;Add pixi lock file&quot;
+git push
+</code></pre>
+<h4 id="issue-lock-file-is-outdated">Issue: "Lock file is outdated"</h4>
+<p><strong>Error message:</strong></p>
+<pre><code>The pixi.lock file is outdated. Please run `pixi install` to update it.
+</code></pre>
+<p><strong>Cause:</strong> You modified <code>pyproject.toml</code> without updating the lock file.</p>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-bash"># Update lock file
+pixi install
+
+# Commit both files
+git add pyproject.toml pixi.lock
+git commit -m &quot;Update dependencies&quot;
+git push
+</code></pre>
+<h4 id="issue-cache-not-working">Issue: Cache not working</h4>
+<p><strong>Symptoms:</strong> Every run takes 5-10 minutes even with <code>cache: 'true'</code></p>
+<p><strong>Possible causes:</strong></p>
+<ol>
+<li>
+<p><strong>Lock file keeps changing:</strong>
+   <code>bash
+   # Check if lock file is in .gitignore
+   git check-ignore pixi.lock
+   # Should output nothing (not ignored)</code></p>
+</li>
+<li>
+<p><strong>Running on PR from fork:</strong></p>
+</li>
+<li>Forks have limited cache access</li>
+<li>
+<p>This is a GitHub limitation</p>
+</li>
+<li>
+<p><strong>Cache was cleared:</strong></p>
+</li>
+<li>Check GitHub Actions → Caches</li>
+<li>Old caches are auto-deleted after 7 days</li>
+</ol>
+<p><strong>Solution:</strong>
+- Ensure <code>pixi.lock</code> is committed
+- Check cache hit/miss in logs
+- For fork PRs, accept slower runs</p>
+<h4 id="issue-environment-not-found">Issue: "Environment not found"</h4>
+<p><strong>Error message:</strong></p>
+<pre><code>Error: Environment 'ml' not found
+</code></pre>
+<p><strong>Cause:</strong> Trying to activate an environment that doesn't exist in <code>pyproject.toml</code> or wasn't installed.</p>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-yaml"># Wrong
+with:
+  environments: 'dev'
+  activate-environment: 'ml'  # ❌ ml not installed!
+
+# Correct
+with:
+  environments: 'dev ml'       # ✅ Install both
+  activate-environment: 'ml'   # ✅ Now can activate ml
+</code></pre>
+<h4 id="issue-package-not-found-after-setup">Issue: Package not found after setup</h4>
+<p><strong>Symptoms:</strong> <code>ModuleNotFoundError: No module named 'numpy'</code> even though it's in <code>pyproject.toml</code></p>
+<p><strong>Possible causes:</strong></p>
+<ol>
+<li>
+<p><strong>Wrong environment activated:</strong>
+   ```yaml
+   # Package is in 'ml' environment but 'dev' is active
+   with:
+     environments: 'dev ml'
+     activate-environment: 'dev'  # numpy might not be here</p>
+</li>
+<li>
+<p>run: python -c "import numpy"  # ❌ Fails
+   ```</p>
+</li>
+<li>
+<p><strong>Package in wrong feature:</strong>
+   Check your <code>pyproject.toml</code> environment definitions</p>
+</li>
+</ol>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-bash"># Check which environment has the package
+pixi list -e dev | grep numpy
+pixi list -e ml | grep numpy
+
+# Either switch environment or add package to current environment
+</code></pre>
+<h4 id="issue-different-versions-locally-vs-ci">Issue: Different versions locally vs CI</h4>
+<p><strong>Symptoms:</strong> Works locally but fails in CI (or vice versa)</p>
+<p><strong>Cause:</strong> Lock file not synchronized</p>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-bash"># Regenerate lock file locally
+rm pixi.lock
+pixi install
+
+# Commit and push
+git add pixi.lock
+git commit -m &quot;Regenerate lock file&quot;
+git push
+</code></pre>
+<h4 id="issue-windows-specific-path-issues">Issue: Windows-specific path issues</h4>
+<p><strong>Symptoms:</strong> Works on Linux/Mac but fails on Windows</p>
+<p><strong>Cause:</strong> Path separators or shell-specific commands</p>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-yaml"># Use pixi tasks instead of shell commands
+# In pyproject.toml:
+[tool.pixi.tasks]
+test = &quot;pytest tests/&quot;
+
+# In workflow:
+- run: pixi run test  # Cross-platform!
+</code></pre>
+<h4 id="issue-slow-installation-even-with-cache">Issue: Slow installation even with cache</h4>
+<p><strong>Symptoms:</strong> Cache hits but still takes 2-3 minutes</p>
+<p><strong>Cause:</strong> Lock verification and environment activation take time</p>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-yaml"># For trusted environments, disable verification
+with:
+  cache: 'true'
+  verify-lock: 'false'  # Faster but less safe
+</code></pre>
+<h3 id="debug-mode">Debug Mode</h3>
+<p>To get more information about what's happening:</p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+  with:
+    cache: 'false'
+
+# Add debug steps
+- name: Debug environment info
+  run: |
+    echo &quot;Pixi version:&quot;
+    pixi --version
+
+    echo &quot;Available environments:&quot;
+    pixi info
+
+    echo &quot;Active Python:&quot;
+    which python
+    python --version
+
+    echo &quot;Installed packages:&quot;
+    pixi list
+
+    echo &quot;PATH:&quot;
+    echo $PATH
+</code></pre>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="1-always-commit-lock-files">1. Always Commit Lock Files</h3>
+<p>✅ <strong>DO:</strong></p>
+<pre><code class="language-bash">git add pyproject.toml pixi.lock
+git commit -m &quot;Update numpy to 2.0&quot;
+</code></pre>
+<p>❌ <strong>DON'T:</strong></p>
+<pre><code class="language-bash">git add pyproject.toml
+# Missing pixi.lock - CI will fail!
+</code></pre>
+<h3 id="2-use-locked-mode-in-ci">2. Use Locked Mode in CI</h3>
+<p>✅ <strong>DO:</strong></p>
+<pre><code class="language-yaml">with:
+  verify-lock: 'true'  # Catch drift
+</code></pre>
+<p>❌ <strong>DON'T:</strong></p>
+<pre><code class="language-yaml">with:
+  verify-lock: 'false'  # Silent failures
+</code></pre>
+<p><strong>Exception:</strong> Disable when lock is auto-updated by bots</p>
+<h3 id="3-enable-caching-for-stable-projects">3. Enable Caching for Stable Projects</h3>
+<p>✅ <strong>DO:</strong></p>
+<pre><code class="language-yaml"># Stable project with infrequent dependency changes
+with:
+  cache: 'true'
+</code></pre>
+<p>❌ <strong>DON'T:</strong></p>
+<pre><code class="language-yaml"># When debugging dependency issues
+with:
+  cache: 'true'  # Cache might mask issues
+</code></pre>
+<h3 id="4-use-minimal-environments">4. Use Minimal Environments</h3>
+<p>✅ <strong>DO:</strong></p>
+<pre><code class="language-yaml"># Install only what you need
+jobs:
+  lint:
+    steps:
+      - uses: .../pixi@v1
+        with:
+          environments: 'dev'  # Just linting tools
+
+  test:
+    steps:
+      - uses: .../pixi@v1
+        with:
+          environments: 'test'  # Just test deps
+</code></pre>
+<p>❌ <strong>DON'T:</strong></p>
+<pre><code class="language-yaml"># Install everything everywhere
+jobs:
+  lint:
+    steps:
+      - uses: .../pixi@v1
+        with:
+          environments: 'dev test ml viz'  # Overkill!
+</code></pre>
+<h3 id="5-one-environment-activation-per-job">5. One Environment Activation Per Job</h3>
+<p>✅ <strong>DO:</strong></p>
+<pre><code class="language-yaml">- uses: .../pixi@v1
+  with:
+    environments: 'dev'
+    activate-environment: 'dev'
+
+# All subsequent steps use dev environment
+</code></pre>
+<p>❌ <strong>DON'T:</strong></p>
+<pre><code class="language-yaml"># Trying to activate multiple environments (not possible)
+- uses: .../pixi@v1
+  with:
+    activate-environment: 'dev'
+
+- uses: .../pixi@v1  # ❌ Second activation
+  with:
+    activate-environment: 'test'
+</code></pre>
+<p><strong>If you need multiple environments</strong>, use <code>pixi run -e</code>:</p>
+<pre><code class="language-yaml">- uses: .../pixi@v1
+  with:
+    environments: 'dev test'
+    activate-environment: 'dev'
+
+- run: black --check .  # Uses dev
+
+- run: pixi run -e test pytest  # Uses test
+</code></pre>
+<h3 id="6-organize-dependencies-by-purpose">6. Organize Dependencies by Purpose</h3>
+<p>✅ <strong>DO:</strong></p>
+<pre><code class="language-toml">[tool.pixi.feature.core.dependencies]
+# Core runtime dependencies
+numpy = &quot;&gt;=1.26&quot;
+pandas = &quot;&gt;=2.0&quot;
+
+[tool.pixi.feature.dev.dependencies]
+# Development tools
+black = &quot;&gt;=23.0&quot;
+ruff = &quot;&gt;=0.1&quot;
+
+[tool.pixi.feature.test.dependencies]
+# Testing tools
+pytest = &quot;&gt;=7.0&quot;
+pytest-cov = &quot;&gt;=4.0&quot;
+
+[tool.pixi.environments]
+default = [&quot;core&quot;]
+dev = [&quot;core&quot;, &quot;dev&quot;]
+ci = [&quot;core&quot;, &quot;test&quot;]
+</code></pre>
+<p>❌ <strong>DON'T:</strong></p>
+<pre><code class="language-toml">[tool.pixi.dependencies]
+# Everything in one place
+numpy = &quot;&gt;=1.26&quot;
+pandas = &quot;&gt;=2.0&quot;
+black = &quot;&gt;=23.0&quot;
+pytest = &quot;&gt;=7.0&quot;
+# No organization!
+</code></pre>
+<h3 id="7-use-descriptive-environment-names">7. Use Descriptive Environment Names</h3>
+<p>✅ <strong>DO:</strong></p>
+<pre><code class="language-toml">[tool.pixi.environments]
+default = [&quot;core&quot;]
+dev = [&quot;core&quot;, &quot;dev-tools&quot;]
+test-py311 = [&quot;core&quot;, &quot;test&quot;, &quot;py311&quot;]
+test-py312 = [&quot;core&quot;, &quot;test&quot;, &quot;py312&quot;]
+prod = [&quot;core&quot;]
+</code></pre>
+<p>❌ <strong>DON'T:</strong></p>
+<pre><code class="language-toml">[tool.pixi.environments]
+env1 = [&quot;core&quot;]
+env2 = [&quot;core&quot;, &quot;dev&quot;]
+myenv = [&quot;core&quot;, &quot;test&quot;]
+</code></pre>
+<h3 id="8-document-environment-purpose">8. Document Environment Purpose</h3>
+<p>✅ <strong>DO:</strong></p>
+<pre><code class="language-toml">[tool.pixi.environments]
+# Core dependencies only - minimal install
+default = [&quot;core&quot;]
+
+# Development environment - includes linting and formatting tools
+dev = [&quot;core&quot;, &quot;dev-tools&quot;]
+
+# CI testing environment - includes test runners and coverage
+ci = [&quot;core&quot;, &quot;test&quot;]
+
+# Production environment - runtime dependencies only
+prod = [&quot;core&quot;]
+</code></pre>
+<h3 id="9-pin-major-python-version">9. Pin Major Python Version</h3>
+<p>✅ <strong>DO:</strong></p>
+<pre><code class="language-toml">[tool.pixi.dependencies]
+python = &quot;&gt;=3.11,&lt;3.13&quot;  # Explicit range
+</code></pre>
+<p>❌ <strong>DON'T:</strong></p>
+<pre><code class="language-toml">[tool.pixi.dependencies]
+python = &quot;&gt;=3.11&quot;  # Too permissive
+</code></pre>
+<h3 id="10-test-lock-file-verification-in-ci">10. Test Lock File Verification in CI</h3>
+<p>✅ <strong>DO:</strong></p>
+<pre><code class="language-yaml">jobs:
+  validate-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: .../pixi@v1
+        with:
+          verify-lock: 'true'  # Enforce verification
+          cache: 'false'
+</code></pre>
+<p>This catches PRs with outdated lock files early.</p>
+<h2 id="migration-guide">Migration Guide</h2>
+<h3 id="from-setup-python-pip">From <code>setup-python</code> + <code>pip</code></h3>
+<p><strong>Before (pip):</strong></p>
+<pre><code class="language-yaml">- uses: actions/setup-python@v5
+  with:
+    python-version: '3.11'
+    cache: 'pip'
+
+- run: pip install -r requirements.txt
+</code></pre>
+<p><strong>After (pixi):</strong></p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+  with:
+    cache: 'true'
+</code></pre>
+<p><strong>Migration steps:</strong>
+1. Create <code>pyproject.toml</code> with pixi configuration
+2. Run <code>pixi install</code> locally to generate <code>pixi.lock</code>
+3. Commit both files
+4. Update workflow to use pixi action</p>
+<h3 id="from-setup-python-conda">From <code>setup-python</code> + <code>conda</code></h3>
+<p><strong>Before (conda):</strong></p>
+<pre><code class="language-yaml">- uses: conda-incubator/setup-miniconda@v3
+  with:
+    python-version: '3.11'
+    environment-file: environment.yml
+</code></pre>
+<p><strong>After (pixi):</strong></p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+  with:
+    cache: 'true'
+</code></pre>
+<p><strong>Migration steps:</strong>
+1. Convert <code>environment.yml</code> to <code>pyproject.toml</code> pixi format
+2. Run <code>pixi install</code> to generate lock file
+3. Commit files
+4. Update workflow</p>
+<h3 id="from-mamba-orgsetup-micromamba">From <code>mamba-org/setup-micromamba</code></h3>
+<p><strong>Before (micromamba):</strong></p>
+<pre><code class="language-yaml">- uses: mamba-org/setup-micromamba@v1
+  with:
+    environment-file: environment.yml
+    cache-environment: true
+</code></pre>
+<p><strong>After (pixi):</strong></p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+  with:
+    cache: 'true'
+</code></pre>
+<p>Pixi is faster than micromamba and has better lock file support!</p>
+<h2 id="additional-resources">Additional Resources</h2>
+<ul>
+<li><strong>Pixi Documentation</strong>: https://prefix.dev/docs/pixi</li>
+<li><strong>Pixi GitHub</strong>: https://github.com/prefix-dev/pixi</li>
+<li><strong>Conda-forge</strong>: https://conda-forge.org/</li>
+<li><strong>Action Source</strong>: <code>Serapieum-of-alex/github-actions/actions/python-setup/pixi</code></li>
+</ul>
+<h2 id="examples-repository">Examples Repository</h2>
+<p>See the test suite for comprehensive examples:
+- <code>.github/workflows/test-python-setup-pixi.yml</code> - All test scenarios
+- <code>tests/data/pixi/</code> - Example configurations</p>
+<h2 id="support">Support</h2>
+<p>For issues or questions:
+1. Check <a href="#troubleshooting">Troubleshooting</a>
+2. Review <a href=".github/workflows/test-python-setup-pixi.yml">test examples</a>
+3. Open an issue in the repository</p>
+<hr />
+<p><strong>Version</strong>: 1.0.0<br />
+<strong>Last Updated</strong>: January 2026<br />
+<strong>Compatibility</strong>: Linux, macOS, Windows<br />
+<strong>Pixi Version</strong>: v0.49.0</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

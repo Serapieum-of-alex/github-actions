@@ -1,0 +1,1508 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Test documentation for GitHub Actions">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Versioning Guide for GitHub Actions - Test Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#versioning-guide-for-github-actions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Test Documentation" class="md-header__button md-logo" aria-label="Test Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Test Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Versioning Guide for GitHub Actions
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Test Documentation" class="md-nav__button md-logo" aria-label="Test Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Test Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#semantic-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Semantic Versioning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Semantic Versioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#version-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-increment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Increment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples-of-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples of Changes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples of Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#patch-version-v100-v101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PATCH Version (v1.0.0 → v1.0.1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minor-version-v101-v110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MINOR Version (v1.0.1 → v1.1.0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#major-version-v110-v200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAJOR Version (v1.1.0 → v2.0.0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tag-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tag Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tag Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#two-types-of-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two Types of Tags
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Two Types of Tags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-specific-version-tags-immutable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Specific Version Tags (Immutable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-major-version-tags-moving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Major Version Tags (Moving)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual Representation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release Process
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Release Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-by-step-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prepare-the-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Prepare the Release
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-specific-version-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Create Specific Version Tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-create-or-move-major-version-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Create or Move Major Version Tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-create-github-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Create GitHub Release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-release-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Release Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#moving-major-version-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Moving Major Version Tags
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Moving Major Version Tags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-does-moving-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Does "Moving" Mean?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-move-major-version-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Move Major Version Tags?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commands-explained" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands Explained
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-for-consumers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage for Consumers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage for Consumers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#referencing-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencing Actions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Referencing Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-specific-version-recommended-for-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1: Specific Version (Recommended for Production)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-major-version-recommended-for-most-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: Major Version (Recommended for Most Users)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-3-branch-not-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 3: Branch (Not Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendation-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking Changes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Breaking Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-constitutes-a-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Constitutes a Breaking Change?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Constitutes a Breaking Change?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes-require-v200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking Changes (Require v2.0.0):
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#not-breaking-changes-can-be-v110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NOT Breaking Changes (Can be v1.1.0):
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handling-breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handling Breaking Changes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Handling Breaking Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-deprecation-period-preferred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Deprecation Period (Preferred)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-migration-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Migration Guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed-verify-lock-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed verify-lock default
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-bug-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Bug Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-new-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: New Feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-4-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 4: Breaking Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-maintainers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Maintainers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-consumers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Consumers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist-for-releases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist for Releases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Checklist for Releases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Release
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="versioning-guide-for-github-actions">Versioning Guide for GitHub Actions</h1>
+<p>This document explains the versioning strategy used in this repository for publishing and maintaining GitHub Actions.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#semantic-versioning">Semantic Versioning</a></li>
+<li><a href="#tag-strategy">Tag Strategy</a></li>
+<li><a href="#release-process">Release Process</a></li>
+<li><a href="#moving-major-version-tags">Moving Major Version Tags</a></li>
+<li><a href="#usage-for-consumers">Usage for Consumers</a></li>
+<li><a href="#breaking-changes">Breaking Changes</a></li>
+<li><a href="#examples">Examples</a></li>
+</ul>
+<h2 id="overview">Overview</h2>
+<p>This repository contains reusable GitHub Actions (composite actions). Unlike traditional software packages, GitHub Actions use a <strong>tag-based versioning system</strong> where users reference specific versions directly in their workflows.</p>
+<p><strong>Key Principles:</strong>
+- ✅ Use semantic versioning (e.g., <code>v1.0.0</code>, <code>v1.1.0</code>, <code>v2.0.0</code>)
+- ✅ Maintain moving major version tags (e.g., <code>v1</code>, <code>v2</code>) for convenience
+- ✅ Keep specific version tags immutable (e.g., <code>v1.0.0</code> never changes)
+- ✅ Use <code>v</code> prefix for all version tags</p>
+<h2 id="semantic-versioning">Semantic Versioning</h2>
+<p>We follow <a href="https://semver.org/">Semantic Versioning 2.0.0</a> with the format: <code>vMAJOR.MINOR.PATCH</code></p>
+<h3 id="version-components">Version Components</h3>
+<pre><code>v1.2.3
+│ │ │
+│ │ └── PATCH: Bug fixes, documentation updates (backward compatible)
+│ └──── MINOR: New features, improvements (backward compatible)
+└────── MAJOR: Breaking changes (NOT backward compatible)
+</code></pre>
+<h3 id="when-to-increment">When to Increment</h3>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Increment When</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PATCH</strong></td>
+<td>Bug fixes, docs, internal refactoring</td>
+<td><code>v1.0.0</code> → <code>v1.0.1</code></td>
+</tr>
+<tr>
+<td><strong>MINOR</strong></td>
+<td>New features, new inputs (optional), deprecations</td>
+<td><code>v1.0.1</code> → <code>v1.1.0</code></td>
+</tr>
+<tr>
+<td><strong>MAJOR</strong></td>
+<td>Breaking changes, removed features, required inputs changed</td>
+<td><code>v1.1.0</code> → <code>v2.0.0</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="examples-of-changes">Examples of Changes</h3>
+<h4 id="patch-version-v100-v101">PATCH Version (v1.0.0 → v1.0.1)</h4>
+<ul>
+<li>🐛 Fix a bug in cache key generation</li>
+<li>📝 Update documentation</li>
+<li>🔧 Internal code refactoring</li>
+<li>⚡ Performance improvements (no behavior change)</li>
+</ul>
+<h4 id="minor-version-v101-v110">MINOR Version (v1.0.1 → v1.1.0)</h4>
+<ul>
+<li>✨ Add new optional input parameter</li>
+<li>🎉 Add new feature that doesn't affect existing usage</li>
+<li>📊 Add new logging/output</li>
+<li>⚠️ Deprecate a feature (but still works)</li>
+</ul>
+<h4 id="major-version-v110-v200">MAJOR Version (v1.1.0 → v2.0.0)</h4>
+<ul>
+<li>💥 Remove or rename an input parameter</li>
+<li>💥 Change default behavior significantly</li>
+<li>💥 Remove deprecated features</li>
+<li>💥 Change required inputs or validation rules</li>
+<li>💥 Update to incompatible dependency versions</li>
+</ul>
+<h2 id="tag-strategy">Tag Strategy</h2>
+<h3 id="two-types-of-tags">Two Types of Tags</h3>
+<p>We maintain two types of Git tags:</p>
+<h4 id="1-specific-version-tags-immutable">1. Specific Version Tags (Immutable)</h4>
+<p><strong>Format:</strong> <code>v1.0.0</code>, <code>v1.1.0</code>, <code>v1.2.0</code>, <code>v2.0.0</code></p>
+<p><strong>Characteristics:</strong>
+- ✅ Never moved or changed
+- ✅ Point to a specific commit forever
+- ✅ Used for reproducibility and security
+- ✅ Ideal for production workflows</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-yaml"># Pin to exact version - never changes
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1.0.0
+</code></pre>
+<h4 id="2-major-version-tags-moving">2. Major Version Tags (Moving)</h4>
+<p><strong>Format:</strong> <code>v1</code>, <code>v2</code>, <code>v3</code></p>
+<p><strong>Characteristics:</strong>
+- 🔄 Updated with each new release within the major version
+- 🔄 Points to the latest compatible version
+- 🔄 Used for automatic updates
+- ⚠️ May change behavior (but stays backward compatible)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-yaml"># Use major version - gets updates automatically
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+</code></pre>
+<h3 id="visual-representation">Visual Representation</h3>
+<pre><code>Timeline of commits and tags:
+
+A ---- B ---- C ---- D ---- E ---- F
+       ↑      ↑            ↑      ↑
+       │      │            │      │
+    v1.0.0  v1.1.0      v1.2.0  v2.0.0
+       ↑                   ↑      ↑
+       v1 (initially)      │      v2
+                           │
+                      v1 (moved)
+
+After release flow:
+- v1.0.0: Created v1 and v1.0.0 pointing to commit B
+- v1.1.0: Created v1.1.0 at commit C, kept v1.0.0 at B
+- v1.2.0: Created v1.2.0 at commit E, moved v1 from B to E
+- v2.0.0: Created v2 and v2.0.0 pointing to commit F
+</code></pre>
+<h2 id="release-process">Release Process</h2>
+<h3 id="step-by-step-guide">Step-by-Step Guide</h3>
+<h4 id="1-prepare-the-release">1. Prepare the Release</h4>
+<p>Make and commit your changes:</p>
+<pre><code class="language-bash"># Make your changes
+git add .
+git commit -m &quot;feat: add caching support to pixi action&quot;
+git push origin main
+</code></pre>
+<h4 id="2-create-specific-version-tag">2. Create Specific Version Tag</h4>
+<pre><code class="language-bash"># Create an annotated tag
+git tag -a v1.1.0 -m &quot;Release v1.1.0
+
+- Add caching support for faster CI runs
+- Improve error messages for missing lock files
+- Update documentation with caching examples&quot;
+
+# Push the tag
+git push origin v1.1.0
+</code></pre>
+<h4 id="3-create-or-move-major-version-tag">3. Create or Move Major Version Tag</h4>
+<pre><code class="language-bash"># Move the major version tag to the new release
+git tag -fa v1 -m &quot;Update v1 to v1.1.0&quot;
+
+# Force push (required because we're overwriting an existing tag)
+git push origin v1 --force
+</code></pre>
+<h4 id="4-create-github-release">4. Create GitHub Release</h4>
+<p><strong>Option A: Using GitHub CLI</strong></p>
+<pre><code class="language-bash">gh release create v1.1.0 \
+  --title &quot;v1.1.0 - Caching Support&quot; \
+  --notes &quot;## 🎉 New Features
+
+- **Caching**: Enable environment caching with \`cache: 'true'\`
+- **Improved Errors**: Better error messages for common issues
+
+## 📝 Documentation
+
+- Updated pixi.md with caching examples
+- Added troubleshooting section
+
+## 🔧 Internal
+
+- Refactored validation logic
+- Added integration tests for caching
+
+## 📦 Upgrade Notes
+
+This is a backward-compatible release. Simply update your action reference from \`@v1.0.0\` to \`@v1.1.0\` or use \`@v1\` for automatic updates.&quot;
+</code></pre>
+<p><strong>Option B: Using GitHub Web UI</strong></p>
+<ol>
+<li>Go to your repository on GitHub</li>
+<li>Click <strong>"Releases"</strong> → <strong>"Draft a new release"</strong></li>
+<li>Click <strong>"Choose a tag"</strong> → Select <code>v1.1.0</code></li>
+<li>Set <strong>"Release title"</strong>: <code>v1.1.0 - Caching Support</code></li>
+<li>Write <strong>release notes</strong> (see format above)</li>
+<li>Click <strong>"Publish release"</strong></li>
+</ol>
+<h3 id="automated-release-workflow">Automated Release Workflow</h3>
+<p>Create <code>.github/workflows/release.yml</code> to automate releases:</p>
+<pre><code class="language-yaml">name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version info
+        id: version
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          MAJOR_VERSION=$(echo $TAG | cut -d. -f1)
+          echo &quot;tag=$TAG&quot; &gt;&gt; $GITHUB_OUTPUT
+          echo &quot;major=$MAJOR_VERSION&quot; &gt;&gt; $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+
+      - name: Update major version tag
+        run: |
+          git config user.name &quot;github-actions[bot]&quot;
+          git config user.email &quot;github-actions[bot]@users.noreply.github.com&quot;
+          git tag -fa ${{ steps.version.outputs.major }} -m &quot;Update ${{ steps.version.outputs.major }} to ${{ steps.version.outputs.tag }}&quot;
+          git push origin ${{ steps.version.outputs.major }} --force
+</code></pre>
+<p><strong>How it works:</strong>
+1. Push a version tag: <code>git push origin v1.1.0</code>
+2. Workflow automatically:
+   - Creates a GitHub release
+   - Generates release notes from commits
+   - Moves the major version tag (<code>v1</code>)</p>
+<h2 id="moving-major-version-tags">Moving Major Version Tags</h2>
+<h3 id="what-does-moving-mean">What Does "Moving" Mean?</h3>
+<p><strong>Moving a tag</strong> means updating a Git tag to point to a different commit. This is done by:
+1. Deleting the old tag (with <code>-f</code> flag)
+2. Creating a new tag with the same name at a different commit
+3. Force-pushing to overwrite the remote tag</p>
+<h3 id="why-move-major-version-tags">Why Move Major Version Tags?</h3>
+<p>This allows users to:
+- ✅ Get automatic bug fixes and features
+- ✅ Stay within a major version (no breaking changes)
+- ✅ Avoid updating workflow files for every patch/minor release</p>
+<h3 id="commands-explained">Commands Explained</h3>
+<pre><code class="language-bash"># -f  = force (allows overwriting existing tag)
+# -a  = annotated (creates tag with metadata)
+git tag -fa v1 -m &quot;Update v1 to v1.1.0&quot;
+
+# --force = required to overwrite remote tag
+git push origin v1 --force
+</code></pre>
+<h3 id="example-flow">Example Flow</h3>
+<p><strong>Initial Release (v1.0.0):</strong></p>
+<pre><code class="language-bash">git tag -a v1.0.0 -m &quot;Release v1.0.0&quot;
+git push origin v1.0.0
+
+git tag -a v1 -m &quot;Major version v1 -&gt; v1.0.0&quot;
+git push origin v1
+</code></pre>
+<p>Result: Both <code>v1</code> and <code>v1.0.0</code> point to the same commit.</p>
+<p><strong>Bug Fix Release (v1.0.1):</strong></p>
+<pre><code class="language-bash">git tag -a v1.0.1 -m &quot;Release v1.0.1&quot;
+git push origin v1.0.1
+
+# Move v1 to point to v1.0.1
+git tag -fa v1 -m &quot;Update v1 -&gt; v1.0.1&quot;
+git push origin v1 --force
+</code></pre>
+<p>Result: 
+- <code>v1.0.0</code> → Still points to old commit
+- <code>v1.0.1</code> → Points to new commit
+- <code>v1</code> → Now points to new commit (moved)</p>
+<p><strong>New Feature Release (v1.1.0):</strong></p>
+<pre><code class="language-bash">git tag -a v1.1.0 -m &quot;Release v1.1.0&quot;
+git push origin v1.1.0
+
+# Move v1 again
+git tag -fa v1 -m &quot;Update v1 -&gt; v1.1.0&quot;
+git push origin v1 --force
+</code></pre>
+<p>Result: <code>v1</code> now points to v1.1.0 (moved again).</p>
+<p><strong>Breaking Change Release (v2.0.0):</strong></p>
+<pre><code class="language-bash">git tag -a v2.0.0 -m &quot;Release v2.0.0&quot;
+git push origin v2.0.0
+
+# Create NEW major version tag (don't move v1)
+git tag -a v2 -m &quot;Major version v2 -&gt; v2.0.0&quot;
+git push origin v2
+</code></pre>
+<p>Result: 
+- <code>v1</code> → Still points to v1.1.0
+- <code>v2</code> → Points to v2.0.0 (new tag)
+- Users must explicitly update to <code>@v2</code></p>
+<h2 id="usage-for-consumers">Usage for Consumers</h2>
+<h3 id="referencing-actions">Referencing Actions</h3>
+<p>Users can reference your actions in three ways:</p>
+<h4 id="option-1-specific-version-recommended-for-production">Option 1: Specific Version (Recommended for Production)</h4>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1.0.0
+</code></pre>
+<p><strong>Pros:</strong>
+- ✅ Completely stable and reproducible
+- ✅ Never changes unexpectedly
+- ✅ Best for security-critical workflows</p>
+<p><strong>Cons:</strong>
+- ❌ Doesn't get bug fixes automatically
+- ❌ Must manually update for new features</p>
+<p><strong>Best for:</strong> Production, security-sensitive, compliance-required workflows</p>
+<h4 id="option-2-major-version-recommended-for-most-users">Option 2: Major Version (Recommended for Most Users)</h4>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+</code></pre>
+<p><strong>Pros:</strong>
+- ✅ Gets bug fixes automatically
+- ✅ Gets new features automatically (within v1.x.x)
+- ✅ No breaking changes</p>
+<p><strong>Cons:</strong>
+- ❌ Behavior may change slightly
+- ❌ Requires trust in maintainers</p>
+<p><strong>Best for:</strong> Most workflows, active development, CI/CD pipelines</p>
+<h4 id="option-3-branch-not-recommended">Option 3: Branch (Not Recommended)</h4>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@main
+</code></pre>
+<p><strong>Pros:</strong>
+- ✅ Always latest code</p>
+<p><strong>Cons:</strong>
+- ❌ Can break at any time
+- ❌ Includes breaking changes
+- ❌ Not reproducible</p>
+<p><strong>Best for:</strong> Testing unreleased features, development only</p>
+<h3 id="recommendation-matrix">Recommendation Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Recommended Reference</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production workflows</td>
+<td>Specific version</td>
+<td><code>@v1.0.0</code></td>
+</tr>
+<tr>
+<td>CI/CD pipelines</td>
+<td>Major version</td>
+<td><code>@v1</code></td>
+</tr>
+<tr>
+<td>Active development</td>
+<td>Major version</td>
+<td><code>@v1</code></td>
+</tr>
+<tr>
+<td>Security-critical</td>
+<td>Specific version</td>
+<td><code>@v1.0.0</code></td>
+</tr>
+<tr>
+<td>Testing new features</td>
+<td>Branch</td>
+<td><code>@main</code></td>
+</tr>
+<tr>
+<td>Dependabot/Renovate</td>
+<td>Major version</td>
+<td><code>@v1</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="breaking-changes">Breaking Changes</h2>
+<h3 id="what-constitutes-a-breaking-change">What Constitutes a Breaking Change?</h3>
+<p>A breaking change requires a <strong>major version bump</strong> (e.g., v1.x.x → v2.0.0).</p>
+<h4 id="breaking-changes-require-v200">Breaking Changes (Require v2.0.0):</h4>
+<ul>
+<li>❌ Removing an input parameter</li>
+<li>❌ Renaming an input parameter</li>
+<li>❌ Changing an input from optional to required</li>
+<li>❌ Changing default values that affect behavior</li>
+<li>❌ Removing or renaming outputs</li>
+<li>❌ Changing behavior in incompatible ways</li>
+<li>❌ Dropping support for older versions (e.g., Python 3.7)</li>
+<li>❌ Changing error handling that could break workflows</li>
+</ul>
+<h4 id="not-breaking-changes-can-be-v110">NOT Breaking Changes (Can be v1.1.0):</h4>
+<ul>
+<li>✅ Adding new optional input parameters</li>
+<li>✅ Adding new outputs</li>
+<li>✅ Deprecating features (but still working)</li>
+<li>✅ Bug fixes that restore intended behavior</li>
+<li>✅ Performance improvements</li>
+<li>✅ Documentation updates</li>
+<li>✅ Adding new features that don't affect existing usage</li>
+</ul>
+<h3 id="handling-breaking-changes">Handling Breaking Changes</h3>
+<h4 id="1-deprecation-period-preferred">1. Deprecation Period (Preferred)</h4>
+<p>Before making a breaking change, deprecate in a minor version:</p>
+<p><strong>v1.5.0 - Deprecation:</strong></p>
+<pre><code class="language-yaml">inputs:
+  old-name:
+    description: 'DEPRECATED: Use new-name instead'
+    required: false
+</code></pre>
+<p>Add warning in action:</p>
+<pre><code class="language-yaml">- name: Deprecation warning
+  if: inputs.old-name != ''
+  shell: bash
+  run: |
+    echo &quot;::warning::Input 'old-name' is deprecated and will be removed in v2.0.0. Use 'new-name' instead.&quot;
+</code></pre>
+<p><strong>v2.0.0 - Removal:</strong></p>
+<pre><code class="language-yaml">inputs:
+  new-name:
+    description: 'Replacement for old-name'
+    required: false
+</code></pre>
+<h4 id="2-migration-guide">2. Migration Guide</h4>
+<p>Always provide a migration guide in the release notes:</p>
+<pre><code class="language-markdown">## 💥 Breaking Changes in v2.0.0
+
+### Removed `cache-key` input
+
+The `cache-key` input has been removed. Caching now uses an automatic key based on `pixi.lock`.
+
+**Migration:**
+
+```diff
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+  with:
+-   cache-key: custom-key
+    cache: 'true'
+</code></pre>
+<p>The action will automatically generate an optimal cache key.</p>
+<h3 id="changed-verify-lock-default">Changed <code>verify-lock</code> default</h3>
+<p>The default for <code>verify-lock</code> changed from <code>'false'</code> to <code>'true'</code>.</p>
+<p><strong>Migration:</strong></p>
+<p>If you want the old behavior:</p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v2
+  with:
+    verify-lock: 'false'  # Explicit old behavior
+</code></pre>
+<pre><code>
+## Examples
+
+### Example 1: First Release
+
+```bash
+# Initial release
+git tag -a v1.0.0 -m &quot;Release v1.0.0: Initial release&quot;
+git push origin v1.0.0
+
+git tag -a v1 -m &quot;Major version v1&quot;
+git push origin v1
+
+gh release create v1.0.0 --title &quot;v1.0.0 - Initial Release&quot; --generate-notes
+</code></pre>
+<h3 id="example-2-bug-fix">Example 2: Bug Fix</h3>
+<pre><code class="language-bash"># Bug fix release
+git tag -a v1.0.1 -m &quot;Release v1.0.1: Fix cache key generation&quot;
+git push origin v1.0.1
+
+# Move v1 to include the fix
+git tag -fa v1 -m &quot;Update v1 to v1.0.1&quot;
+git push origin v1 --force
+
+gh release create v1.0.1 --title &quot;v1.0.1 - Bug Fixes&quot; --notes &quot;Fix cache key generation for Windows&quot;
+</code></pre>
+<h3 id="example-3-new-feature">Example 3: New Feature</h3>
+<pre><code class="language-bash"># New feature release
+git tag -a v1.1.0 -m &quot;Release v1.1.0: Add caching support&quot;
+git push origin v1.1.0
+
+# Move v1 to include the feature
+git tag -fa v1 -m &quot;Update v1 to v1.1.0&quot;
+git push origin v1 --force
+
+gh release create v1.1.0 --title &quot;v1.1.0 - Caching Support&quot; --generate-notes
+</code></pre>
+<h3 id="example-4-breaking-change">Example 4: Breaking Change</h3>
+<pre><code class="language-bash"># Breaking change release
+git tag -a v2.0.0 -m &quot;Release v2.0.0: Remove deprecated inputs&quot;
+git push origin v2.0.0
+
+# Create NEW major version tag (don't touch v1)
+git tag -a v2 -m &quot;Major version v2&quot;
+git push origin v2
+
+gh release create v2.0.0 --title &quot;v2.0.0 - Breaking Changes&quot; --notes &quot;See MIGRATION.md for upgrade guide&quot;
+</code></pre>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="for-maintainers">For Maintainers</h3>
+<ol>
+<li>✅ <strong>Always use annotated tags</strong> (<code>-a</code> flag) with meaningful messages</li>
+<li>✅ <strong>Test thoroughly</strong> before releasing</li>
+<li>✅ <strong>Write clear release notes</strong> explaining what changed</li>
+<li>✅ <strong>Pin action dependencies</strong> to specific SHA or version tags</li>
+<li>✅ <strong>Document breaking changes</strong> with migration guides</li>
+<li>✅ <strong>Use deprecation warnings</strong> before removing features</li>
+<li>✅ <strong>Keep v1, v2, etc. updated</strong> with each release</li>
+<li>✅ <strong>Never delete or force-push specific version tags</strong> (only major versions)</li>
+</ol>
+<h3 id="for-consumers">For Consumers</h3>
+<ol>
+<li>✅ <strong>Use major version tags</strong> for most workflows (<code>@v1</code>)</li>
+<li>✅ <strong>Pin specific versions</strong> for critical/production workflows (<code>@v1.0.0</code>)</li>
+<li>✅ <strong>Read release notes</strong> when major versions change</li>
+<li>✅ <strong>Test in staging</strong> before updating major versions</li>
+<li>✅ <strong>Use Dependabot/Renovate</strong> to track updates</li>
+<li>✅ <strong>Never use <code>@main</code></strong> in production</li>
+</ol>
+<h2 id="checklist-for-releases">Checklist for Releases</h2>
+<h3 id="pre-release">Pre-Release</h3>
+<ul>
+<li>[ ] All changes committed and pushed</li>
+<li>[ ] Tests passing</li>
+<li>[ ] Documentation updated</li>
+<li>[ ] CHANGELOG updated (if applicable)</li>
+<li>[ ] Version number decided (PATCH/MINOR/MAJOR)</li>
+<li>[ ] Breaking changes documented</li>
+<li>[ ] Migration guide written (if breaking changes)</li>
+</ul>
+<h3 id="release">Release</h3>
+<ul>
+<li>[ ] Create specific version tag (e.g., <code>v1.1.0</code>)</li>
+<li>[ ] Push specific version tag</li>
+<li>[ ] Move major version tag (e.g., <code>v1</code>)</li>
+<li>[ ] Force push major version tag</li>
+<li>[ ] Create GitHub release with notes</li>
+<li>[ ] Test the release in a sample workflow</li>
+</ul>
+<h3 id="post-release">Post-Release</h3>
+<ul>
+<li>[ ] Verify tags are correct on GitHub</li>
+<li>[ ] Verify release notes are clear</li>
+<li>[ ] Update README if needed</li>
+<li>[ ] Announce in relevant channels</li>
+<li>[ ] Monitor for issues</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://semver.org/">Semantic Versioning</a></li>
+<li><a href="https://github.com/actions/toolkit/blob/master/docs/action-versioning.md">GitHub Actions Versioning</a></li>
+<li><a href="https://git-scm.com/book/en/v2/Git-Basics-Tagging">Git Tagging</a></li>
+</ul>
+<hr />
+<p><strong>Version</strong>: 1.0<br />
+<strong>Last Updated</strong>: January 2026<br />
+<strong>Maintained by</strong>: Serapieum-of-alex</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

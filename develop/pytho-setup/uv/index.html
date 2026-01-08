@@ -1,0 +1,2592 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Test documentation for GitHub Actions">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Python Setup with uv - Complete Guide - Test Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#python-setup-with-uv-complete-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Test Documentation" class="md-header__button md-logo" aria-label="Test Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Test Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Python Setup with uv - Complete Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Test Documentation" class="md-nav__button md-logo" aria-label="Test Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Test Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage-core-dependencies-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage (Core Dependencies Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-dependency-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With Dependency Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inputs-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inputs Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inputs Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Details
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        python-version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        install-groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-lock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        verify-lock
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-automatic-virtual-environment-activation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Automatic Virtual Environment Activation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-smart-dependency-group-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Smart Dependency Group Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-lock-file-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Lock File Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-dependency-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Dependency Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-comprehensive-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Comprehensive Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Scenarios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Scenarios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario-1-core-dependencies-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 1: Core Dependencies Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-2-development-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 2: Development Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-3-testing-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 3: Testing Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-4-documentation-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 4: Documentation Build
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-5-multiple-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 5: Multiple Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-6-matrix-testing-across-python-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 6: Matrix Testing Across Python Versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-7-cross-platform-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 7: Cross-Platform Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-8-skip-lock-verification-for-dynamic-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 8: Skip Lock Verification for Dynamic Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-9-no-dependency-groups-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 9: No Dependency Groups Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-10-multiple-formats-for-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 10: Multiple Formats for Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-11-complex-multi-group-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 11: Complex Multi-Group Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-12-testing-lock-file-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 12: Testing Lock File Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-13-explicit-dev-group-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 13: Explicit Dev Group Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-14-minimal-production-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 14: Minimal Production Build
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-15-cache-behavior-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 15: Cache Behavior Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Groups
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dependency Groups">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dependency-groups-vs-optional-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Groups vs Optional Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-dependency-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Dependency Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-installation-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group Installation Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-no-default-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why --no-default-groups?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#format-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Format Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-group-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Group Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-summary-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation Summary Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lock-file-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lock File Verification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lock File Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-lock-file-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Lock File Verification?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-enable-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Enable (Default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-disable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Disable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lock-file-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lock File Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual Environment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Virtual Environment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-activation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic Activation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using the Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-location" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Location
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-coverage-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Coverage Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-scenarios-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Scenarios Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-fixtures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Fixtures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-tests-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Tests Locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-test-behaviors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Test Behaviors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugging-failed-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging Failed Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-assertions-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Assertions Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Continuous Integration Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-the-lockfile-at-uvlock-needs-to-be-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error: "The lockfile at uv.lock needs to be updated"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-no-such-file-or-directory-uvlock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error: "No such file or directory: uv.lock"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wrong-python-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrong Python Version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency-not-found-after-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Not Found After Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#groups-not-isolated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Groups Not Isolated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-environment-not-activated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual Environment Not Activated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-not-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Not Working
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-always-commit-lock-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Always Commit Lock File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-use-specific-python-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Use Specific Python Versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-organize-dependency-groups-by-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Organize Dependency Groups by Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-use-lock-verification-in-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Use Lock Verification in CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-pin-action-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Pin Action Versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-separate-workflows-by-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Separate Workflows by Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-use-matrix-for-multi-version-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Use Matrix for Multi-Version Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-with-other-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison with Other Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="python-setup-with-uv-complete-guide">Python Setup with uv - Complete Guide</h1>
+<p>Composite GitHub Action for setting up Python environments with the uv package manager, designed for modern Python projects using <code>pyproject.toml</code> and dependency groups.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#inputs-reference">Inputs Reference</a></li>
+<li><a href="#features">Features</a></li>
+<li><a href="#usage-scenarios">Usage Scenarios</a></li>
+<li><a href="#dependency-groups">Dependency Groups</a></li>
+<li><a href="#lock-file-verification">Lock File Verification</a></li>
+<li><a href="#virtual-environment">Virtual Environment</a></li>
+<li><a href="#testing-guide">Testing Guide</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+</ul>
+<h2 id="overview">Overview</h2>
+<p>This action provides a complete Python environment setup using <a href="https://github.com/astral-sh/uv">uv</a>, the fast Python package installer and resolver. It automatically:</p>
+<ul>
+<li>Installs Python and uv</li>
+<li>Verifies lock file integrity (optional)</li>
+<li>Installs dependencies with group support</li>
+<li>Activates the virtual environment automatically</li>
+<li>Caches dependencies for faster CI runs</li>
+</ul>
+<p><strong>Location</strong>: <code>Serapieum-of-alex/github-actions/actions/python-setup/uv@v1</code></p>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="basic-usage-core-dependencies-only">Basic Usage (Core Dependencies Only)</h3>
+<pre><code class="language-yaml">steps:
+  - uses: actions/checkout@v5
+  - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+
+  # Virtual environment is automatically activated!
+  - run: python --version
+  - run: pytest
+</code></pre>
+<h3 id="with-dependency-groups">With Dependency Groups</h3>
+<pre><code class="language-yaml">steps:
+  - uses: actions/checkout@v5
+  - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+    with:
+      install-groups: 'dev test'
+
+  - run: pytest
+  - run: black --check .
+</code></pre>
+<h2 id="inputs-reference">Inputs Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Description</th>
+<th>Required</th>
+<th>Default</th>
+<th>Valid Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>python-version</code></td>
+<td>Python version to install</td>
+<td>No</td>
+<td><code>'3.12'</code></td>
+<td>Any valid Python version (e.g., <code>'3.10'</code>, <code>'3.11'</code>, <code>'3.12'</code>)</td>
+</tr>
+<tr>
+<td><code>install-groups</code></td>
+<td>Dependency groups to install</td>
+<td>No</td>
+<td><code>''</code> (core only)</td>
+<td>Space or comma-separated list (e.g., <code>'dev'</code>, <code>'dev test'</code>, <code>'dev,test,docs'</code>)</td>
+</tr>
+<tr>
+<td><code>verify-lock</code></td>
+<td>Verify lock file is up to date</td>
+<td>No</td>
+<td><code>'true'</code></td>
+<td><code>'true'</code>, <code>'false'</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="input-details">Input Details</h3>
+<h4 id="python-version"><code>python-version</code></h4>
+<p>Specifies which Python version to install via <code>actions/setup-python@v6</code>.</p>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-yaml">python-version: '3.10'  # Python 3.10
+python-version: '3.11'  # Python 3.11
+python-version: '3.12'  # Python 3.12 (default)
+</code></pre>
+<h4 id="install-groups"><code>install-groups</code></h4>
+<p>Specifies which dependency groups from <code>[dependency-groups]</code> in <code>pyproject.toml</code> to install.</p>
+<p><strong>Default behavior (<code>''</code>)</strong>: Installs only core dependencies (those listed in <code>dependencies</code>), no optional groups.</p>
+<p><strong>When specified</strong>: Installs core dependencies + only the specified groups (all other groups are excluded).</p>
+<p><strong>Formats supported:</strong>
+- Space-separated: <code>'dev test'</code>
+- Comma-separated: <code>'dev,test,docs'</code>
+- Mixed: <code>'dev, test docs'</code></p>
+<p><strong>Important</strong>: The action uses <code>uv sync --no-default-groups --group &lt;name&gt;</code> to ensure ONLY the specified groups are installed, preventing unwanted transitive group installations.</p>
+<h4 id="verify-lock"><code>verify-lock</code></h4>
+<p>Controls whether to verify the <code>uv.lock</code> file is up to date before installation.</p>
+<p><strong>When <code>'true'</code> (default)</strong>: Runs <code>uv lock --check</code> and fails if lock file is outdated.</p>
+<p>**When <code>'false'</code>: Skips lock file verification.</p>
+<h2 id="features">Features</h2>
+<h3 id="1-automatic-virtual-environment-activation">1. Automatic Virtual Environment Activation</h3>
+<p>The action automatically activates the <code>.venv</code> virtual environment by:
+- Adding <code>.venv/bin</code> (Linux/macOS) or <code>.venv/Scripts</code> (Windows) to <code>$GITHUB_PATH</code>
+- Setting <code>$VIRTUAL_ENV</code> environment variable</p>
+<p><strong>Result</strong>: All subsequent steps can use <code>python</code>, <code>pytest</code>, <code>black</code>, etc. directly without manual activation or <code>uv run</code>.</p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+  with:
+    install-groups: 'dev test'
+
+# No activation needed!
+- run: python --version  # Uses venv Python
+- run: pytest            # Uses venv pytest
+- run: black .           # Uses venv black
+</code></pre>
+<h3 id="2-smart-dependency-group-management">2. Smart Dependency Group Management</h3>
+<p>The action uses <code>--no-default-groups</code> flag to ensure clean group isolation:</p>
+<pre><code class="language-yaml"># pyproject.toml
+[project]
+dependencies = [&quot;requests&quot;]
+
+[dependency-groups]
+dev = [&quot;httpx&quot;]
+test = [&quot;pytest-cov&quot;]
+docs = [&quot;mkdocs&quot;]
+</code></pre>
+<p><strong>Without groups</strong> (<code>install-groups: ''</code>):
+- Command: <code>uv sync --frozen --no-default-groups</code>
+- Installs: <code>requests</code> only</p>
+<p><strong>With specific groups</strong> (<code>install-groups: 'test docs'</code>):
+- Command: <code>uv sync --frozen --no-default-groups --group test --group docs</code>
+- Installs: <code>requests</code> + <code>pytest-cov</code> + <code>mkdocs</code>
+- Excludes: <code>httpx</code> (dev group not requested)</p>
+<h3 id="3-lock-file-verification">3. Lock File Verification</h3>
+<p>Ensures reproducible builds by validating <code>uv.lock</code> matches <code>pyproject.toml</code>:</p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+  with:
+    verify-lock: 'true'  # Fails if lock is outdated
+</code></pre>
+<p><strong>Skip verification</strong> (useful for dynamic dependency updates):</p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+  with:
+    verify-lock: 'false'
+</code></pre>
+<h3 id="4-dependency-caching">4. Dependency Caching</h3>
+<p>The action uses <code>astral-sh/setup-uv@v4</code> with:</p>
+<pre><code class="language-yaml">enable-cache: true
+cache-dependency-glob: uv.lock
+</code></pre>
+<p>This caches dependencies based on <code>uv.lock</code> hash, significantly speeding up CI runs.</p>
+<h3 id="5-comprehensive-logging">5. Comprehensive Logging</h3>
+<p>The action provides detailed output:</p>
+<pre><code>Environment information
+  Virtual environment: ACTIVATED
+
+  Virtual environment location:
+    /home/runner/work/repo/repo/.venv
+
+  Python executable:
+    /home/runner/work/repo/repo/.venv/bin/python
+
+  The virtual environment has been automatically activated.
+  You can now use 'python' and installed CLI tools directly in subsequent steps.
+</code></pre>
+<h2 id="usage-scenarios">Usage Scenarios</h2>
+<h3 id="scenario-1-core-dependencies-only">Scenario 1: Core Dependencies Only</h3>
+<p><strong>Use Case</strong>: Simple project with only core dependencies, no dev tools needed.</p>
+<pre><code class="language-yaml">steps:
+  - uses: actions/checkout@v5
+  - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+
+  - name: Run application
+    run: python main.py
+</code></pre>
+<p><strong>pyproject.toml</strong>:</p>
+<pre><code class="language-toml">[project]
+name = &quot;my-app&quot;
+version = &quot;1.0.0&quot;
+dependencies = [&quot;requests&quot;, &quot;pydantic&quot;]
+</code></pre>
+<p><strong>What gets installed</strong>: <code>requests</code>, <code>pydantic</code> only</p>
+<h3 id="scenario-2-development-environment">Scenario 2: Development Environment</h3>
+<p><strong>Use Case</strong>: Local-style development with all dev tools.</p>
+<pre><code class="language-yaml">steps:
+  - uses: actions/checkout@v5
+  - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+    with:
+      install-groups: 'dev'
+
+  - run: black --check .
+  - run: mypy src/
+  - run: ruff check .
+</code></pre>
+<p><strong>pyproject.toml</strong>:</p>
+<pre><code class="language-toml">[project]
+dependencies = [&quot;requests&quot;]
+
+[dependency-groups]
+dev = [&quot;black&quot;, &quot;mypy&quot;, &quot;ruff&quot;]
+</code></pre>
+<p><strong>What gets installed</strong>: <code>requests</code> + <code>black</code> + <code>mypy</code> + <code>ruff</code></p>
+<h3 id="scenario-3-testing-workflow">Scenario 3: Testing Workflow</h3>
+<p><strong>Use Case</strong>: Run tests without dev tools to match production environment.</p>
+<pre><code class="language-yaml">steps:
+  - uses: actions/checkout@v5
+  - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+    with:
+      install-groups: 'groups: test'
+
+  - run: pytest --cov=src --cov-report=xml
+  - run: coverage report
+</code></pre>
+<p><strong>pyproject.toml</strong>:</p>
+<pre><code class="language-toml">[project]
+dependencies = [&quot;requests&quot;]
+
+[dependency-groups]
+dev = [&quot;black&quot;, &quot;mypy&quot;]
+test = [&quot;pytest&quot;, &quot;pytest-cov&quot;, &quot;coverage&quot;]
+</code></pre>
+<p><strong>What gets installed</strong>: <code>requests</code> + <code>pytest</code> + <code>pytest-cov</code> + <code>coverage</code> (dev tools excluded)</p>
+<h3 id="scenario-4-documentation-build">Scenario 4: Documentation Build</h3>
+<p><strong>Use Case</strong>: Build documentation without test/dev dependencies.</p>
+<pre><code class="language-yaml">steps:
+  - uses: actions/checkout@v5
+  - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+    with:
+      install-groups: 'docs'
+
+  - run: mkdocs build
+  - run: mkdocs gh-deploy --force
+</code></pre>
+<p><strong>pyproject.toml</strong>:</p>
+<pre><code class="language-toml">[project]
+dependencies = [&quot;mylib&quot;]
+
+[dependency-groups]
+docs = [&quot;mkdocs&quot;, &quot;mkdocs-material&quot;]
+</code></pre>
+<p><strong>What gets installed</strong>: <code>mylib</code> + <code>mkdocs</code> + <code>mkdocs-material</code></p>
+<h3 id="scenario-5-multiple-groups">Scenario 5: Multiple Groups</h3>
+<p><strong>Use Case</strong>: CI workflow that needs both testing and linting.</p>
+<pre><code class="language-yaml">steps:
+  - uses: actions/checkout@v5
+  - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+    with:
+      install-groups: 'dev test'
+
+  - name: Lint
+    run: |
+      black --check .
+      mypy src/
+
+  - name: Test
+    run: pytest --cov=src
+</code></pre>
+<p><strong>pyproject.toml</strong>:</p>
+<pre><code class="language-toml">[project]
+dependencies = [&quot;requests&quot;]
+
+[dependency-groups]
+dev = [&quot;black&quot;, &quot;mypy&quot;]
+test = [&quot;pytest&quot;, &quot;pytest-cov&quot;]
+docs = [&quot;mkdocs&quot;]  # Not installed
+</code></pre>
+<p><strong>What gets installed</strong>: <code>requests</code> + <code>black</code> + <code>mypy</code> + <code>pytest</code> + <code>pytest-cov</code></p>
+<p><strong>What's excluded</strong>: <code>mkdocs</code> (docs group not requested)</p>
+<h3 id="scenario-6-matrix-testing-across-python-versions">Scenario 6: Matrix Testing Across Python Versions</h3>
+<p><strong>Use Case</strong>: Test compatibility with multiple Python versions.</p>
+<pre><code class="language-yaml">strategy:
+  matrix:
+    python-version: ['3.10', '3.11', '3.12']
+
+steps:
+  - uses: actions/checkout@v5
+  - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+    with:
+      python-version: ${{ matrix.python-version }}
+      install-groups: 'groups: test'
+
+  - run: pytest
+</code></pre>
+<p><strong>Result</strong>: Tests run on Python 3.10, 3.11, and 3.12</p>
+<h3 id="scenario-7-cross-platform-testing">Scenario 7: Cross-Platform Testing</h3>
+<p><strong>Use Case</strong>: Ensure application works on all major operating systems.</p>
+<pre><code class="language-yaml">strategy:
+  matrix:
+    os: [ubuntu-latest, windows-latest, macos-latest]
+
+steps:
+  - uses: actions/checkout@v5
+  - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+    with:
+      install-groups: 'test'
+
+  - run: pytest
+</code></pre>
+<p><strong>Result</strong>: Tests run on Linux, Windows, and macOS</p>
+<h3 id="scenario-8-skip-lock-verification-for-dynamic-dependencies">Scenario 8: Skip Lock Verification for Dynamic Dependencies</h3>
+<p><strong>Use Case</strong>: Dependencies from Git branches or local paths that change frequently.</p>
+<p><strong>pyproject.toml</strong>:</p>
+<pre><code class="language-toml">[project]
+dependencies = [
+  &quot;mylib @ git+https://github.com/user/repo@main&quot;,
+  &quot;another-lib @ git+https://github.com/user/another@develop&quot;
+]
+</code></pre>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  test-dynamic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+        with:
+          verify-lock: 'false'  # Skip lock check for dynamic deps
+          install-groups: 'groups: dev'
+
+      - name: Run tests
+        run: pytest
+</code></pre>
+<p><strong>What Happens</strong>:
+- Skips <code>uv lock --check</code> validation
+- Installs dependencies from lock file as-is
+- Useful when lock file changes frequently</p>
+<h3 id="scenario-9-no-dependency-groups-section">Scenario 9: No Dependency Groups Section</h3>
+<p><strong>Use Case</strong>: Simple project without optional dependency groups.</p>
+<p><strong>pyproject.toml</strong>:</p>
+<pre><code class="language-toml">[project]
+name = &quot;simple-app&quot;
+dependencies = [&quot;requests&quot;, &quot;click&quot;]
+# No [dependency-groups] section
+</code></pre>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+
+      - name: Run application
+        run: python app.py
+</code></pre>
+<p><strong>What Happens</strong>:
+- Core dependencies installed: <code>requests</code>, <code>click</code>
+- No error even though <code>[dependency-groups]</code> section doesn't exist
+- Action handles missing dependency-groups gracefully</p>
+<h3 id="scenario-10-multiple-formats-for-groups">Scenario 10: Multiple Formats for Groups</h3>
+<p><strong>Use Case</strong>: Demonstrating flexible group specification formats.</p>
+<p><strong>All these are equivalent:</strong></p>
+<pre><code class="language-yaml"># Space-separated
+install-groups: 'groups: dev test docs'
+
+# Comma-separated
+install-groups: 'groups: dev,test,docs'
+
+# Mixed
+install-groups: 'groups: dev, test docs'
+</code></pre>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  test-formats:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        format:
+          - 'groups: dev test docs'
+          - 'groups: dev,test,docs'
+          - 'groups: dev, test docs'
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+        with:
+          install-groups: ${{ matrix.format }}
+
+      - name: Verify all formats work
+        run: |
+          python -c &quot;import black, pytest, mkdocs&quot;
+          echo &quot;[OK] All formats install same dependencies&quot;
+</code></pre>
+<h3 id="scenario-11-complex-multi-group-setup">Scenario 11: Complex Multi-Group Setup</h3>
+<p><strong>Use Case</strong>: Large project with many specialized dependency groups.</p>
+<p><strong>pyproject.toml</strong>:</p>
+<pre><code class="language-toml">[project]
+name = &quot;enterprise-app&quot;
+dependencies = [&quot;requests&quot;, &quot;pydantic&quot;, &quot;typer&quot;]
+
+[project.optional-dependencies]
+aws = [&quot;boto3&quot;, &quot;s3fs&quot;]
+azure = [&quot;azure-storage-blob&quot;, &quot;azure-identity&quot;]
+gcp = [&quot;google-cloud-storage&quot;]
+postgres = [&quot;psycopg2-binary&quot;, &quot;sqlalchemy&quot;]
+redis = [&quot;redis&quot;, &quot;hiredis&quot;]
+
+[dependency-groups]
+dev = [&quot;black&quot;, &quot;mypy&quot;, &quot;ruff&quot;, &quot;ipython&quot;]
+test = [&quot;pytest&quot;, &quot;pytest-cov&quot;, &quot;pytest-mock&quot;, &quot;hypothesis&quot;]
+docs = [&quot;mkdocs&quot;, &quot;mkdocs-material&quot;, &quot;mkdocstrings[python]&quot;]
+lint = [&quot;pylint&quot;, &quot;flake8&quot;, &quot;bandit&quot;]
+build = [&quot;build&quot;, &quot;twine&quot;, &quot;wheel&quot;]
+</code></pre>
+<p><strong>Workflow (development):</strong></p>
+<pre><code class="language-yaml">jobs:
+  develop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+        with:
+          install-groups: 'groups: dev test lint, extras: postgres redis'
+
+      - name: Full dev environment
+        run: |
+          black --check .
+          mypy src/
+          pytest --cov=src
+</code></pre>
+<p><strong>Workflow (documentation):</strong></p>
+<pre><code class="language-yaml">jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+        with:
+          install-groups: 'groups: docs'
+
+      - name: Build docs
+        run: mkdocs build
+</code></pre>
+<p><strong>Workflow (production):</strong></p>
+<pre><code class="language-yaml">jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+        with:
+          install-groups: 'extras: aws postgres'  # No dev groups
+
+      - name: Deploy app
+        run: python -m app
+</code></pre>
+<h3 id="scenario-12-testing-lock-file-validation">Scenario 12: Testing Lock File Validation</h3>
+<p><strong>Use Case</strong>: Ensuring lock file stays in sync with pyproject.toml.</p>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  validate-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Verify lock file is up to date
+        uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+        with:
+          verify-lock: 'true'  # Default, but explicit
+          install-groups: 'groups: dev'
+
+      - name: Run checks
+        run: |
+          echo &quot;Lock file is valid and up to date&quot;
+          pytest
+</code></pre>
+<p><strong>What Happens</strong>:
+- Runs <code>uv lock --check</code> before installation
+- <strong>Fails if lock file is outdated</strong> with clear error message
+- Prevents deploying with mismatched dependencies</p>
+<h3 id="scenario-13-explicit-dev-group-installation">Scenario 13: Explicit Dev Group Installation</h3>
+<p><strong>Use Case</strong>: Ensuring dev tools are available for local-style development in CI.</p>
+<p><strong>pyproject.toml</strong>:</p>
+<pre><code class="language-toml">[project]
+name = &quot;myapp&quot;
+dependencies = [&quot;fastapi&quot;, &quot;uvicorn&quot;]
+
+[dependency-groups]
+dev = [&quot;pytest&quot;, &quot;black&quot;, &quot;mypy&quot;, &quot;ruff&quot;, &quot;httpx&quot;]
+</code></pre>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  dev-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+        with:
+          install-groups: 'groups: dev'
+
+      - name: Run all dev checks
+        run: |
+          black --check .
+          mypy src/
+          ruff check .
+          pytest
+</code></pre>
+<p><strong>What Happens</strong>:
+- Core: <code>fastapi</code>, <code>uvicorn</code>
+- Dev group: <code>pytest</code>, <code>black</code>, <code>mypy</code>, <code>ruff</code>, <code>httpx</code>
+- All dev tools available for comprehensive CI checks</p>
+<h3 id="scenario-14-minimal-production-build">Scenario 14: Minimal Production Build</h3>
+<p><strong>Use Case</strong>: Production deployment with only runtime dependencies.</p>
+<p><strong>pyproject.toml</strong>:</p>
+<pre><code class="language-toml">[project]
+name = &quot;webapp&quot;
+dependencies = [&quot;flask&quot;, &quot;gunicorn&quot;, &quot;psycopg2&quot;]
+
+[dependency-groups]
+dev = [&quot;pytest&quot;, &quot;black&quot;]
+test = [&quot;pytest-cov&quot;, &quot;faker&quot;]
+</code></pre>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  production:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+        # No install-groups = core only
+
+      - name: Verify minimal install
+        run: |
+          uv pip list
+          python -c &quot;import flask, gunicorn, psycopg2&quot;
+          echo &quot;[OK] Only production dependencies installed&quot;
+
+      - name: Deploy
+        run: gunicorn app:app
+</code></pre>
+<p><strong>What Happens</strong>:
+- Only core dependencies installed
+- No dev/test tools (smaller image, faster deployment)
+- Production-ready minimal environment</p>
+<h3 id="scenario-15-cache-behavior-testing">Scenario 15: Cache Behavior Testing</h3>
+<p><strong>Use Case</strong>: Understanding and testing caching behavior.</p>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-yaml">jobs:
+  cache-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: First run (populate cache)
+        uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+        with:
+          cache: 'true'  # Default
+          install-groups: 'groups: dev test'
+
+      - name: Verify packages
+        run: uv pip list
+
+      # On subsequent runs:
+      # - Cache restored from uv.lock hash
+      # - Much faster (seconds vs minutes)
+</code></pre>
+<p><strong>Cache behavior</strong>:
+- <strong>First run</strong>: Downloads and caches all dependencies (~2-5 minutes)
+- <strong>Subsequent runs</strong>: Restores from cache (~10-30 seconds)
+- <strong>Cache key</strong>: Based on <code>uv.lock</code> hash
+- <strong>Cache invalidation</strong>: Automatic when <code>uv.lock</code> changes</p>
+<h2 id="dependency-groups">Dependency Groups</h2>
+<h3 id="dependency-groups-vs-optional-dependencies">Dependency Groups vs Optional Dependencies</h3>
+<p><strong>Key Differences</strong>:</p>
+<ol>
+<li><strong>Dependency Groups</strong> (<code>[dependency-groups]</code>):</li>
+<li>Part of PEP 735 standard</li>
+<li><strong>Fully supported by uv</strong> (unlike pip)</li>
+<li>Development-only dependencies, not published with package</li>
+<li>Installed using <code>--group</code> flag with <code>uv sync</code></li>
+<li>Use prefix <code>groups:</code> in this action</li>
+<li>
+<p><strong>Recommended for uv users</strong></p>
+</li>
+<li>
+<p><strong>Optional Dependencies</strong> (<code>[project.optional-dependencies]</code>):</p>
+</li>
+<li>Part of PEP 621 standard, widely supported</li>
+<li>Published with your package, can be installed by end users</li>
+<li>Installed using <code>--extra</code> flag with <code>uv sync</code></li>
+<li>Use prefix <code>extras:</code> in this action</li>
+<li><strong>Also supported by uv</strong></li>
+</ol>
+<p><strong>Key Advantage of uv</strong>: Unlike pip, uv has <strong>full native support</strong> for PEP 735 dependency groups without any limitations or warnings.</p>
+<h3 id="understanding-dependency-groups">Understanding Dependency Groups</h3>
+<p>Dependency groups in <code>pyproject.toml</code> allow organizing optional dependencies:</p>
+<pre><code class="language-toml">[project]
+name = &quot;myapp&quot;
+dependencies = [&quot;requests&quot;]  # Core - always installed
+
+[project.optional-dependencies]
+aws = [&quot;boto3&quot;, &quot;s3fs&quot;]      # Published extras (end-user features)
+viz = [&quot;matplotlib&quot;, &quot;seaborn&quot;]  # End-user features
+
+[dependency-groups]
+dev = [&quot;black&quot;, &quot;mypy&quot;, &quot;ruff&quot;]      # Development tools (not published)
+test = [&quot;pytest&quot;, &quot;pytest-cov&quot;]  # Testing tools (not published)
+docs = [&quot;mkdocs&quot;, &quot;mkdocstrings&quot;]  # Documentation tools (not published)
+</code></pre>
+<p><strong>When to use which:</strong>
+- <code>optional-dependencies</code>: Features for end-users (e.g., cloud integrations, visualization)
+- <code>dependency-groups</code>: Development tools only needed by contributors (e.g., linting, testing)</p>
+<h3 id="group-installation-behavior">Group Installation Behavior</h3>
+<table>
+<thead>
+<tr>
+<th><code>install-groups</code> Value</th>
+<th>Command Generated</th>
+<th>What Gets Installed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>''</code> (empty/default)</td>
+<td><code>uv sync --frozen --no-default-groups</code></td>
+<td>Core only</td>
+</tr>
+<tr>
+<td><code>'groups: dev'</code></td>
+<td><code>uv sync --frozen --no-default-groups --group dev</code></td>
+<td>Core + dev</td>
+</tr>
+<tr>
+<td><code>'groups: test'</code></td>
+<td><code>uv sync --frozen --no-default-groups --group test</code></td>
+<td>Core + test</td>
+</tr>
+<tr>
+<td><code>'groups: dev test'</code></td>
+<td><code>uv sync --frozen --no-default-groups --group dev --group test</code></td>
+<td>Core + dev + test</td>
+</tr>
+<tr>
+<td><code>'groups: dev,test,docs'</code></td>
+<td><code>uv sync --frozen --no-default-groups --group dev --group test --group docs</code></td>
+<td>Core + dev + test + docs</td>
+</tr>
+<tr>
+<td><code>'extras: aws'</code></td>
+<td><code>uv sync --frozen --no-default-groups --extra aws</code></td>
+<td>Core + aws extra</td>
+</tr>
+<tr>
+<td><code>'groups: dev, extras: aws'</code></td>
+<td><code>uv sync --frozen --no-default-groups --group dev --extra aws</code></td>
+<td>Core + dev + aws</td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-no-default-groups">Why <code>--no-default-groups</code>?</h3>
+<p>By default, <code>uv sync</code> includes certain groups automatically (like <code>dev</code>). Using <code>--no-default-groups</code> ensures:
+- ✅ <strong>Clean group isolation</strong> - only requested groups are installed
+- ✅ <strong>Predictable builds</strong> - same result every time
+- ✅ <strong>Reproducible</strong> - no unexpected transitive group installations
+- ✅ <strong>Explicit control</strong> - you specify exactly what to install</p>
+<p><strong>Without <code>--no-default-groups</code></strong> (old behavior):</p>
+<pre><code class="language-bash">uv sync --group test  # Might also install 'dev' group unexpectedly
+</code></pre>
+<p><strong>With <code>--no-default-groups</code></strong> (current behavior):</p>
+<pre><code class="language-bash">uv sync --no-default-groups --group test  # ONLY test group
+</code></pre>
+<h3 id="format-options">Format Options</h3>
+<p>The action accepts multiple formats for <code>install-groups</code>:</p>
+<p><strong>Space-separated:</strong></p>
+<pre><code class="language-yaml">install-groups: 'groups: dev test docs'
+</code></pre>
+<p><strong>Comma-separated:</strong></p>
+<pre><code class="language-yaml">install-groups: 'groups: dev,test,docs'
+</code></pre>
+<p><strong>Mixed (spaces and commas):</strong></p>
+<pre><code class="language-yaml">install-groups: 'groups: dev, test docs'
+</code></pre>
+<p><strong>Groups and extras together:</strong></p>
+<pre><code class="language-yaml">install-groups: 'groups: dev test, extras: aws viz'
+</code></pre>
+<p><strong>Reverse order (extras first):</strong></p>
+<pre><code class="language-yaml">install-groups: 'extras: aws, groups: dev'
+</code></pre>
+<p>All formats produce the same result - the action parses them intelligently.</p>
+<h3 id="common-group-patterns">Common Group Patterns</h3>
+<p><strong>Development:</strong></p>
+<pre><code class="language-toml">[dependency-groups]
+dev = [&quot;black&gt;=23.0&quot;, &quot;mypy&gt;=1.0&quot;, &quot;ruff&gt;=0.1&quot;, &quot;ipython&gt;=8.0&quot;]
+</code></pre>
+<pre><code class="language-yaml">- uses: .../actions/python-setup/uv@v1
+  with:
+    install-groups: 'groups: dev'
+- run: black --check .
+- run: mypy src/
+</code></pre>
+<p><strong>Testing:</strong></p>
+<pre><code class="language-toml">[dependency-groups]
+test = [&quot;pytest&gt;=7.0&quot;, &quot;pytest-cov&gt;=4.0&quot;, &quot;pytest-mock&gt;=3.0&quot;, &quot;faker&gt;=20.0&quot;]
+</code></pre>
+<pre><code class="language-yaml">- uses: .../actions/python-setup/uv@v1
+  with:
+    install-groups: 'groups: test'
+- run: pytest --cov=src
+</code></pre>
+<p><strong>Documentation:</strong></p>
+<pre><code class="language-toml">[dependency-groups]
+docs = [&quot;mkdocs&gt;=1.5&quot;, &quot;mkdocs-material&gt;=9.0&quot;, &quot;mkdocstrings[python]&gt;=0.24&quot;]
+</code></pre>
+<pre><code class="language-yaml">- uses: .../actions/python-setup/uv@v1
+  with:
+    install-groups: 'groups: docs'
+- run: mkdocs build
+</code></pre>
+<p><strong>Production (extras for end-users):</strong></p>
+<pre><code class="language-toml">[project.optional-dependencies]
+postgres = [&quot;psycopg2-binary&gt;=2.9&quot;]
+redis = [&quot;redis&gt;=5.0&quot;]
+</code></pre>
+<pre><code class="language-yaml">- uses: .../actions/python-setup/uv@v1
+  with:
+    install-groups: 'extras: postgres redis'
+- run: python app.py
+</code></pre>
+<p><strong>Combined (dev + testing):</strong></p>
+<pre><code class="language-yaml">- uses: .../actions/python-setup/uv@v1
+  with:
+    install-groups: 'groups: dev test'
+- run: black --check .
+- run: pytest
+</code></pre>
+<p><strong>All groups:</strong></p>
+<pre><code class="language-yaml">- uses: .../actions/python-setup/uv@v1
+  with:
+    install-groups: 'groups: dev test docs, extras: aws azure'
+</code></pre>
+<h3 id="installation-summary-output">Installation Summary Output</h3>
+<p>The action provides detailed feedback about what will be installed:</p>
+<p><strong>Example output:</strong></p>
+<pre><code>Processing install-groups: groups: dev test, extras: aws
+  - Adding dependency group: dev
+  - Adding dependency group: test
+  - Adding optional dependency (extra): aws
+
+=== Installation Summary ===
+✓ Dependency groups will be installed: dev test
+✓ Optional dependencies (extras) will be installed: aws
+✗ No optional dependencies specified
+✓ Core dependencies will always be installed
+==========================
+
+Running: uv sync --frozen --no-default-groups --group dev --group test --extra aws
+</code></pre>
+<p>This makes it clear exactly what's being installed and why.</p>
+<h2 id="lock-file-verification">Lock File Verification</h2>
+<h3 id="what-is-lock-file-verification">What is Lock File Verification?</h3>
+<p><code>uv.lock</code> is a lock file that pins exact versions of all dependencies. Verification ensures the lock file is synchronized with <code>pyproject.toml</code>.</p>
+<h3 id="when-to-enable-default">When to Enable (Default)</h3>
+<p><strong>Enable verification (<code>verify-lock: 'true'</code>) when:</strong>
+- Working in a team (ensure everyone uses same dependencies)
+- Production deployments (reproducible builds)
+- CI/CD pipelines (catch dependency drift early)</p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+  with:
+    verify-lock: 'true'  # Fails if lock is outdated
+</code></pre>
+<p><strong>Error if outdated</strong>:</p>
+<pre><code>error: The lockfile at `uv.lock` needs to be updated, but `--locked` was provided.
+</code></pre>
+<p><strong>Fix</strong>: Run <code>uv lock</code> locally and commit the updated lock file.</p>
+<h3 id="when-to-disable">When to Disable</h3>
+<p><strong>Disable verification (<code>verify-lock: 'false'</code>) when:</strong>
+- Dependencies change frequently (Git dependencies)
+- Development branches with experimental changes
+- Prototyping/testing new dependencies</p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+  with:
+    verify-lock: 'false'
+</code></pre>
+<h3 id="lock-file-workflow">Lock File Workflow</h3>
+<p><strong>Recommended workflow</strong>:
+1. Modify <code>pyproject.toml</code> (add/update dependencies)
+2. Run <code>uv lock</code> locally
+3. Commit both <code>pyproject.toml</code> and <code>uv.lock</code>
+4. CI runs with <code>verify-lock: 'true'</code> and passes</p>
+<h2 id="virtual-environment">Virtual Environment</h2>
+<h3 id="automatic-activation">Automatic Activation</h3>
+<p>The action automatically activates the virtual environment created by <code>uv sync</code> at <code>.venv</code>.</p>
+<p><strong>How it works</strong>:
+1. Action runs <code>uv sync</code> which creates <code>.venv/</code>
+2. Action adds <code>.venv/bin</code> (or <code>.venv/Scripts</code> on Windows) to <code>$GITHUB_PATH</code>
+3. Action sets <code>$VIRTUAL_ENV</code> environment variable
+4. All subsequent steps use the activated environment</p>
+<h3 id="using-the-environment">Using the Environment</h3>
+<p><strong>Direct Python/CLI commands</strong> (recommended):</p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+  with:
+    install-groups: 'dev test'
+
+- run: python --version
+- run: pytest
+- run: black .
+- run: mypy src/
+</code></pre>
+<p><strong>Alternative: uv run</strong> (also works):</p>
+<pre><code class="language-yaml">- run: uv run pytest
+- run: uv run black .
+</code></pre>
+<p><strong>Manual activation</strong> (unnecessary but possible):</p>
+<pre><code class="language-yaml">- run: |
+    source .venv/bin/activate  # Linux/macOS
+    python --version
+</code></pre>
+<h3 id="environment-location">Environment Location</h3>
+<p>The virtual environment is always at:
+- <strong>Linux/macOS</strong>: <code>$(pwd)/.venv</code>
+- <strong>Windows</strong>: <code>$(pwd)\.venv</code></p>
+<p><strong>Python executable</strong>:
+- <strong>Linux/macOS</strong>: <code>.venv/bin/python</code>
+- <strong>Windows</strong>: <code>.venv\Scripts\python.exe</code></p>
+<h2 id="testing-guide">Testing Guide</h2>
+<p>This action is comprehensively tested across multiple scenarios to ensure reliability and correct behavior. Reference the test workflow at <code>.github/workflows/test-python-setup-uv.yml</code>.</p>
+<h3 id="test-coverage-matrix">Test Coverage Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Test Job</th>
+<th>Purpose</th>
+<th>Key Validations</th>
+<th>Behavior Tested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test-uv-basic</code></td>
+<td>Default behavior (core only)</td>
+<td>Core dependencies installed, dev group NOT installed</td>
+<td><code>--no-default-groups</code> excludes optional groups by default</td>
+</tr>
+<tr>
+<td><code>test-uv-custom-groups</code></td>
+<td>Specific groups</td>
+<td>Only <code>test</code> and <code>docs</code> groups installed, <code>dev</code> excluded</td>
+<td>Group isolation with <code>--no-default-groups</code></td>
+</tr>
+<tr>
+<td><code>test-uv-no-groups</code></td>
+<td>Explicit empty groups</td>
+<td>Only core dependencies, no optional groups</td>
+<td>Empty <code>install-groups: ''</code> handled correctly</td>
+</tr>
+<tr>
+<td><code>test-uv-lock-verification</code></td>
+<td>Lock validation (valid)</td>
+<td>Lock file check passes</td>
+<td><code>uv lock --check</code> succeeds with up-to-date lock</td>
+</tr>
+<tr>
+<td><code>test-uv-lock-verification-disabled</code></td>
+<td>Skip lock check</td>
+<td>Installation succeeds without verification</td>
+<td><code>verify-lock: 'false'</code> skips validation</td>
+</tr>
+<tr>
+<td><code>test-uv-lock-verification-fail</code></td>
+<td>Outdated lock handling</td>
+<td>Action fails gracefully with clear error</td>
+<td>Outdated lock detected and reported</td>
+</tr>
+<tr>
+<td><code>test-uv-matrix</code></td>
+<td>Cross-platform/version</td>
+<td>Python 3.10/3.11/3.12 on Linux/Windows/macOS</td>
+<td>Platform-specific virtual environment activation</td>
+</tr>
+<tr>
+<td><code>test-uv-cache</code></td>
+<td>Dependency caching</td>
+<td>Cache populated and restored based on <code>uv.lock</code> hash</td>
+<td><code>enable-cache: true</code> with <code>cache-dependency-glob</code></td>
+</tr>
+<tr>
+<td><code>test-uv-comma-separated-groups</code></td>
+<td>Group parsing</td>
+<td><code>'dev,test,docs'</code> format parsed correctly</td>
+<td>Multiple separator handling</td>
+</tr>
+<tr>
+<td><code>test-uv-mixed-separators</code></td>
+<td>Group parsing</td>
+<td><code>'dev, test docs'</code> format parsed correctly</td>
+<td>Flexible formatting support</td>
+</tr>
+<tr>
+<td><code>test-uv-space-separated-groups</code></td>
+<td>Group parsing</td>
+<td><code>'dev test docs'</code> format parsed correctly</td>
+<td>Space-separated groups</td>
+</tr>
+<tr>
+<td><code>test-uv-no-dependency-groups-section</code></td>
+<td>Missing groups section</td>
+<td>Works without <code>[dependency-groups]</code> in pyproject.toml</td>
+<td>Graceful handling of missing section</td>
+</tr>
+<tr>
+<td><code>test-uv-explicit-dev-group</code></td>
+<td>Specific dev group</td>
+<td>Only dev group installed when requested</td>
+<td>Explicit group selection</td>
+</tr>
+<tr>
+<td><code>test-uv-groups-and-extras</code></td>
+<td>Mixed groups/extras</td>
+<td>Both groups and extras install correctly</td>
+<td><code>--group</code> and <code>--extra</code> flags together</td>
+</tr>
+<tr>
+<td><code>test-uv-extras-only</code></td>
+<td>Extras without groups</td>
+<td>Only extras installed, groups excluded</td>
+<td><code>extras:</code> prefix handling</td>
+</tr>
+<tr>
+<td><code>test-uv-reverse-order</code></td>
+<td>Order independence</td>
+<td>Same result regardless of groups/extras order</td>
+<td>Parser handles any order</td>
+</tr>
+</tbody>
+</table>
+<h3 id="test-scenarios-details">Test Scenarios Details</h3>
+<p><strong>Default Behavior Test (<code>test-uv-basic</code>):</strong>
+- <strong>Validates</strong>: Core dependencies installed, optional groups excluded by default
+- <strong>Key assertion</strong>: <code>httpx</code> from dev group should NOT be present
+- <strong>Purpose</strong>: Verify <code>--no-default-groups</code> prevents automatic group installation</p>
+<p><strong>Custom Groups Test (<code>test-uv-custom-groups</code>):</strong>
+- <strong>Validates</strong>: Only requested groups (<code>test</code>, <code>docs</code>) installed
+- <strong>Key assertion</strong>: <code>httpx</code> from dev group should NOT be present
+- <strong>Purpose</strong>: Verify group isolation and <code>--no-default-groups</code> behavior</p>
+<p><strong>Lock Verification Test (<code>test-uv-lock-verification</code>):</strong>
+- <strong>Validates</strong>: <code>uv lock --check</code> passes with synchronized lock file
+- <strong>Purpose</strong>: Ensure lock file validation works correctly</p>
+<p><strong>Lock Verification Failure Test (<code>test-uv-lock-verification-fail</code>):</strong>
+- <strong>Setup</strong>: Modifies <code>pyproject.toml</code> after generating lock file
+- <strong>Validates</strong>: Action fails with clear error message
+- <strong>Purpose</strong>: Verify outdated lock detection</p>
+<p><strong>Matrix Test (<code>test-uv-matrix</code>):</strong>
+- <strong>Validates</strong>: Works across Python 3.10, 3.11, 3.12 on ubuntu, windows, macos
+- <strong>Purpose</strong>: Cross-platform and cross-version compatibility</p>
+<p><strong>Format Tests (<code>comma-separated</code>, <code>mixed-separators</code>, <code>space-separated</code>):</strong>
+- <strong>Validates</strong>: All group specification formats produce identical results
+- <strong>Purpose</strong>: Flexible input format support</p>
+<h3 id="test-fixtures">Test Fixtures</h3>
+<p>Tests use inline pyproject.toml creation for maximum clarity:</p>
+<p><strong>Basic Test Example:</strong></p>
+<pre><code class="language-yaml">- name: Create test project with uv
+  run: |
+    cat &gt; pyproject.toml &lt;&lt; 'EOF'
+    [project]
+    name = &quot;test-uv-basic&quot;
+    version = &quot;0.1.0&quot;
+    requires-python = &quot;&gt;=3.12&quot;
+    dependencies = [&quot;requests&quot;]
+
+    [dependency-groups]
+    dev = [&quot;httpx&quot;]
+    EOF
+
+    pip install uv
+    uv lock
+</code></pre>
+<p><strong>Custom Groups Test Example:</strong></p>
+<pre><code class="language-yaml">- name: Create test project with multiple groups
+  run: |
+    cat &gt; pyproject.toml &lt;&lt; 'EOF'
+    [project]
+    name = &quot;test-uv-groups&quot;
+    version = &quot;0.1.0&quot;
+    requires-python = &quot;&gt;=3.12&quot;
+    dependencies = [&quot;requests&quot;]
+
+    [dependency-groups]
+    dev = [&quot;httpx&quot;]
+    test = [&quot;pytest-cov&quot;, &quot;pytest-mock&quot;]
+    docs = [&quot;mkdocs&quot;]
+    EOF
+
+    pip install uv
+    uv lock
+</code></pre>
+<h3 id="running-tests-locally">Running Tests Locally</h3>
+<p><strong>Using act (GitHub Actions locally):</strong></p>
+<pre><code class="language-bash"># Install act
+choco install act-cli  # Windows
+brew install act       # macOS
+winget install nektos.act  # Windows (alternative)
+
+# Run specific test
+act -j test-uv-basic
+act -j test-uv-custom-groups
+act -j test-uv-matrix
+
+# Run all uv tests
+act -j test-uv-*
+</code></pre>
+<p><strong>Manual testing in your repository:</strong></p>
+<pre><code class="language-yaml"># .github/workflows/test-uv-action.yml
+name: Test uv action
+
+on: [push, pull_request]
+
+jobs:
+  test-basic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+        with:
+          install-groups: 'groups: dev test'
+      - run: pytest
+
+  test-groups-isolation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+        with:
+          install-groups: 'groups: test'
+
+      - name: Verify only test group
+        run: |
+          python -c &quot;import pytest; print('[OK] Test group installed')&quot;
+          # Verify dev group NOT installed
+          python -c &quot;import black&quot; 2&gt;&amp;1 &amp;&amp; exit 1 || echo &quot;[OK] Dev group not installed&quot;
+
+  test-lock-verification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+        with:
+          verify-lock: 'true'
+      - run: echo &quot;Lock file verified&quot;
+</code></pre>
+<h3 id="expected-test-behaviors">Expected Test Behaviors</h3>
+<p><strong>Group Isolation:</strong>
+- When <code>install-groups: 'groups: test'</code> specified, ONLY test group installed
+- Dev, docs, and other groups explicitly excluded via <code>--no-default-groups</code>
+- Core dependencies always installed</p>
+<p><strong>Lock File Verification:</strong>
+- With <code>verify-lock: 'true'</code>: Fails if lock outdated
+- With <code>verify-lock: 'false'</code>: Uses lock as-is without checking
+- Default is <code>'true'</code> for safety</p>
+<p><strong>Virtual Environment Activation:</strong>
+- <code>.venv/bin</code> (Linux/macOS) or <code>.venv/Scripts</code> (Windows) added to PATH
+- <code>VIRTUAL_ENV</code> environment variable set
+- Subsequent steps can use <code>python</code> and CLI tools directly</p>
+<p><strong>Cache Behavior:</strong>
+- First run: Downloads and caches dependencies
+- Subsequent runs: Restores from cache based on <code>uv.lock</code> hash
+- Cache invalidates automatically when lock file changes</p>
+<h3 id="debugging-failed-tests">Debugging Failed Tests</h3>
+<p><strong>Verify Python and uv installation:</strong></p>
+<pre><code class="language-yaml">- name: Debug environment
+  run: |
+    python --version
+    uv --version
+    which python
+    which uv
+</code></pre>
+<p><strong>Check installed packages:</strong></p>
+<pre><code class="language-yaml">- name: List packages
+  run: |
+    uv pip list
+    python -c &quot;import sys; print(sys.path)&quot;
+</code></pre>
+<p><strong>Test specific imports:</strong></p>
+<pre><code class="language-yaml">- name: Test imports
+  run: |
+    python -c &quot;import pytest; print('pytest OK')&quot;
+    python -c &quot;import black; print('black OK')&quot; || echo &quot;black not installed (expected?)&quot;
+</code></pre>
+<p><strong>Verify virtual environment:</strong></p>
+<pre><code class="language-yaml">- name: Check venv
+  run: |
+    echo &quot;VIRTUAL_ENV: $VIRTUAL_ENV&quot;
+    echo &quot;PATH: $PATH&quot;
+    ls -la .venv/
+</code></pre>
+<p><strong>Check lock file:</strong></p>
+<pre><code class="language-yaml">- name: Verify lock
+  run: |
+    cat pyproject.toml
+    ls -la uv.lock
+    uv lock --check
+</code></pre>
+<h3 id="test-assertions-examples">Test Assertions Examples</h3>
+<p><strong>Positive assertion (should be installed):</strong></p>
+<pre><code class="language-bash">python -c &quot;import pytest; print('[OK] pytest installed')&quot;
+</code></pre>
+<p><strong>Negative assertion (should NOT be installed):</strong></p>
+<pre><code class="language-bash">if python -c &quot;import httpx&quot; 2&gt;/dev/null; then
+  echo &quot;[ERROR] httpx should not be installed&quot;
+  exit 1
+else
+  echo &quot;[OK] httpx not installed as expected&quot;
+fi
+</code></pre>
+<p><strong>Version assertion:</strong></p>
+<pre><code class="language-bash">python -c &quot;import sys; assert sys.version_info[:2] == (3, 12), 'Wrong Python version'&quot;
+</code></pre>
+<h3 id="continuous-integration-best-practices">Continuous Integration Best Practices</h3>
+<p><strong>Matrix testing:</strong></p>
+<pre><code class="language-yaml">strategy:
+  matrix:
+    python-version: ['3.10', '3.11', '3.12']
+    os: [ubuntu-latest, windows-latest, macos-latest]
+    groups: ['dev', 'test', 'dev test', '']
+
+steps:
+  - uses: .../actions/python-setup/uv@v1
+    with:
+      python-version: ${{ matrix.python-version }}
+      install-groups: ${{ matrix.groups &amp;&amp; format('groups: {0}', matrix.groups) || '' }}
+</code></pre>
+<p><strong>Fail-fast disabled for comprehensive testing:</strong></p>
+<pre><code class="language-yaml">strategy:
+  fail-fast: false  # Test all combinations even if one fails
+  matrix:
+    # ... matrix configuration
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="error-the-lockfile-at-uvlock-needs-to-be-updated">Error: "The lockfile at <code>uv.lock</code> needs to be updated"</h3>
+<p><strong>Cause</strong>: Lock file is outdated compared to <code>pyproject.toml</code>.</p>
+<p><strong>Solution</strong>:</p>
+<pre><code class="language-bash"># Update lock file locally
+uv lock
+
+# Commit the changes
+git add pyproject.toml uv.lock
+git commit -m &quot;Update dependencies&quot;
+git push
+</code></pre>
+<p><strong>Or</strong> disable verification temporarily:</p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+  with:
+    verify-lock: 'false'
+</code></pre>
+<h3 id="error-no-such-file-or-directory-uvlock">Error: "No such file or directory: uv.lock"</h3>
+<p><strong>Cause</strong>: Lock file doesn't exist in repository.</p>
+<p><strong>Solution</strong>:</p>
+<pre><code class="language-bash"># Generate lock file
+uv lock
+
+# Commit it
+git add uv.lock
+git commit -m &quot;Add uv.lock file&quot;
+git push
+</code></pre>
+<h3 id="wrong-python-version">Wrong Python Version</h3>
+<p><strong>Issue</strong>: Action installs Python 3.12 but need 3.10.</p>
+<p><strong>Solution</strong>: Specify version explicitly:</p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+  with:
+    python-version: '3.10'
+</code></pre>
+<h3 id="dependency-not-found-after-installation">Dependency Not Found After Installation</h3>
+<p><strong>Issue</strong>: <code>ModuleNotFoundError</code> even after installation.</p>
+<p><strong>Possible causes</strong>:
+1. <strong>Group not specified</strong>: Dependency is in optional group not requested
+   ```yaml
+   # Wrong: dev group has pytest but not installed
+   install-groups: 'test'</p>
+<p># Fix: Add dev group
+   install-groups: 'dev test'
+   ```</p>
+<ol>
+<li><strong>Wrong import name</strong>: Package name ≠ import name
+   <code>toml
+   # Package: "pyyaml", Import: "yaml"
+   dependencies = ["pyyaml"]</code>
+   <code>python
+   import yaml  # Not: import pyyaml</code></li>
+</ol>
+<h3 id="groups-not-isolated">Groups Not Isolated</h3>
+<p><strong>Issue</strong>: Unwanted packages installed even though group not specified.</p>
+<p><strong>Cause</strong>: Before the fix, the action used <code>--group</code> which included default groups.</p>
+<p><strong>Solution</strong>: Use latest version of the action which uses <code>--no-default-groups</code>:</p>
+<pre><code class="language-yaml">- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1  # Latest
+</code></pre>
+<h3 id="virtual-environment-not-activated">Virtual Environment Not Activated</h3>
+<p><strong>Issue</strong>: <code>python: command not found</code> or wrong Python version.</p>
+<p><strong>Verification</strong>:</p>
+<pre><code class="language-yaml">- run: |
+    echo &quot;Python: $(which python)&quot;
+    echo &quot;PATH: $PATH&quot;
+    echo &quot;VIRTUAL_ENV: $VIRTUAL_ENV&quot;
+</code></pre>
+<p><strong>Expected output</strong>:</p>
+<pre><code>Python: /home/runner/work/repo/repo/.venv/bin/python
+PATH: /home/runner/work/repo/repo/.venv/bin:...
+VIRTUAL_ENV: /home/runner/work/repo/repo/.venv
+</code></pre>
+<p><strong>If not working</strong>: Check GitHub Actions runner logs for warnings in "Activate virtual environment" step.</p>
+<h3 id="cache-not-working">Cache Not Working</h3>
+<p><strong>Symptoms</strong>: Dependencies reinstall on every run.</p>
+<p><strong>Debug</strong>:
+1. Check <code>uv.lock</code> exists and is committed
+2. Verify cache hit in action logs:
+   <code>Restored cache from key: setup-uv-...</code>
+3. Check lock file hasn't changed between runs</p>
+<p><strong>Force cache refresh</strong>:
+Change <code>uv.lock</code> content (update dependencies).</p>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="1-always-commit-lock-file">1. Always Commit Lock File</h3>
+<pre><code class="language-bash"># Generate lock file
+uv lock
+
+# Always commit both files together
+git add pyproject.toml uv.lock
+git commit -m &quot;Update dependencies&quot;
+</code></pre>
+<p><strong>Why</strong>: Ensures reproducible builds across all environments.</p>
+<h3 id="2-use-specific-python-versions">2. Use Specific Python Versions</h3>
+<pre><code class="language-yaml"># Good: Explicit version
+python-version: '3.11'
+
+# Avoid: Version ranges or latest
+python-version: '3.x'  # Too broad
+</code></pre>
+<h3 id="3-organize-dependency-groups-by-purpose">3. Organize Dependency Groups by Purpose</h3>
+<pre><code class="language-toml"># Good: Clear separation
+[dependency-groups]
+dev = [&quot;black&quot;, &quot;mypy&quot;, &quot;ruff&quot;]
+test = [&quot;pytest&quot;, &quot;pytest-cov&quot;]
+docs = [&quot;mkdocs&quot;]
+
+# Avoid: Single &quot;dev&quot; group for everything
+[dependency-groups]
+dev = [&quot;black&quot;, &quot;mypy&quot;, &quot;pytest&quot;, &quot;mkdocs&quot;]  # Too broad
+</code></pre>
+<h3 id="4-use-lock-verification-in-ci">4. Use Lock Verification in CI</h3>
+<pre><code class="language-yaml"># Good: Catch dependency drift early
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+  with:
+    verify-lock: 'true'  # Default, but explicit is clear
+</code></pre>
+<h3 id="5-pin-action-versions">5. Pin Action Versions</h3>
+<pre><code class="language-yaml"># Good: Pin to major version (gets updates)
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
+
+# Good: Pin to exact commit (maximum stability)
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@abc1234
+
+# Avoid: Using @main (unpredictable)
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@main
+</code></pre>
+<h3 id="6-separate-workflows-by-purpose">6. Separate Workflows by Purpose</h3>
+<pre><code class="language-yaml"># lint.yml
+- uses: .../actions/python-setup/uv@v1
+  with:
+    install-groups: 'dev'
+- run: black --check .
+- run: mypy src/
+
+# test.yml
+- uses: .../actions/python-setup/uv@v1
+  with:
+    install-groups: 'test'
+- run: pytest
+
+# docs.yml
+- uses: .../actions/python-setup/uv@v1
+  with:
+    install-groups: 'docs'
+- run: mkdocs build
+</code></pre>
+<h3 id="7-use-matrix-for-multi-version-testing">7. Use Matrix for Multi-Version Testing</h3>
+<pre><code class="language-yaml">strategy:
+  matrix:
+    python-version: ['3.10', '3.11', '3.12']
+    os: [ubuntu-latest, windows-latest, macos-latest]
+
+steps:
+  - uses: .../actions/python-setup/uv@v1
+    with:
+      python-version: ${{ matrix.python-version }}
+</code></pre>
+<h2 id="comparison-with-other-actions">Comparison with Other Actions</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>This Action</th>
+<th>actions/setup-python</th>
+<th>astral-sh/setup-uv alone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python Installation</td>
+<td>✓</td>
+<td>✓</td>
+<td>✗ (requires setup-python)</td>
+</tr>
+<tr>
+<td>uv Installation</td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Dependency Installation</td>
+<td>✓ (automatic)</td>
+<td>✗ (manual)</td>
+<td>✗ (manual)</td>
+</tr>
+<tr>
+<td>Group Support</td>
+<td>✓ (built-in)</td>
+<td>✗</td>
+<td>✓ (manual)</td>
+</tr>
+<tr>
+<td>Lock Verification</td>
+<td>✓ (built-in)</td>
+<td>✗</td>
+<td>✗ (manual)</td>
+</tr>
+<tr>
+<td>Auto VEnv Activation</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>Dependency Caching</td>
+<td>✓</td>
+<td>✓ (pip only)</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Group Isolation</td>
+<td>✓ (<code>--no-default-groups</code>)</td>
+<td>N/A</td>
+<td>✗ (manual)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to use this action:</strong>
+- Modern Python projects using <code>pyproject.toml</code>
+- Need dependency group support
+- Want automatic environment activation
+- Prefer uv's speed over pip</p>
+<p><strong>When to use alternatives:</strong>
+- <code>actions/setup-python</code> alone: Minimal setup, no uv needed
+- <code>astral-sh/setup-uv</code> alone: Need full control over uv commands</p>
+<h2 id="additional-resources">Additional Resources</h2>
+<ul>
+<li><a href="https://docs.astral.sh/uv/">uv documentation</a></li>
+<li><a href="https://peps.python.org/pep-0735/">PEP 735: Dependency Groups</a></li>
+<li><a href="https://github.com/actions/setup-python">actions/setup-python</a></li>
+<li><a href="https://github.com/astral-sh/setup-uv">astral-sh/setup-uv</a></li>
+</ul>
+<h2 id="support">Support</h2>
+<p>For issues, questions, or contributions:
+- Repository: https://github.com/Serapieum-of-alex/github-actions
+- Issues: https://github.com/Serapieum-of-alex/github-actions/issues</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
