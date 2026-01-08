@@ -330,7 +330,6 @@ jobs:
           trigger: 'main'
           package-manager: 'uv'
           deploy-token: ${{ secrets.GITHUB_TOKEN }}
-          verify-lock: 'false'
 
       - name: Test pixi command execution
         uses: ./actions/mkdocs-deploy
