@@ -76,6 +76,7 @@ jobs:
       - name: Copy test fixture files
         run: |
           cp tests/data/mkdocs-deploy/test-main-trigger/pyproject.toml .
+          cp tests/data/mkdocs-deploy/test-main-trigger/uv.lock .
           cp tests/data/mkdocs-deploy/test-main-trigger/mkdocs.yml .
           cp -r tests/data/mkdocs-deploy/test-main-trigger/docs .
 
