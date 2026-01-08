@@ -32,10 +32,6 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v5
-      with:
-        fetch-depth: 0
 
     - name: Set up Python environment (pip)
       if: ${{ inputs.package-manager == 'pip' }}
