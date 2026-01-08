@@ -392,6 +392,7 @@ jobs:
         run: |
           cp tests/data/mkdocs-deploy/test-pull-request-pip-uv/pyproject.toml .
           cp tests/data/mkdocs-deploy/test-pull-request-pip-uv/mkdocs.yml .
+          cp tests/data/mkdocs-deploy/test-pull-request-pip-uv/uc.lock .
           cp -r tests/data/mkdocs-deploy/test-pull-request-pip-uv/docs .
 
       - name: Copy test fixture files (pixi)
