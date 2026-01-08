@@ -23,6 +23,7 @@ jobs:
         if: matrix.package-manager != 'pixi'
         run: |
           cp tests/data/mkdocs-deploy/test-pull-request-pip-uv/pyproject.toml .
+          cp tests/data/mkdocs-deploy/test-pull-request-pip-uv/uv.lock .
           cp tests/data/mkdocs-deploy/test-pull-request-pip-uv/mkdocs.yml .
           cp -r tests/data/mkdocs-deploy/test-pull-request-pip-uv/docs .
 
@@ -30,6 +31,7 @@ jobs:
         if: matrix.package-manager == 'pixi'
         run: |
           cp tests/data/mkdocs-deploy/test-pull-request-pixi/pyproject.toml .
+          cp tests/data/mkdocs-deploy/test-pull-request-pixi/pixi.lock .
           cp tests/data/mkdocs-deploy/test-pull-request-pixi/mkdocs.yml .
           cp -r tests/data/mkdocs-deploy/test-pull-request-pixi/docs .
           # Generate pixi.lock if not present (for testing)
