@@ -1,6 +1,3 @@
-# Pixi lock files - generated during CI/testing
-pixi.lock
-
 # Python cache
 __pycache__/
 *.py[cod]
