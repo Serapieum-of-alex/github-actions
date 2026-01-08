@@ -303,6 +303,10 @@ jobs:
           cp tests/data/mkdocs-deploy/test-package-manager-commands/pyproject.toml .
           cp tests/data/mkdocs-deploy/test-package-manager-commands/mkdocs.yml .
           cp -r tests/data/mkdocs-deploy/test-package-manager-commands/docs .
+          # Copy uv.lock if it exists
+          if [ -f tests/data/mkdocs-deploy/test-package-manager-commands/uv.lock ]; then
+            cp tests/data/mkdocs-deploy/test-package-manager-commands/uv.lock .
+          fi
           # Copy pixi.lock if it exists
           if [ -f tests/data/mkdocs-deploy/test-package-manager-commands/pixi.lock ]; then
             cp tests/data/mkdocs-deploy/test-package-manager-commands/pixi.lock .
