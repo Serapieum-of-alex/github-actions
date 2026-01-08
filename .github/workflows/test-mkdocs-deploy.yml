@@ -477,14 +477,15 @@ jobs:
 
       - name: Copy test fixture files
         run: |
-          cp tests/data/mkdocs-deploy/test-pull-request-pip-uv/pyproject.toml .
-          cp tests/data/mkdocs-deploy/test-pull-request-pip-uv/mkdocs.yml .
-          cp -r tests/data/mkdocs-deploy/test-pull-request-pip-uv/docs .
+          cp tests/data/mkdocs-deploy/test-custom-configuration/pyproject.toml .
+          cp tests/data/mkdocs-deploy/test-custom-configuration/mkdocs.yml .
+          cp tests/data/mkdocs-deploy/test-custom-configuration/uv.lock .
+          cp -r tests/data/mkdocs-deploy/test-custom-configuration/docs .
 
       - name: Setup fake git remote for testing
         uses: ./.github/workflows/test-helpers/setup-fake-remote
 
-      - name: Test with Python ${{ matrix.python-version }}
+      - name: Test install-groups format "${{ matrix.install-groups }}"
         uses: ./actions/mkdocs-deploy
         with:
           trigger: 'pull_request'
@@ -527,6 +528,7 @@ jobs:
         run: |
           cp tests/data/mkdocs-deploy/test-custom-configuration/pyproject.toml .
           cp tests/data/mkdocs-deploy/test-custom-configuration/mkdocs.yml .
+          cp tests/data/mkdocs-deploy/test-custom-configuration/uv.lock .
           cp -r tests/data/mkdocs-deploy/test-custom-configuration/docs .
 
       - name: Setup fake git remote for testing
