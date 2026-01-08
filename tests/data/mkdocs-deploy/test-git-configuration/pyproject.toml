@@ -1,12 +1,10 @@
-﻿[build-system]
+[build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
-
 [project]
 name = "test-git-config"
 version = "0.1.0"
 dependencies = []
-
 [dependency-groups]
 docs = [
   "mkdocs>=1.5.0",
