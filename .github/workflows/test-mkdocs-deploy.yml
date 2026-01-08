@@ -185,6 +185,7 @@ jobs:
         run: |
           cp tests/data/mkdocs-deploy/test-custom-configuration/pyproject.toml .
           cp tests/data/mkdocs-deploy/test-custom-configuration/mkdocs.yml .
+          cp tests/data/mkdocs-deploy/test-custom-configuration/uv.lock .
           cp -r tests/data/mkdocs-deploy/test-custom-configuration/docs .
 
       - name: Setup fake git remote for testing
