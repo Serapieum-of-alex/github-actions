@@ -294,24 +294,24 @@ git push origin main
 
 ```bash
 # Create an annotated tag with namespace prefix
-git tag -a python-setup/pip/v1.0.1 -m "Release python-setup/pip v1.0.1
+git tag -a pip/v1.0.1 -m "Release pip v1.0.1
 
 - Add support for PEP 735 dependency groups
 - Fix cache key generation on Windows
 - Improve error messages"
 
 # Push the tag
-git push origin python-setup/pip/v1.0.1
+git push origin pip/v1.0.1
 ```
 
 ##### 3. Create or Move Namespaced Major Version Tag
 
 ```bash
 # Move the major version tag for this specific action
-git tag -fa python-setup/pip/v1 -m "Update python-setup/pip v1 to v1.0.1"
+git tag -fa pip/v1 -m "Update pip v1 to v1.0.1"
 
 # Force push (required because we're overwriting an existing tag)
-git push origin python-setup/pip/v1 --force
+git push origin pip/v1 --force
 ```
 
 ##### 4. Create GitHub Release
