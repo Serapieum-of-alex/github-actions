@@ -1,0 +1,9 @@
+site_name: Custom Config Test
+site_description: Testing custom configurations
+
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+

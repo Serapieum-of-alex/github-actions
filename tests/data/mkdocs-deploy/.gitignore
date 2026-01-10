@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# MkDocs build output
+site/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+

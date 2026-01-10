@@ -1,0 +1,13 @@
+[project]
+name = "test-pip-whitespace"
+version = "0.1.0"
+dependencies = ["requests"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+test = ["pytest-cov"]
+
+[dependency-groups]
+lint = ["ruff"]
+format = ["black"]
+

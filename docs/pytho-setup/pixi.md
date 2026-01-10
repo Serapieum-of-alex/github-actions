@@ -1,4 +1,4 @@
-# Python Setup with pixi - Complete Guide
+te a# Python Setup with pixi - Complete Guide
 
 Composite GitHub Action for setting up Python environments with the pixi package manager, designed for projects using conda-forge packages and cross-platform development with `pyproject.toml`.
 
@@ -1111,6 +1111,144 @@ my-project/
 ```
 
 ## Testing Guide
+
+This action is comprehensively tested across multiple scenarios to ensure reliability. Reference the test workflow at `.github/workflows/test-python-setup-pixi.yml`.
+
+### Test Coverage Matrix
+
+| Test Job | Purpose | Key Validations | Fixture |
+|----------|---------|-----------------|---------|
+| `test-pixi-basic` | Default behavior | Pixi and Python installed, packages available | `test-pixi-basic/` |
+| `test-pixi-default-environment` | Default environment only | Only default environment installed | `test-pixi-default-environment/` |
+| `test-pixi-multiple-environments` | Multiple environments | Multiple envs installed, correct one activated | `test-pixi-multiple-environments/` |
+| `test-pixi-environment-activation` | Environment activation | Specific environment activated correctly | `test-pixi-environment-activation/` |
+| `test-pixi-lock-verification-valid` | Valid lock file | Lock verification passes | `test-pixi-lock-verification-valid/` |
+| `test-pixi-lock-verification-outdated` | Outdated lock handling | Fails with outdated lock file | `test-pixi-lock-verification-outdated/` |
+| `test-pixi-lock-verification-disabled` | Skip lock check | Works with `verify-lock: 'false'` | `test-pixi-lock-verification-disabled/` |
+| `test-pixi-lock-verification-validation` | Missing lock file | Fails without lock file | `test-pixi-lock-verification-validation/` |
+| `test-pixi-caching-populate` | Cache population | Cache created and packages installed | `test-pixi-caching-populate/` |
+| `test-pixi-caching-retrieve` | Cache retrieval | Cache restored on subsequent runs | `test-pixi-caching-retrieve/` |
+| `test-pixi-caching-validation` | Cache without lock | Fails when cache enabled without lock | - |
+| `test-pixi-matrix` | Cross-platform matrix | Works on Linux/Windows/macOS with multiple environments | `test-pixi-matrix/` |
+| `test-pixi-error-scenarios` | Error handling | Proper errors for missing lock, wrong environment | `test-pixi-basic/` |
+| `test-pixi-complex-project` | Complex setup | Multiple features and environments | `test-pixi-complex-project/` |
+
+### Test Fixtures Location
+
+All test fixtures are located in `tests/data/pixi/` directory:
+```
+tests/data/pixi/
+├── test-pixi-basic/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-default-environment/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-multiple-environments/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-environment-activation/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-lock-verification-valid/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-lock-verification-outdated/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-lock-verification-disabled/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-lock-verification-validation/
+│   └── pyproject.toml  # No lock file (intentional)
+├── test-pixi-caching-populate/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-caching-retrieve/
+│   ├── pyproject.toml
+│   └── pixi.lock
+├── test-pixi-matrix/
+│   ├── pyproject.toml
+│   └── pixi.lock
+└── test-pixi-complex-project/
+    ├── pyproject.toml
+    └── pixi.lock
+```
+
+### Example Test Fixtures
+
+**test-pixi-basic/pyproject.toml:**
+```toml
+[project]
+name = "test-pixi-basic"
+version = "0.1.0"
+dependencies = []
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+[tool.pixi.dependencies]
+python = ">=3.11"
+numpy = ">=1.26"
+pytest = ">=7.0"
+```
+
+**test-pixi-multiple-environments/pyproject.toml:**
+```toml
+[project]
+name = "test-multi-env"
+version = "0.1.0"
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+[tool.pixi.feature.core.dependencies]
+python = ">=3.11"
+numpy = ">=1.26"
+
+[tool.pixi.feature.py311.dependencies]
+python = "3.11.*"
+pandas = ">=2.0"
+
+[tool.pixi.feature.py312.dependencies]
+python = "3.12.*"
+pandas = ">=2.0"
+
+[tool.pixi.environments]
+default = ["core"]
+py311 = ["core", "py311"]
+py312 = ["core", "py312"]
+```
+
+**test-pixi-complex-project/pyproject.toml:**
+```toml
+[project]
+name = "test-complex"
+version = "0.1.0"
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+[tool.pixi.feature.core.dependencies]
+python = ">=3.11"
+requests = ">=2.31"
+
+[tool.pixi.feature.ml.dependencies]
+numpy = ">=1.26"
+scikit-learn = ">=1.3"
+
+[tool.pixi.feature.dev.dependencies]
+pytest = ">=7.0"
+black = ">=23.0"
+
+[tool.pixi.environments]
+default = ["core", "dev"]
+ml = ["core", "ml", "dev"]
+prod = ["core", "ml"]
+```
 
 ### Basic Test Setup
 

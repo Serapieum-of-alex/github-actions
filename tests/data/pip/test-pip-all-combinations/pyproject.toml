@@ -1,0 +1,15 @@
+[project]
+name = "test-pip-all-combinations"
+version = "0.1.0"
+dependencies = ["requests", "click"]
+
+[project.optional-dependencies]
+aws = ["boto3"]
+azure = ["azure-storage-blob"]
+gcp = ["google-cloud-storage"]
+
+[dependency-groups]
+dev = ["httpx", "ruff"]
+test = ["pytest", "pytest-cov", "pytest-mock"]
+docs = ["mkdocs", "mkdocs-material"]
+

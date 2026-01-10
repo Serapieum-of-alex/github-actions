@@ -1,0 +1,7 @@
+[project]
+name = "test-no-docs"
+version = "0.1.0"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=7.0.0"]
