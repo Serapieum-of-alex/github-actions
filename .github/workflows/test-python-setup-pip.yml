@@ -253,11 +253,11 @@ jobs:
           # Verify optional dependencies are installed
           python -c "import boto3; print('[OK] AWS extra installed')"
           python -c "import matplotlib; print('[OK] Viz extra installed')"
-          # Verify dependency groups are NOT installed (no --dependency-groups support in older pip)
+          # Verify dependency groups are NOT installed (no -group support in older pip)
           if python -c "import httpx" 2>/dev/null; then
             echo "[OK] httpx found - dependency groups may be supported"
           else
-            echo "[OK] httpx not found as expected (dependency groups not supported in this pip version)"
+            echo "::error::Dev group not installed - pip version does not support --group"
           fi
 
   test-pip-mixed-groups-and-extras:
@@ -282,11 +282,12 @@ jobs:
           # Verify all requested dependencies are installed
           python -c "import requests; print('[OK] Core dependencies installed')"
           python -c "import boto3; print('[OK] AWS extra installed')"
-          # Dev group installation depends on pip version support for --dependency-groups
+          # Dev group installation depends on pip version support for --group
           if python -c "import httpx" 2>/dev/null; then
-            echo "[OK] Dev group installed (pip supports --dependency-groups)"
+            echo "[OK] Dev group installed (pip supports --group)"
           else
-            echo "[OK] Dev group not installed (pip version does not support --dependency-groups)"
+            echo "::error::Dev group not installed - pip version does not support --group"
+            exit 1
           fi
 
   test-pip-dependency-groups-only:
@@ -569,7 +570,8 @@ jobs:
           if python -c "import httpx" 2>/dev/null; then
             echo "[OK] Dev group installed (pip supports PEP 735)"
           else
-            echo "[OK] Dev group not installed (pip doesn't support PEP 735)"
+            echo "::error::Dev group not installed - pip doesn't support PEP 735"
+            exit 1
           fi
 
   test-pip-cache-with-groups:
