@@ -435,7 +435,6 @@ jobs:
       matrix:
         install-groups:
           - "docs"       # Direct environment name
-          - "default"    # Default environment
     steps:
       - uses: actions/checkout@v5
         with:
