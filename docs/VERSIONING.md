@@ -7,7 +7,11 @@ This document explains the versioning strategy used in this repository for publi
 - [Overview](#overview)
 - [Semantic Versioning](#semantic-versioning)
 - [Tag Strategy](#tag-strategy)
+  - [Global Versioning Strategy](#global-versioning-strategy)
+  - [Namespaced Versioning Strategy](#namespaced-versioning-strategy)
 - [Release Process](#release-process)
+  - [Global Versioning Release Process](#global-versioning-release-process)
+  - [Namespaced Versioning Release Process](#namespaced-versioning-release-process)
 - [Moving Major Version Tags](#moving-major-version-tags)
 - [Usage for Consumers](#usage-for-consumers)
 - [Breaking Changes](#breaking-changes)
@@ -17,11 +21,17 @@ This document explains the versioning strategy used in this repository for publi
 
 This repository contains reusable GitHub Actions (composite actions). Unlike traditional software packages, GitHub Actions use a **tag-based versioning system** where users reference specific versions directly in their workflows.
 
+This repository supports **two versioning strategies**:
+
+1. **Global Versioning**: All actions share the same version tags (e.g., `v1`, `v2`)
+2. **Namespaced Versioning**: Each action has independent version tags (e.g., `python-setup/pip/v1.0.0`, `mkdocs-deploy/v1.0.0`)
+
 **Key Principles:**
 - ✅ Use semantic versioning (e.g., `v1.0.0`, `v1.1.0`, `v2.0.0`)
 - ✅ Maintain moving major version tags (e.g., `v1`, `v2`) for convenience
 - ✅ Keep specific version tags immutable (e.g., `v1.0.0` never changes)
 - ✅ Use `v` prefix for all version tags
+- ✅ Use namespaced tags for independent action versioning (e.g., `action-name/v1.0.0`)
 
 ## Semantic Versioning
 
@@ -68,13 +78,65 @@ v1.2.3
 
 ## Tag Strategy
 
-### Two Types of Tags
+This repository supports two versioning strategies. Choose the one that best fits your needs:
+
+### Global Versioning Strategy
+
+In this strategy, **all actions in the repository share the same version tags**. When you release `v1.0.0`, it applies to all actions.
+
+**Use when:**
+- ✅ All actions are released together
+- ✅ Actions have dependencies on each other
+- ✅ Simpler to manage for small repositories
+
+**Tag format:** `v1.0.0`, `v1`, `v2`
+
+**Usage example:**
+```yaml
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+- uses: Serapieum-of-alex/github-actions/actions/mkdocs-deploy@v1
+```
+
+### Namespaced Versioning Strategy
+
+In this strategy, **each action has its own independent version tags**. You can release `python-setup/pip/v1.0.1` without affecting other actions.
+
+**Use when:**
+- ✅ Actions evolve independently
+- ✅ You want granular version control
+- ✅ Different actions have different release cycles
+- ✅ You need clear versioning per action
+
+**Tag format:** `action-name/v1.0.0`, `action-name/v1`, `action-name/v2`
+
+**Examples:**
+- `python-setup/pip/v1.0.0`, `python-setup/pip/v1`
+- `python-setup/uv/v1.0.0`, `python-setup/uv/v1`
+- `python-setup/pixi/v1.0.0`, `python-setup/pixi/v1`
+- `mkdocs-deploy/v1.0.0`, `mkdocs-deploy/v1`
+
+**Usage example:**
+```yaml
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@python-setup/pip/v1
+- uses: Serapieum-of-alex/github-actions/actions/mkdocs-deploy@mkdocs-deploy/v1.0.0
+```
+
+**Benefits:**
+- Each action can be versioned independently
+- Update one action without affecting others
+- Clear version history per action
+- No breaking changes across unrelated actions
+
+---
+
+## Tag Types (Both Strategies)
 
 We maintain two types of Git tags:
 
 #### 1. Specific Version Tags (Immutable)
 
-**Format:** `v1.0.0`, `v1.1.0`, `v1.2.0`, `v2.0.0`
+**Global Format:** `v1.0.0`, `v1.1.0`, `v1.2.0`, `v2.0.0`  
+**Namespaced Format:** `action-name/v1.0.0`, `action-name/v1.1.0`, `action-name/v2.0.0`
 
 **Characteristics:**
 - ✅ Never moved or changed
@@ -82,15 +144,19 @@ We maintain two types of Git tags:
 - ✅ Used for reproducibility and security
 - ✅ Ideal for production workflows
 
-**Example:**
+**Examples:**
 ```yaml
-# Pin to exact version - never changes
+# Global versioning - Pin to exact version
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1.0.0
+
+# Namespaced versioning - Pin to exact version
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@python-setup/pip/v1.0.1
 ```
 
 #### 2. Major Version Tags (Moving)
 
-**Format:** `v1`, `v2`, `v3`
+**Global Format:** `v1`, `v2`, `v3`  
+**Namespaced Format:** `action-name/v1`, `action-name/v2`, `action-name/v3`
 
 **Characteristics:**
 - 🔄 Updated with each new release within the major version
@@ -98,10 +164,13 @@ We maintain two types of Git tags:
 - 🔄 Used for automatic updates
 - ⚠️ May change behavior (but stays backward compatible)
 
-**Example:**
+**Examples:**
 ```yaml
-# Use major version - gets updates automatically
+# Global versioning - Use major version for updates
 - uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
+
+# Namespaced versioning - Use major version for updates
+- uses: Serapieum-of-alex/github-actions/actions/mkdocs-deploy@mkdocs-deploy/v1
 ```
 
 ### Visual Representation
@@ -127,9 +196,13 @@ After release flow:
 
 ## Release Process
 
-### Step-by-Step Guide
+### Global Versioning Release Process
 
-#### 1. Prepare the Release
+Use this process when all actions share the same version tags.
+
+#### Step-by-Step Guide
+
+##### 1. Prepare the Release
 
 Make and commit your changes:
 
@@ -140,7 +213,7 @@ git commit -m "feat: add caching support to pixi action"
 git push origin main
 ```
 
-#### 2. Create Specific Version Tag
+##### 2. Create Specific Version Tag
 
 ```bash
 # Create an annotated tag
@@ -154,7 +227,7 @@ git tag -a v1.1.0 -m "Release v1.1.0
 git push origin v1.1.0
 ```
 
-#### 3. Create or Move Major Version Tag
+##### 3. Create or Move Major Version Tag
 
 ```bash
 # Move the major version tag to the new release
@@ -164,7 +237,7 @@ git tag -fa v1 -m "Update v1 to v1.1.0"
 git push origin v1 --force
 ```
 
-#### 4. Create GitHub Release
+##### 4. Create GitHub Release
 
 **Option A: Using GitHub CLI**
 
@@ -200,9 +273,84 @@ This is a backward-compatible release. Simply update your action reference from 
 5. Write **release notes** (see format above)
 6. Click **"Publish release"**
 
+### Namespaced Versioning Release Process
+
+Use this process to version individual actions independently.
+
+#### Step-by-Step Guide
+
+##### 1. Prepare the Release
+
+Make and commit your changes to the specific action:
+
+```bash
+# Make your changes to actions/python-setup/pip/
+git add actions/python-setup/pip/
+git commit -m "feat(python-setup/pip): add support for dependency groups"
+git push origin main
+```
+
+##### 2. Create Namespaced Specific Version Tag
+
+```bash
+# Create an annotated tag with namespace prefix
+git tag -a python-setup/pip/v1.0.1 -m "Release python-setup/pip v1.0.1
+
+- Add support for PEP 735 dependency groups
+- Fix cache key generation on Windows
+- Improve error messages"
+
+# Push the tag
+git push origin python-setup/pip/v1.0.1
+```
+
+##### 3. Create or Move Namespaced Major Version Tag
+
+```bash
+# Move the major version tag for this specific action
+git tag -fa python-setup/pip/v1 -m "Update python-setup/pip v1 to v1.0.1"
+
+# Force push (required because we're overwriting an existing tag)
+git push origin python-setup/pip/v1 --force
+```
+
+##### 4. Create GitHub Release
+
+**Option A: Using GitHub CLI**
+
+```bash
+gh release create python-setup/pip/v1.0.1 \
+  --title "python-setup/pip v1.0.1" \
+  --notes "## 🎉 New Features
+
+- **Dependency Groups**: Support for PEP 735 dependency groups
+- **Improved Caching**: Better cache key generation on Windows
+
+## 📦 Upgrade Notes
+
+This is a backward-compatible release for \`python-setup/pip\` action only.
+
+Update your workflow:
+\`\`\`yaml
+- uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@python-setup/pip/v1.0.1
+  # or use @python-setup/pip/v1 for automatic updates
+\`\`\`"
+```
+
+**Option B: Using GitHub Web UI**
+
+1. Go to your repository on GitHub
+2. Click **"Releases"** → **"Draft a new release"**
+3. Click **"Choose a tag"** → Select `python-setup/pip/v1.0.1`
+4. Set **"Release title"**: `python-setup/pip v1.0.1`
+5. Write **release notes** with action name prefix
+6. Click **"Publish release"**
+
 ### Automated Release Workflow
 
-Create `.github/workflows/release.yml` to automate releases:
+#### Global Versioning Workflow
+
+Create `.github/workflows/release.yml` for global versioning:
 
 ```yaml
 name: Create Release
@@ -254,6 +402,70 @@ jobs:
    - Creates a GitHub release
    - Generates release notes from commits
    - Moves the major version tag (`v1`)
+
+#### Namespaced Versioning Workflow
+
+Create `.github/workflows/release-namespaced.yml` for namespaced versioning:
+
+```yaml
+name: Create Namespaced Release
+
+on:
+  push:
+    tags:
+      - '*/v*.*.*'  # Matches tags like python-setup/pip/v1.0.1
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version info
+        id: version
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          # Extract action name (everything before /vX.Y.Z)
+          ACTION_NAME=$(echo $TAG | sed 's|/v[0-9].*||')
+          # Extract version (vX.Y.Z)
+          VERSION=$(echo $TAG | grep -oP 'v[0-9]+\.[0-9]+\.[0-9]+$')
+          # Extract major version (vX)
+          MAJOR_VERSION=$(echo $VERSION | cut -d. -f1)
+          
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "action=$ACTION_NAME" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "major=$ACTION_NAME/$MAJOR_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "${{ steps.version.outputs.action }} ${{ steps.version.outputs.version }}"
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+
+      - name: Update major version tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -fa ${{ steps.version.outputs.major }} -m "Update ${{ steps.version.outputs.major }} to ${{ steps.version.outputs.tag }}"
+          git push origin ${{ steps.version.outputs.major }} --force
+```
+
+**How it works:**
+1. Push a namespaced tag: `git push origin python-setup/pip/v1.0.1`
+2. Workflow automatically:
+   - Creates a GitHub release with action-specific title
+   - Generates release notes from commits
+   - Moves the major version tag (`python-setup/pip/v1`)
 
 ## Moving Major Version Tags
 
@@ -501,7 +713,9 @@ If you want the old behavior:
 
 ## Examples
 
-### Example 1: First Release
+### Global Versioning Examples
+
+#### Example 1: First Release
 
 ```bash
 # Initial release
@@ -514,7 +728,7 @@ git push origin v1
 gh release create v1.0.0 --title "v1.0.0 - Initial Release" --generate-notes
 ```
 
-### Example 2: Bug Fix
+#### Example 2: Bug Fix
 
 ```bash
 # Bug fix release
@@ -528,7 +742,7 @@ git push origin v1 --force
 gh release create v1.0.1 --title "v1.0.1 - Bug Fixes" --notes "Fix cache key generation for Windows"
 ```
 
-### Example 3: New Feature
+#### Example 3: New Feature
 
 ```bash
 # New feature release
@@ -542,7 +756,7 @@ git push origin v1 --force
 gh release create v1.1.0 --title "v1.1.0 - Caching Support" --generate-notes
 ```
 
-### Example 4: Breaking Change
+#### Example 4: Breaking Change
 
 ```bash
 # Breaking change release
@@ -556,6 +770,97 @@ git push origin v2
 gh release create v2.0.0 --title "v2.0.0 - Breaking Changes" --notes "See MIGRATION.md for upgrade guide"
 ```
 
+### Namespaced Versioning Examples
+
+#### Example 1: First Release of Specific Action
+
+```bash
+# Initial release of python-setup/pip action
+git tag -a python-setup/pip/v1.0.0 -m "Release python-setup/pip v1.0.0: Initial release"
+git push origin python-setup/pip/v1.0.0
+
+git tag -a python-setup/pip/v1 -m "Major version python-setup/pip v1"
+git push origin python-setup/pip/v1
+
+gh release create python-setup/pip/v1.0.0 \
+  --title "python-setup/pip v1.0.0 - Initial Release" \
+  --generate-notes
+```
+
+#### Example 2: Bug Fix for Specific Action
+
+```bash
+# Bug fix release for python-setup/pip
+git tag -a python-setup/pip/v1.0.1 -m "Release python-setup/pip v1.0.1: Fix cache key generation"
+git push origin python-setup/pip/v1.0.1
+
+# Move python-setup/pip/v1 to include the fix
+git tag -fa python-setup/pip/v1 -m "Update python-setup/pip v1 to v1.0.1"
+git push origin python-setup/pip/v1 --force
+
+gh release create python-setup/pip/v1.0.1 \
+  --title "python-setup/pip v1.0.1 - Bug Fixes" \
+  --notes "Fix cache key generation for Windows"
+```
+
+#### Example 3: New Feature for Specific Action
+
+```bash
+# New feature release for mkdocs-deploy
+git tag -a mkdocs-deploy/v1.1.0 -m "Release mkdocs-deploy v1.1.0: Add custom domain support"
+git push origin mkdocs-deploy/v1.1.0
+
+# Move mkdocs-deploy/v1 to include the feature
+git tag -fa mkdocs-deploy/v1 -m "Update mkdocs-deploy v1 to v1.1.0"
+git push origin mkdocs-deploy/v1 --force
+
+gh release create mkdocs-deploy/v1.1.0 \
+  --title "mkdocs-deploy v1.1.0 - Custom Domain Support" \
+  --notes "## New Features
+
+- Add support for custom domain configuration
+- Improve deployment reliability"
+```
+
+#### Example 4: Breaking Change for Specific Action
+
+```bash
+# Breaking change release for python-setup/uv
+git tag -a python-setup/uv/v2.0.0 -m "Release python-setup/uv v2.0.0: Remove deprecated inputs"
+git push origin python-setup/uv/v2.0.0
+
+# Create NEW major version tag (don't touch python-setup/uv/v1)
+git tag -a python-setup/uv/v2 -m "Major version python-setup/uv v2"
+git push origin python-setup/uv/v2
+
+gh release create python-setup/uv/v2.0.0 \
+  --title "python-setup/uv v2.0.0 - Breaking Changes" \
+  --notes "## Breaking Changes
+
+- Removed \`legacy-mode\` input
+- Changed default behavior for lockfile validation
+
+See migration guide in docs."
+```
+
+#### Example 5: Releasing Multiple Actions Independently
+
+```bash
+# Release python-setup/pip v1.0.1
+git tag -a python-setup/pip/v1.0.1 -m "Release python-setup/pip v1.0.1"
+git push origin python-setup/pip/v1.0.1
+git tag -fa python-setup/pip/v1 -m "Update to v1.0.1"
+git push origin python-setup/pip/v1 --force
+
+# Release mkdocs-deploy v1.2.0 (different version, same commit)
+git tag -a mkdocs-deploy/v1.2.0 -m "Release mkdocs-deploy v1.2.0"
+git push origin mkdocs-deploy/v1.2.0
+git tag -fa mkdocs-deploy/v1 -m "Update to v1.2.0"
+git push origin mkdocs-deploy/v1 --force
+
+# python-setup/uv can stay at its current version - not affected
+```
+
 ## Best Practices
 
 ### For Maintainers
@@ -566,17 +871,21 @@ gh release create v2.0.0 --title "v2.0.0 - Breaking Changes" --notes "See MIGRAT
 4. ✅ **Pin action dependencies** to specific SHA or version tags
 5. ✅ **Document breaking changes** with migration guides
 6. ✅ **Use deprecation warnings** before removing features
-7. ✅ **Keep v1, v2, etc. updated** with each release
+7. ✅ **Keep v1, v2, etc. updated** with each release (or namespaced equivalents)
 8. ✅ **Never delete or force-push specific version tags** (only major versions)
+9. ✅ **Choose a versioning strategy** (global or namespaced) and stick with it
+10. ✅ **Use namespaced tags** when actions evolve independently
+11. ✅ **Document your versioning strategy** in README for consumers
 
 ### For Consumers
 
-1. ✅ **Use major version tags** for most workflows (`@v1`)
-2. ✅ **Pin specific versions** for critical/production workflows (`@v1.0.0`)
+1. ✅ **Use major version tags** for most workflows (`@v1` or `@action-name/v1`)
+2. ✅ **Pin specific versions** for critical/production workflows (`@v1.0.0` or `@action-name/v1.0.0`)
 3. ✅ **Read release notes** when major versions change
 4. ✅ **Test in staging** before updating major versions
 5. ✅ **Use Dependabot/Renovate** to track updates
 6. ✅ **Never use `@main`** in production
+7. ✅ **Understand the versioning strategy** used by the action maintainer
 
 ## Checklist for Releases
 
