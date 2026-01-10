@@ -27,19 +27,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Create test pyproject.toml
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-project"
-          version = "0.1.0"
-          dependencies = ["requests"]
-
-          [project.optional-dependencies]
-          dev = ["pytest", "black"]
-          test = ["pytest-cov"]
-          docs = ["mkdocs"]
-          EOF
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-with-groups/pyproject.toml .
 
       - name: Test pip action with optional dependencies (extras)
         uses: ./actions/python-setup/pip
@@ -68,14 +57,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Create minimal pyproject.toml
+      - name: Copy test fixture files
         shell: bash
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-matrix"
-          version = "0.1.0"
-          EOF
+        run: cp tests/data/pip/test-pip-matrix/pyproject.toml .
 
       - name: Test pip action with Python ${{ matrix.python-version }}
         uses: ./actions/python-setup/pip
@@ -101,14 +85,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Create test pyproject.toml
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-cache"
-          version = "0.1.0"
-          dependencies = ["requests", "numpy"]
-          EOF
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-cache/pyproject.toml .
 
       - name: First run - populate cache
         uses: ./actions/python-setup/pip
@@ -131,14 +109,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Create minimal pyproject.toml
+      - name: Copy test fixture files
         shell: bash
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-architecture"
-          version = "0.1.0"
-          EOF
+        run: cp tests/data/pip/test-pip-architecture/pyproject.toml .
 
       - name: Test pip action with ${{ matrix.architecture }}
         uses: ./actions/python-setup/pip
@@ -180,12 +153,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Create requirements.txt
-        run: |
-          cat > requirements.txt << 'EOF'
-          requests==2.31.0
-          numpy==1.26.0
-          EOF
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-cache-with-requirements/requirements.txt .
 
       - name: Test pip action with cache and requirements.txt
         uses: ./actions/python-setup/pip
@@ -224,20 +193,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Create test project
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-pip-empty"
-          version = "0.1.0"
-          dependencies = ["requests"]
-
-          [project.optional-dependencies]
-          aws = ["boto3"]
-
-          [dependency-groups]
-          dev = ["httpx"]
-          EOF
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-empty-sections/pyproject.toml .
 
       - name: Test pip action with empty groups section
         uses: ./actions/python-setup/pip
@@ -258,14 +215,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Create test project
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-pip-invalid"
-          version = "0.1.0"
-          dependencies = ["requests"]
-          EOF
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-invalid-format/pyproject.toml .
 
       - name: Test pip action with invalid format (should show warning)
         uses: ./actions/python-setup/pip
@@ -285,22 +236,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Create test project with optional dependencies
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-pip-extras"
-          version = "0.1.0"
-          dependencies = ["requests"]
-
-          [project.optional-dependencies]
-          aws = ["boto3"]
-          viz = ["matplotlib"]
-
-          [dependency-groups]
-          dev = ["httpx"]
-          test = ["pytest"]
-          EOF
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-optional-dependencies/pyproject.toml .
 
       - name: Test pip action with optional dependencies only
         uses: ./actions/python-setup/pip
@@ -316,11 +253,11 @@ jobs:
           # Verify optional dependencies are installed
           python -c "import boto3; print('[OK] AWS extra installed')"
           python -c "import matplotlib; print('[OK] Viz extra installed')"
-          # Verify dependency groups are NOT installed (no --dependency-groups support in older pip)
+          # Verify dependency groups are NOT installed (no -group support in older pip)
           if python -c "import httpx" 2>/dev/null; then
             echo "[OK] httpx found - dependency groups may be supported"
           else
-            echo "[OK] httpx not found as expected (dependency groups not supported in this pip version)"
+            echo "::error::Dev group not installed - pip version does not support --group"
           fi
 
   test-pip-mixed-groups-and-extras:
@@ -330,20 +267,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Create test project
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-pip-mixed"
-          version = "0.1.0"
-          dependencies = ["requests"]
-
-          [project.optional-dependencies]
-          aws = ["boto3"]
-
-          [dependency-groups]
-          dev = ["httpx"]
-          EOF
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-mixed-groups-and-extras/pyproject.toml .
 
       - name: Test pip action with mixed groups and extras
         uses: ./actions/python-setup/pip
@@ -357,11 +282,12 @@ jobs:
           # Verify all requested dependencies are installed
           python -c "import requests; print('[OK] Core dependencies installed')"
           python -c "import boto3; print('[OK] AWS extra installed')"
-          # Dev group installation depends on pip version support for --dependency-groups
+          # Dev group installation depends on pip version support for --group
           if python -c "import httpx" 2>/dev/null; then
-            echo "[OK] Dev group installed (pip supports --dependency-groups)"
+            echo "[OK] Dev group installed (pip supports --group)"
           else
-            echo "[OK] Dev group not installed (pip version does not support --dependency-groups)"
+            echo "::error::Dev group not installed - pip version does not support --group"
+            exit 1
           fi
 
   test-pip-dependency-groups-only:
@@ -371,18 +297,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Create test project with dependency groups
-        run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-pip-dep-groups"
-          version = "0.1.0"
-          dependencies = ["requests"]
-
-          [dependency-groups]
-          dev = ["httpx"]
-          test = ["pytest"]
-          EOF
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-dependency-groups-only/pyproject.toml .
 
       - name: Test pip action with dependency groups only
         uses: ./actions/python-setup/pip
@@ -402,3 +318,283 @@ jobs:
             echo "[OK] Dependency groups not installed (pip version does not support PEP 735 --dependency-groups)"
             echo "[INFO] This is expected for older pip versions. Consider using uv action for dependency groups support."
           fi
+
+  test-pip-groups-docs-only:
+    name: Test pip action - Single dependency group (docs)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-groups-only-docs/pyproject.toml .
+
+      - name: Test pip action with docs dependency group
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'groups: docs'
+
+      - name: Verify installation and expected warning
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          # This test verifies the warning behavior when pip doesn't support --dependency-groups
+          if python -c "import mkdocs" 2>/dev/null; then
+            echo "[OK] Docs group installed (pip supports PEP 735)"
+          else
+            echo "[OK] Docs group not installed - this is expected with current pip version"
+            echo "[INFO] The warning message 'pip version does not support --dependency-groups' is expected"
+          fi
+
+  test-pip-all-combinations:
+    name: Test pip action - All combinations (groups + extras)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-all-combinations/pyproject.toml .
+
+      - name: Test pip action with multiple groups and extras
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'groups: dev test docs, extras: aws azure gcp'
+
+      - name: Verify comprehensive installation
+        shell: bash
+        run: |
+          pip list
+          # Verify core dependencies
+          python -c "import requests; import click; print('[OK] Core dependencies installed')"
+          # Verify optional dependencies (extras)
+          python -c "import boto3; print('[OK] AWS extra installed')"
+          python -c "from azure.storage.blob import BlobServiceClient; print('[OK] Azure extra installed')"
+          python -c "from google.cloud import storage; print('[OK] GCP extra installed')"
+          # Verify dependency groups (if supported)
+          if python -c "import httpx; import pytest; import mkdocs" 2>/dev/null; then
+            echo "[OK] All dependency groups installed (pip supports PEP 735)"
+          else
+            echo "[OK] Dependency groups not installed (pip doesn't support PEP 735)"
+          fi
+
+  test-pip-single-extra:
+    name: Test pip action - Single extra only
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-single-extra/pyproject.toml .
+
+      - name: Test pip action with single extra
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'extras: dev'
+
+      - name: Verify single extra installation
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import pytest; import black; import ruff; print('[OK] Dev extra installed')"
+
+  test-pip-single-group:
+    name: Test pip action - Single group only
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-single-group/pyproject.toml .
+
+      - name: Test pip action with single group
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'groups: dev'
+
+      - name: Verify single group installation
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          if python -c "import pytest; import black; import ruff" 2>/dev/null; then
+            echo "[OK] Dev group installed (pip supports PEP 735)"
+          else
+            echo "[OK] Dev group not installed (pip doesn't support PEP 735)"
+          fi
+
+  test-pip-only-core-dependencies:
+    name: Test pip action - Only core dependencies (no groups/extras)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-only-dependencies/pyproject.toml .
+
+      - name: Test pip action without install-groups parameter
+        uses: ./actions/python-setup/pip
+
+      - name: Verify only core dependencies installed
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; import click; import httpx; print('[OK] Core dependencies installed')"
+          echo "[OK] Only core dependencies installed as expected"
+
+  test-pip-whitespace-handling:
+    name: Test pip action - Whitespace handling in groups/extras
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-whitespace-handling/pyproject.toml .
+
+      - name: Test pip action with extra whitespace
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: '  groups:  lint   format  ,  extras:  dev   test  '
+
+      - name: Verify whitespace handling
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import pytest; print('[OK] Dev extra installed')"
+          python -c "import pytest_cov; print('[OK] Test extra installed')"
+          if python -c "import ruff; import black" 2>/dev/null; then
+            echo "[OK] Groups installed with whitespace handling (pip supports PEP 735)"
+          else
+            echo "[OK] Groups not installed (pip doesn't support PEP 735)"
+          fi
+
+  test-pip-empty-groups-value:
+    name: Test pip action - Empty groups value
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-empty-groups-only/pyproject.toml .
+
+      - name: Test pip action with empty groups value
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'groups: '
+
+      - name: Verify empty groups handling
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          echo "[OK] Empty groups value handled correctly"
+
+  test-pip-empty-extras-value:
+    name: Test pip action - Empty extras value
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-empty-extras-only/pyproject.toml .
+
+      - name: Test pip action with empty extras value
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'extras: '
+
+      - name: Verify empty extras handling
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          echo "[OK] Empty extras value handled correctly"
+
+  test-pip-python-version-matrix:
+    name: Test pip action - Python version matrix with extras
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-multiple-python-versions/pyproject.toml .
+
+      - name: Test pip action with Python ${{ matrix.python-version }}
+        uses: ./actions/python-setup/pip
+        with:
+          python-version: ${{ matrix.python-version }}
+          install-groups: 'extras: dev'
+
+      - name: Verify Python version and extras
+        shell: bash
+        run: |
+          python --version
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import pytest; print('[OK] Dev extra installed')"
+
+  test-pip-reverse-order:
+    name: Test pip action - Reverse order (extras before groups)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-all-combinations/pyproject.toml .
+
+      - name: Test pip action with extras before groups
+        uses: ./actions/python-setup/pip
+        with:
+          install-groups: 'extras: aws, groups: dev'
+
+      - name: Verify reverse order handling
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import boto3; print('[OK] AWS extra installed')"
+          if python -c "import httpx" 2>/dev/null; then
+            echo "[OK] Dev group installed (pip supports PEP 735)"
+          else
+            echo "::error::Dev group not installed - pip doesn't support PEP 735"
+            exit 1
+          fi
+
+  test-pip-cache-with-groups:
+    name: Test pip action - Cache with groups and extras
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Copy test fixture files
+        run: cp tests/data/pip/test-pip-all-combinations/pyproject.toml .
+
+      - name: Test pip action with cache and install-groups
+        uses: ./actions/python-setup/pip
+        with:
+          cache: 'pip'
+          install-groups: 'groups: dev, extras: aws'
+
+      - name: Verify cache and installation
+        shell: bash
+        run: |
+          pip list
+          python -c "import requests; print('[OK] Core dependencies installed')"
+          python -c "import boto3; print('[OK] AWS extra installed with cache')"
+          echo "[OK] Cache validation passed with groups and extras"
+

@@ -1,0 +1,40 @@
+[project]
+name = "test-docs-custom"
+version = "0.1.0"
+dependencies = []
+
+[project.optional-dependencies]
+docs = [
+  "mkdocs>=1.5.0",
+  "mkdocs-material>=9.5.0",
+  "mike>=2.1.0"
+]
+dev = [
+  "pytest>=7.0.0",
+  "black>=23.0.0"
+]
+test = [
+  "pytest-cov>=4.0.0",
+  "coverage>=7.0.0"
+]
+aws = [
+  "boto3>=1.26.0"
+]
+
+[dependency-groups]
+docs = [
+  "mkdocs>=1.5.0",
+  "mkdocs-material>=9.5.0",
+  "mike>=2.1.0"
+]
+dev = [
+  "pytest>=7.0.0",
+  "black>=23.0.0"
+]
+test = [
+  "pytest-cov>=4.0.0",
+  "coverage>=7.0.0"
+]
+aws = [
+  "boto3>=1.26.0"
+]

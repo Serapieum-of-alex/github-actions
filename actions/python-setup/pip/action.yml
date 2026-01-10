@@ -142,24 +142,22 @@ runs:
 
             # Install dependency groups if any (requires pip with PEP 735 support)
             if [ ${#dependency_groups[@]} -gt 0 ]; then
-              # Build comma-separated list of dependency groups
-              groups_list=""
+              # Build command with multiple --group flags
+              dep_groups_cmd="pip install ."
               for group in "${dependency_groups[@]}"; do
-                if [[ -z "$groups_list" ]]; then
-                  groups_list="$group"
-                else
-                  groups_list="$groups_list,$group"
-                fi
+                dep_groups_cmd="$dep_groups_cmd --group $group"
               done
               
-              # Check if pip supports --dependency-groups (PEP 735)
-              if pip install --help | grep -q "dependency-groups"; then
-                dep_groups_cmd="pip install --dependency-groups $groups_list"
+              # Check if pip supports --group (PEP 735)
+              if pip install --help | grep -q "\-\-group"; then
                 echo "Installing dependency groups: $dep_groups_cmd"
                 eval "$dep_groups_cmd"
               else
-                echo "::warning::pip version does not support --dependency-groups flag (PEP 735). Dependency groups will be ignored: $groups_list"
-                echo "::warning::Please use a newer version of pip or consider using the uv action instead."
+                groups_list=$(IFS=,; echo "${dependency_groups[*]}")
+                pip_version=$(pip --version | awk '{print $2}')
+                echo "::warning::pip version $pip_version does not support --group flag (PEP 735). Dependency groups will be ignored: $groups_list"
+                echo "::warning::Please upgrade pip to version >= 24.2 or consider using the uv action instead."
+                echo "::warning::Suggested workaround: Specify version: '24.2' or version: 'latest' in the action inputs."
               fi
             fi
           else

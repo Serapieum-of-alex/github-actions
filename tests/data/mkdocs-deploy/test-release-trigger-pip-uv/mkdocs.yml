@@ -1,0 +1,10 @@
+site_name: Release Documentation
+site_description: Testing release deployment
+
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - Release Notes: release.md
+

@@ -1,0 +1,9 @@
+[project]
+name = "test-pip-dep-groups"
+version = "0.1.0"
+dependencies = ["requests"]
+
+[dependency-groups]
+dev = ["httpx"]
+test = ["pytest"]
+

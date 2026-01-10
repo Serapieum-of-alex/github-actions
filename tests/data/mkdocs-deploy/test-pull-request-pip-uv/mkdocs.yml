@@ -1,0 +1,9 @@
+site_name: Test Documentation
+site_description: Test documentation for GitHub Actions
+
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+

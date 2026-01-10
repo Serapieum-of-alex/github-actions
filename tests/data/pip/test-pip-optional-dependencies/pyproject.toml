@@ -1,0 +1,13 @@
+[project]
+name = "test-pip-extras"
+version = "0.1.0"
+dependencies = ["requests"]
+
+[project.optional-dependencies]
+aws = ["boto3"]
+viz = ["matplotlib"]
+
+[dependency-groups]
+dev = ["httpx"]
+test = ["pytest"]
+

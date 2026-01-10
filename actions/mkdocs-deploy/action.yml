@@ -14,9 +14,9 @@ inputs:
     required: false
     default: '3.12'
   install-groups:
-    description: 'Dependency groups to install'
+    description: 'Dependency groups to install. For pip/uv: use "groups: docs" or "extras: docs". For pixi: pass environment name directly like "docs"'
     required: false
-    default: 'docs'
+    default: 'groups: docs'
   deploy-token:
     description: 'GitHub token for deployment'
     required: true
@@ -32,31 +32,29 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v5
-      with:
-        fetch-depth: 0
 
     - name: Set up Python environment (pip)
       if: ${{ inputs.package-manager == 'pip' }}
-      uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@main
+      uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
       with:
         python-version: ${{ inputs.python-version }}
         install-groups: ${{ inputs.install-groups }}
 
     - name: Set up Python environment (uv)
       if: ${{ inputs.package-manager == 'uv' }}
-      uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@main
+      uses: Serapieum-of-alex/github-actions/actions/python-setup/uv@v1
       with:
         python-version: ${{ inputs.python-version }}
         install-groups: ${{ inputs.install-groups }}
+        verify-lock: false
 
     - name: Set up Python environment (pixi)
       if: ${{ inputs.package-manager == 'pixi' }}
-      uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@main
+      uses: Serapieum-of-alex/github-actions/actions/python-setup/pixi@v1
       with:
         environments: ${{ inputs.install-groups }}
         activate-environment: ${{ inputs.install-groups }}
+        verify-lock: false
 
     - name: Configure Git
       shell: bash
