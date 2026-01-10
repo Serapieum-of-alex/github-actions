@@ -35,7 +35,7 @@ runs:
 
     - name: Set up Python environment (pip)
       if: ${{ inputs.package-manager == 'pip' }}
-      uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@v1
+      uses: Serapieum-of-alex/github-actions/actions/python-setup/pip@pip/v1
       with:
         python-version: ${{ inputs.python-version }}
         install-groups: ${{ inputs.install-groups }}
