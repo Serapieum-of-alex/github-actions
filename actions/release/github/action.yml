@@ -3,14 +3,22 @@ description: 'Create a GitHub release with optional package manager setup for bu
 
 inputs:
   github-token:
-    description: 'GitHub token for creating releases'
+    description: |
+      GitHub token for creating releases. Typically use the built-in GITHUB_TOKEN or a personal access token.
+      Example: ${{ secrets.GITHUB_TOKEN }}
     required: true
   release-branch:
-    description: 'Branch to create release from'
+    description: |
+      Branch to create release from. The branch that contains the code to be released.
+      Examples: 'main', 'develop', 'release/v2.0', 'production'
     required: false
     default: 'main'
   increment:
-    description: 'Version increment type (patch, minor, major)'
+    description: |
+      Version increment type used by commitizen for semantic versioning.
+      - patch: Bug fixes (1.0.0 -> 1.0.1)
+      - minor: New features (1.0.1 -> 1.1.0)
+      - major: Breaking changes (1.1.0 -> 2.0.0)
     required: false
     type: choice
     options:
@@ -19,7 +27,12 @@ inputs:
       - major
     default: 'patch'
   prerelease-type:
-    description: 'Prerelease type (none, alpha, beta, rc)'
+    description: |
+      Prerelease type appended to the version (used with commitizen --prerelease flag).
+      - none: Standard release (1.0.0)
+      - alpha: Alpha release (1.0.0-alpha.1)
+      - beta: Beta release (1.0.0-beta.1)
+      - rc: Release candidate (1.0.0-rc.1)
     required: false
     type: choice
     options:
@@ -29,11 +42,19 @@ inputs:
       - rc
     default: 'none'
   draft:
-    description: 'Create as draft release'
+    description: |
+      Create as draft release (passed to softprops/action-gh-release).
+      - 'true': Release will be created as draft (not published)
+      - 'false': Release will be published immediately
     required: false
     default: 'false'
   package-manager:
-    description: 'Package manager to use for pre-release setup (pip, uv, pixi)'
+    description: |
+      Package manager to use for setting up Python environment before release.
+      Determines which python-setup action to use.
+      - pip: Standard pip with pyproject.toml
+      - uv: UV package manager (faster, modern)
+      - pixi: Pixi package manager (conda-based)
     required: false
     type: choice
     options:
@@ -42,13 +63,32 @@ inputs:
       - pixi
     default: 'uv'
   python-version:
-    description: 'Python version to install'
+    description: |
+      Python version to install (passed to actions/setup-python).
+      Supports semantic versioning and version ranges.
+      Examples: '3.12', '3.11', '3.10', '3.9', '3.12.0', '3.x'
     required: false
     default: '3.12'
   install-groups:
-    description: 'Dependency groups to install'
+    description: |
+      Dependency groups or environments to install.
+      Format varies by package-manager:
+
+      For pip/uv (passed to install-groups):
+        - "groups: dev test" - Install dependency groups (PEP 735)
+        - "extras: aws viz" - Install optional dependencies (extras)
+        - "groups: dev docs, extras: aws" - Combine both
+        - "" - Install only core dependencies
+
+      For pixi (passed to environments and activate-environment):
+        - "default" - Use default environment
+        - "py311" - Single named environment
+        - "py312 py313" - Multiple environments (space-separated)
+
+      Note: When using pixi, specify only one environment name as it's used for both
+      environments and activate-environment parameters.
     required: false
-    default: 'dev'
+    default: 'groups: docs dev'
 
 runs:
   using: 'composite'
