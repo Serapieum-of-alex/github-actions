@@ -376,8 +376,15 @@ jobs:
           # Create release branch
           git checkout -b release/v2.0
 
+          # Create initial tag to prevent commitizen interactive prompt
+          git add pyproject.toml
+          git commit -m "chore: initial commit"
+          git tag 0.1.0
+          git push origin release/v2.0
+          git push origin 0.1.0
+
           echo "# Test" > README.md
-          git add pyproject.toml README.md
+          git add README.md
           git commit -m "feat: test on release branch"
           git push origin release/v2.0
 
@@ -539,12 +546,20 @@ jobs:
 
       - name: Create test commit (git already configured by fake remote helper)
         run: |
+          # Create initial tag to prevent commitizen interactive prompt
+          git add pyproject.toml
+          git commit -m "chore: initial commit"
+          git tag 0.1.0
+          git push origin main
+          git push origin 0.1.0
+
           echo "# Test" > README.md
-          git add pyproject.toml README.md
+          git add README.md
           git commit -m "feat: test git config"
           git push origin main
 
       - name: Test release action (will reconfigure git)
+        uses: ./actions/release/github
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           release-branch: 'main'
