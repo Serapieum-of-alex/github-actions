@@ -1,0 +1,15 @@
+[project]
+name = "test-release-pixi"
+channels = ["conda-forge"]
+platforms = ["linux-64", "win-64", "osx-64", "osx-arm64"]
+
+[dependencies]
+python = ">=3.10"
+requests = ">=2.28.0"
+commitizen = "*"
+
+[feature.dev.dependencies]
+pytest = ">=7.0.0"
+
+[environments]
+default = ["dev"]
