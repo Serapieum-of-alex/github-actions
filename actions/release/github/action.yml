@@ -262,42 +262,38 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Bumping version and generating changelog"
-        echo "Applying version bump and changelog generation..."
-        # Check if there's at least 1 existing tag for incremental changelog
-        # 0 tags → use full changelog (first release)
-        # 1+ tags → use incremental changelog (has previous release to compare)
-        EXISTING_TAGS=$(git tag -l)
-        TAG_COUNT=$(echo "$EXISTING_TAGS" | grep -c '^' || echo "0")
+        echo "Running cz bump (handles both version and changelog)..."
 
-        if [ -z "$EXISTING_TAGS" ] || [ "$TAG_COUNT" -lt 1 ]; then
-          echo "Note: No existing tags. This is the first release."
-          echo "Full changelog will be generated."
-        else
-          echo "Note: Found $TAG_COUNT existing tag(s)."
-          echo "Incremental changelog will be generated."
-        fi
-
-        # Run cz bump to update version files and create tag
-        # Suppress changelog generation errors with || true
+        # Run cz bump - it handles changelog generation automatically
+        # If it fails, we'll recover by generating full changelog and retrying
+        set +e  # Don't exit on error
         if [ "${{ inputs.prerelease-type }}" != "none" ]; then
-          $CZ_CMD bump --yes --increment ${{ inputs.increment }} --prerelease ${{ inputs.prerelease-type }} --changelog-to-stdout > /tmp/changelog_output.txt || true
+          $CZ_CMD bump --yes --increment ${{ inputs.increment }} --prerelease ${{ inputs.prerelease-type }}
+          BUMP_EXIT_CODE=$?
         else
-          $CZ_CMD bump --yes --increment ${{ inputs.increment }} --changelog-to-stdout > /tmp/changelog_output.txt || true
+          $CZ_CMD bump --yes --increment ${{ inputs.increment }}
+          BUMP_EXIT_CODE=$?
+        fi
+        set -e  # Re-enable exit on error
+
+        # If bump failed, recover by generating full changelog and retrying with --files-only
+        if [ $BUMP_EXIT_CODE -ne 0 ]; then
+          echo "⚠ cz bump encountered an issue (exit code: $BUMP_EXIT_CODE)"
+          echo "Recovering: generating full changelog and retrying..."
+
+          # Generate full changelog
+          $CZ_CMD changelog --unreleased-version="$NEXT_VERSION"
+
+          # Retry bump with --files-only (skip changelog since we just generated it)
+          if [ "${{ inputs.prerelease-type }}" != "none" ]; then
+            $CZ_CMD bump --yes --increment ${{ inputs.increment }} --prerelease ${{ inputs.prerelease-type }} --files-only
+          else
+            $CZ_CMD bump --yes --increment ${{ inputs.increment }} --files-only
+          fi
+          echo "✓ Recovery successful"
         fi
 
-        # Get the new version after bump
-        BUMPED_VERSION=$($CZ_CMD version --project)
-        echo "✓ Version bumped to: $BUMPED_VERSION"
-
-        # Generate changelog: incremental if we had 1+ tags before bump, full otherwise
-        if [ -z "$EXISTING_TAGS" ] || [ "$TAG_COUNT" -lt 1 ]; then
-          echo "Generating full changelog..."
-          $CZ_CMD changelog --unreleased-version="$BUMPED_VERSION"
-        else
-          echo "Generating incremental changelog..."
-          $CZ_CMD changelog --unreleased-version="$BUMPED_VERSION" --incremental
-        fi
-        echo "✓ Changelog generated successfully"
+        echo "✓ Version bump and changelog generation completed"
         echo "::endgroup::"
 
         echo "::group::Verifying version bump"
