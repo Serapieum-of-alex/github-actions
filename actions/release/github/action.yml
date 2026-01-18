@@ -91,9 +91,17 @@ inputs:
     default: 'groups: docs dev'
   skip-checkout:
     description: |
-      Skip the checkout step (useful for testing).
-      - 'false': Checkout repository (default)
-      - 'true': Skip checkout (repository must already be checked out)
+      Skip the checkout step. FOR TESTING ONLY - do not use in production!
+
+      In production, the checkout step is essential because it:
+      - Ensures you're on the correct release-branch
+      - Fetches full git history needed by commitizen
+      - Guarantees a clean state before version bumping
+
+      Only set to 'true' when testing the action with pre-staged fixtures.
+
+      - 'false': Checkout repository (default, use this in production)
+      - 'true': Skip checkout (testing only)
     required: false
     default: 'false'
 
