@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = []
+packages = ["src/test_release_uv"]
 
 [project.optional-dependencies]
 dev = [

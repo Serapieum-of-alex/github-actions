@@ -524,7 +524,7 @@ wheels = [
 [[package]]
 name = "test-release-prerelease"
 version = "1.0.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "requests" },
 ]
