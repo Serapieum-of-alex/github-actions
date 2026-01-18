@@ -117,20 +117,14 @@ jobs:
         run: |
           cp tests/data/release-github/test-basic-pixi/pyproject.toml .
           cp tests/data/release-github/test-basic-pixi/pixi.toml .
-
-      - name: Generate pixi.lock file
-        run: |
-          curl -fsSL https://pixi.sh/install.sh | bash
-          export PATH="$HOME/.pixi/bin:$PATH"
-          pixi install
-          git add pixi.lock
-
+          cp tests/data/release-github/test-basic-pixi/pixi.lock .
 
       - name: Clean up repository tags
         run: |
           # Delete all existing tags to prevent commitizen confusion
           # The test fixture expects tags like "0.1.0", not "mkdocs/v1" etc.
           git tag -l | xargs -r git tag -d
+
       - name: Setup fake git remote for testing
         uses: ./.github/workflows/test-helpers/setup-fake-remote
 
