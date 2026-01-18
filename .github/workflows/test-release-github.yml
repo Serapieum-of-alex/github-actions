@@ -31,6 +31,12 @@ jobs:
             cp tests/data/release-github/test-basic-${{ matrix.package-manager }}/uv.lock . || true
           fi
 
+      - name: Clean up repository tags
+        run: |
+          # Delete all existing tags to prevent commitizen confusion
+          # The test fixture expects tags like "0.1.0", not "mkdocs/v1" etc.
+          git tag -l | xargs -r git tag -d
+
       - name: Setup fake git remote for testing
         uses: ./.github/workflows/test-helpers/setup-fake-remote
 
@@ -112,6 +118,12 @@ jobs:
           pixi install
           git add pixi.lock
 
+
+      - name: Clean up repository tags
+        run: |
+          # Delete all existing tags to prevent commitizen confusion
+          # The test fixture expects tags like "0.1.0", not "mkdocs/v1" etc.
+          git tag -l | xargs -r git tag -d
       - name: Setup fake git remote for testing
         uses: ./.github/workflows/test-helpers/setup-fake-remote
 
@@ -172,6 +184,12 @@ jobs:
         run: |
           cp tests/data/release-github/test-prerelease/pyproject.toml .
 
+
+      - name: Clean up repository tags
+        run: |
+          # Delete all existing tags to prevent commitizen confusion
+          # The test fixture expects tags like "0.1.0", not "mkdocs/v1" etc.
+          git tag -l | xargs -r git tag -d
       - name: Setup fake git remote for testing
         uses: ./.github/workflows/test-helpers/setup-fake-remote
 
@@ -253,6 +271,12 @@ jobs:
         run: |
           cp tests/data/release-github/test-with-groups/pyproject.toml .
 
+
+      - name: Clean up repository tags
+        run: |
+          # Delete all existing tags to prevent commitizen confusion
+          # The test fixture expects tags like "0.1.0", not "mkdocs/v1" etc.
+          git tag -l | xargs -r git tag -d
       - name: Setup fake git remote for testing
         uses: ./.github/workflows/test-helpers/setup-fake-remote
 
@@ -312,6 +336,12 @@ jobs:
         run: |
           cp tests/data/release-github/test-basic-uv/pyproject.toml .
 
+
+      - name: Clean up repository tags
+        run: |
+          # Delete all existing tags to prevent commitizen confusion
+          # The test fixture expects tags like "0.1.0", not "mkdocs/v1" etc.
+          git tag -l | xargs -r git tag -d
       - name: Setup fake git remote for testing
         uses: ./.github/workflows/test-helpers/setup-fake-remote
 
@@ -365,6 +395,12 @@ jobs:
         run: |
           cp tests/data/release-github/test-basic-uv/pyproject.toml .
 
+
+      - name: Clean up repository tags
+        run: |
+          # Delete all existing tags to prevent commitizen confusion
+          # The test fixture expects tags like "0.1.0", not "mkdocs/v1" etc.
+          git tag -l | xargs -r git tag -d
       - name: Setup fake git remote for testing
         uses: ./.github/workflows/test-helpers/setup-fake-remote
 
@@ -426,6 +462,12 @@ jobs:
         run: |
           cp tests/data/release-github/test-basic-uv/pyproject.toml .
 
+
+      - name: Clean up repository tags
+        run: |
+          # Delete all existing tags to prevent commitizen confusion
+          # The test fixture expects tags like "0.1.0", not "mkdocs/v1" etc.
+          git tag -l | xargs -r git tag -d
       - name: Setup fake git remote for testing
         uses: ./.github/workflows/test-helpers/setup-fake-remote
 
@@ -492,6 +534,12 @@ jobs:
           tag_format = "$version"
           EOF
 
+
+      - name: Clean up repository tags
+        run: |
+          # Delete all existing tags to prevent commitizen confusion
+          # The test fixture expects tags like "0.1.0", not "mkdocs/v1" etc.
+          git tag -l | xargs -r git tag -d
       - name: Setup fake git remote for testing
         uses: ./.github/workflows/test-helpers/setup-fake-remote
 
@@ -541,6 +589,12 @@ jobs:
         run: |
           cp tests/data/release-github/test-basic-uv/pyproject.toml .
 
+
+      - name: Clean up repository tags
+        run: |
+          # Delete all existing tags to prevent commitizen confusion
+          # The test fixture expects tags like "0.1.0", not "mkdocs/v1" etc.
+          git tag -l | xargs -r git tag -d
       - name: Setup fake git remote for testing
         uses: ./.github/workflows/test-helpers/setup-fake-remote
 
