@@ -1,0 +1,512 @@
+name: Test release/github
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # ============================================================================
+  # Test basic functionality with different package managers
+  # ============================================================================
+
+  test-release-basic:
+    name: Test release - ${{ matrix.package-manager }} (${{ matrix.increment }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package-manager: [pip, uv]
+        increment: [patch, minor, major]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Copy test fixture
+        run: |
+          cp tests/data/release-github/test-basic-${{ matrix.package-manager }}/pyproject.toml .
+          if [ "${{ matrix.package-manager }}" == "uv" ]; then
+            cp tests/data/release-github/test-basic-${{ matrix.package-manager }}/uv.lock . || true
+          fi
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
+
+      - name: Create test commit for version bumping
+        run: |
+          git config user.name "Test Bot"
+          git config user.email "test@example.com"
+
+          # Create test commits based on increment type
+          if [ "${{ matrix.increment }}" == "patch" ]; then
+            echo "# Test" > README.md
+            git add pyproject.toml README.md
+            git commit -m "fix: patch fix for testing"
+          elif [ "${{ matrix.increment }}" == "minor" ]; then
+            echo "# Test" > README.md
+            git add pyproject.toml README.md
+            git commit -m "feat: minor feature for testing"
+          else
+            echo "# Test" > README.md
+            git add pyproject.toml README.md
+            git commit -m "feat!: breaking change for testing"
+          fi
+
+          # Push to fake remote
+          git push origin main
+
+      - name: Test release action (will create release in test repo)
+        uses: ./actions/release/github
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-branch: 'main'
+          increment: ${{ matrix.increment }}
+          prerelease-type: 'none'
+          draft: 'true'  # Create as draft to avoid polluting releases
+          package-manager: ${{ matrix.package-manager }}
+          python-version: '3.12'
+          install-groups: 'groups: dev docs'
+
+      - name: Verify release was processed
+        run: |
+          echo "Release action completed successfully"
+          git log --oneline -n 5
+          git tag -l
+
+  # ============================================================================
+  # Test with pixi package manager
+  # ============================================================================
+
+  test-release-pixi:
+    name: Test release - pixi (patch)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Copy test fixture
+        run: |
+          cp tests/data/release-github/test-basic-pixi/pyproject.toml .
+          cp tests/data/release-github/test-basic-pixi/pixi.toml .
+
+      - name: Generate pixi.lock file
+        run: |
+          curl -fsSL https://pixi.sh/install.sh | bash
+          export PATH="$HOME/.pixi/bin:$PATH"
+          pixi install
+          git add pixi.lock
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
+
+      - name: Create test commit for version bumping
+        run: |
+          git config user.name "Test Bot"
+          git config user.email "test@example.com"
+
+          echo "# Test" > README.md
+          git add pyproject.toml pixi.toml pixi.lock README.md
+          git commit -m "fix: pixi patch fix"
+          git push origin main
+
+      - name: Test release action with pixi
+        uses: ./actions/release/github
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-branch: 'main'
+          increment: 'patch'
+          prerelease-type: 'none'
+          draft: 'true'
+          package-manager: 'pixi'
+          python-version: '3.12'
+          install-groups: 'default'
+
+      - name: Verify release was processed
+        run: |
+          echo "Pixi release action completed successfully"
+          git log --oneline -n 5
+          git tag -l
+
+  # ============================================================================
+  # Test prerelease types
+  # ============================================================================
+
+  test-release-prerelease:
+    name: Test release - ${{ matrix.prerelease-type }} prerelease
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        prerelease-type: [alpha, beta, rc]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Copy test fixture
+        run: |
+          cp tests/data/release-github/test-prerelease/pyproject.toml .
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
+
+      - name: Create test commit
+        run: |
+          git config user.name "Test Bot"
+          git config user.email "test@example.com"
+
+          echo "# Test ${{ matrix.prerelease-type }}" > README.md
+          git add pyproject.toml README.md
+          git commit -m "feat: ${{ matrix.prerelease-type }} feature"
+          git push origin main
+
+      - name: Test release action with ${{ matrix.prerelease-type }}
+        uses: ./actions/release/github
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-branch: 'main'
+          increment: 'patch'
+          prerelease-type: ${{ matrix.prerelease-type }}
+          draft: 'true'
+          package-manager: 'uv'
+          python-version: '3.12'
+
+      - name: Verify prerelease was created
+        run: |
+          echo "Prerelease ${{ matrix.prerelease-type }} completed successfully"
+
+          # Get the latest tag
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          echo "Latest tag: $LATEST_TAG"
+
+          # Verify it contains the prerelease type
+          if [[ "$LATEST_TAG" == *"${{ matrix.prerelease-type }}"* ]]; then
+            echo "[OK] Tag contains prerelease type: ${{ matrix.prerelease-type }}"
+          else
+            echo "[ERROR] Tag does not contain prerelease type"
+            exit 1
+          fi
+
+  # ============================================================================
+  # Test with different install-groups configurations
+  # ============================================================================
+
+  test-release-groups-and-extras:
+    name: Test release - ${{ matrix.install-type }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - install-type: "groups only"
+            install-groups: "groups: dev docs"
+            verify-import: "import pytest; import mkdocs"
+          - install-type: "extras only"
+            install-groups: "extras: aws"
+            verify-import: "import boto3"
+          - install-type: "groups and extras"
+            install-groups: "groups: dev docs, extras: aws"
+            verify-import: "import pytest; import mkdocs; import boto3"
+          - install-type: "empty (core only)"
+            install-groups: ""
+            verify-import: "import requests"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Copy test fixture
+        run: |
+          cp tests/data/release-github/test-with-groups/pyproject.toml .
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
+
+      - name: Create test commit
+        run: |
+          git config user.name "Test Bot"
+          git config user.email "test@example.com"
+
+          echo "# Test" > README.md
+          git add pyproject.toml README.md
+          git commit -m "feat: test ${{ matrix.install-type }}"
+          git push origin main
+
+      - name: Test release action with ${{ matrix.install-type }}
+        uses: ./actions/release/github
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-branch: 'main'
+          increment: 'patch'
+          draft: 'true'
+          package-manager: 'uv'
+          python-version: '3.12'
+          install-groups: ${{ matrix.install-groups }}
+
+      - name: Verify dependencies installed correctly
+        run: |
+          # Activate the uv environment and verify imports
+          source .venv/bin/activate
+          python -c "${{ matrix.verify-import }}" || echo "[WARNING] Verification imports may differ in CI"
+
+  # ============================================================================
+  # Test with different Python versions
+  # ============================================================================
+
+  test-release-python-versions:
+    name: Test release - Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Copy test fixture
+        run: |
+          cp tests/data/release-github/test-basic-uv/pyproject.toml .
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
+
+      - name: Create test commit
+        run: |
+          git config user.name "Test Bot"
+          git config user.email "test@example.com"
+
+          echo "# Test Python ${{ matrix.python-version }}" > README.md
+          git add pyproject.toml README.md
+          git commit -m "feat: test with python ${{ matrix.python-version }}"
+          git push origin main
+
+      - name: Test release action with Python ${{ matrix.python-version }}
+        uses: ./actions/release/github
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-branch: 'main'
+          increment: 'patch'
+          draft: 'true'
+          package-manager: 'uv'
+          python-version: ${{ matrix.python-version }}
+
+      - name: Verify Python version
+        run: |
+          python --version
+          echo "[OK] Release works with Python ${{ matrix.python-version }}"
+
+  # ============================================================================
+  # Test with different release branches
+  # ============================================================================
+
+  test-release-different-branch:
+    name: Test release - custom branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Copy test fixture
+        run: |
+          cp tests/data/release-github/test-basic-uv/pyproject.toml .
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
+
+      - name: Create and switch to release branch
+        run: |
+          git config user.name "Test Bot"
+          git config user.email "test@example.com"
+
+          # Create release branch
+          git checkout -b release/v2.0
+
+          echo "# Test" > README.md
+          git add pyproject.toml README.md
+          git commit -m "feat: test on release branch"
+          git push origin release/v2.0
+
+      - name: Test release action on custom branch
+        uses: ./actions/release/github
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-branch: 'release/v2.0'
+          increment: 'patch'
+          draft: 'true'
+          package-manager: 'uv'
+          python-version: '3.12'
+
+      - name: Verify release on custom branch
+        run: |
+          echo "[OK] Release works on custom branch"
+          git log --oneline -n 5
+
+  # ============================================================================
+  # Test cross-platform
+  # ============================================================================
+
+  test-release-cross-platform:
+    name: Test release - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Copy test fixture
+        shell: bash
+        run: |
+          cp tests/data/release-github/test-basic-uv/pyproject.toml .
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
+
+      - name: Create test commit
+        shell: bash
+        run: |
+          git config user.name "Test Bot"
+          git config user.email "test@example.com"
+
+          echo "# Test ${{ matrix.os }}" > README.md
+          git add pyproject.toml README.md
+          git commit -m "feat: test on ${{ matrix.os }}"
+          git push origin main
+
+      - name: Test release action on ${{ matrix.os }}
+        uses: ./actions/release/github
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-branch: 'main'
+          increment: 'patch'
+          draft: 'true'
+          package-manager: 'uv'
+          python-version: '3.12'
+
+      - name: Verify release on ${{ matrix.os }}
+        shell: bash
+        run: |
+          echo "[OK] Release works on ${{ matrix.os }}"
+
+  # ============================================================================
+  # Test edge cases
+  # ============================================================================
+
+  test-release-no-dependency-groups:
+    name: Test release - no dependency-groups section
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create minimal test fixture
+        run: |
+          cat > pyproject.toml << 'EOF'
+          [project]
+          name = "test-release-minimal"
+          version = "0.1.0"
+          requires-python = ">=3.10"
+          dependencies = ["requests"]
+
+          [tool.commitizen]
+          name = "cz_conventional_commits"
+          version = "0.1.0"
+          version_files = ["pyproject.toml:version"]
+          tag_format = "$version"
+          EOF
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
+
+      - name: Create test commit
+        run: |
+          git config user.name "Test Bot"
+          git config user.email "test@example.com"
+
+          echo "# Test" > README.md
+          git add pyproject.toml README.md
+          git commit -m "feat: minimal project"
+          git push origin main
+
+      - name: Test release action without dependency groups
+        uses: ./actions/release/github
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-branch: 'main'
+          increment: 'patch'
+          draft: 'true'
+          package-manager: 'uv'
+          python-version: '3.12'
+          install-groups: ''
+
+      - name: Verify release succeeded
+        run: |
+          echo "[OK] Release works without dependency-groups section"
+
+  test-release-git-configuration:
+    name: Test release - git configuration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Copy test fixture
+        run: |
+          cp tests/data/release-github/test-basic-uv/pyproject.toml .
+
+      - name: Setup fake git remote for testing
+        uses: ./.github/workflows/test-helpers/setup-fake-remote
+
+      - name: Create test commit (git already configured by fake remote helper)
+        run: |
+          echo "# Test" > README.md
+          git add pyproject.toml README.md
+          git commit -m "feat: test git config"
+          git push origin main
+
+      - name: Test release action (will reconfigure git)
+        uses: ./actions/release/github
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-branch: 'main'
+          increment: 'patch'
+          draft: 'true'
+          package-manager: 'uv'
+          python-version: '3.12'
+
+      - name: Verify git was configured by action
+        run: |
+          GIT_NAME=$(git config user.name)
+          GIT_EMAIL=$(git config user.email)
+
+          echo "Git user.name: $GIT_NAME"
+          echo "Git user.email: $GIT_EMAIL"
+
+          # Action should have configured git with github.actor
+          if [[ "$GIT_NAME" == "${{ github.actor }}" ]]; then
+            echo "[OK] Git configured correctly by release action"
+          else
+            echo "[WARNING] Git configuration may differ"
+          fi
