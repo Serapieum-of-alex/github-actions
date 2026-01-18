@@ -9,10 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  # ============================================================================
   # Test basic functionality with different package managers
-  # ============================================================================
-
   test-release-basic:
     name: Test release - ${{ matrix.package-manager }} (${{ matrix.increment }})
     runs-on: ubuntu-latest
