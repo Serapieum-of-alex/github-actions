@@ -108,6 +108,13 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Checkout repository
+      if: ${{ inputs.skip-checkout != 'true' }}
+      uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+        ref: ${{ inputs.release-branch }}
+
     - name: Check prerequisites for release
       shell: bash
       run: |
@@ -180,12 +187,6 @@ runs:
         echo "========================================"
         echo "::endgroup::"
 
-    - name: Checkout repository
-      if: ${{ inputs.skip-checkout != 'true' }}
-      uses: actions/checkout@v5
-      with:
-        fetch-depth: 0
-        ref: ${{ inputs.release-branch }}
 
     - name: Set up Python environment (pip)
       if: ${{ inputs.package-manager == 'pip' }}
