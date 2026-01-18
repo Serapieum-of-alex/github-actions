@@ -108,6 +108,38 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Display release configuration
+      shell: bash
+      run: |
+        echo "::group::Release Configuration"
+        echo "=== GitHub Release Action Configuration ==="
+        if [ "${{ inputs.skip-checkout }}" = "true" ]; then
+          echo "✗ Repository checkout: Skipped (skip-checkout=true)"
+        else
+          echo "✓ Repository checkout: Enabled"
+          echo "  Branch: ${{ inputs.release-branch }}"
+        fi
+        echo "✓ Package manager: ${{ inputs.package-manager }}"
+        echo "✓ Python version: ${{ inputs.python-version }}"
+        echo "✓ Version increment: ${{ inputs.increment }}"
+        if [ "${{ inputs.prerelease-type }}" != "none" ]; then
+          echo "✓ Prerelease type: ${{ inputs.prerelease-type }}"
+        else
+          echo "✗ Prerelease type: none (standard release)"
+        fi
+        if [ "${{ inputs.draft }}" = "true" ]; then
+          echo "✓ Draft release: Yes"
+        else
+          echo "✗ Draft release: No (will be published)"
+        fi
+        if [ -n "${{ inputs.install-groups }}" ]; then
+          echo "✓ Install groups: ${{ inputs.install-groups }}"
+        else
+          echo "✗ Install groups: none (core dependencies only)"
+        fi
+        echo "========================================"
+        echo "::endgroup::"
+
     - name: Checkout repository
       if: ${{ inputs.skip-checkout != 'true' }}
       uses: actions/checkout@v5
@@ -139,79 +171,147 @@ runs:
     - name: Configure Git
       shell: bash
       run: |
-        echo "::group::Configuring Git"
+        echo "::group::Configuring Git for version bump"
+        echo "Setting git user configuration..."
         git config --global user.name '${{ github.actor }}'
         git config --global user.email '${{ github.actor }}@users.noreply.github.com'
+        echo "✓ Git configured with user: ${{ github.actor }}"
         echo "::endgroup::"
 
     - name: Generate changelog and bump version with commitizen
       id: bump_version
       shell: bash
       run: |
-        echo "::group::Generating changelog and bumping version"
-        
-        # Build commitizen command
+        echo "::group::Preparing commitizen command"
+
+        # Build commitizen command based on package manager
         if [ "${{ inputs.package-manager }}" = "pip" ]; then
           CZ_CMD="cz"
+          echo "Using pip package manager"
+          echo "✓ Commitizen command: cz"
         elif [ "${{ inputs.package-manager }}" = "pixi" ]; then
           CZ_CMD="pixi run -e ${{ inputs.install-groups }} cz"
+          echo "Using pixi package manager"
+          echo "✓ Commitizen command: pixi run -e ${{ inputs.install-groups }} cz"
         else
           CZ_CMD="${{ inputs.package-manager }} run cz"
+          echo "Using ${{ inputs.package-manager }} package manager"
+          echo "✓ Commitizen command: ${{ inputs.package-manager }} run cz"
         fi
-        
-        # Get current version first
+        echo "::endgroup::"
+
+        echo "::group::Getting current version"
         CURRENT_VERSION=$($CZ_CMD version --project)
-        echo "Current version: $CURRENT_VERSION"
-        
-        # Calculate what the next version will be (dry run)
-        echo "Calculating next version..."
+        echo "✓ Current version: $CURRENT_VERSION"
+        echo "::endgroup::"
+
+        echo "::group::Calculating next version"
+        echo "Increment type: ${{ inputs.increment }}"
         if [ "${{ inputs.prerelease-type }}" != "none" ]; then
+          echo "Prerelease type: ${{ inputs.prerelease-type }}"
+          echo "Running dry-run to calculate version..."
           NEXT_VERSION=$($CZ_CMD bump --dry-run --increment ${{ inputs.increment }} --prerelease ${{ inputs.prerelease-type }} | grep "tag to create" | awk '{print $NF}')
         else
+          echo "Prerelease type: none (standard release)"
+          echo "Running dry-run to calculate version..."
           NEXT_VERSION=$($CZ_CMD bump --dry-run --increment ${{ inputs.increment }} | grep "tag to create" | awk '{print $NF}')
         fi
-        
-        echo "Next version will be: $NEXT_VERSION"
-        
-        # Generate changelog with the calculated version
-        echo "Generating changelog..."
+        echo "✓ Next version will be: $NEXT_VERSION"
+        echo "  Version change: $CURRENT_VERSION → $NEXT_VERSION"
+        echo "::endgroup::"
+
+        echo "::group::Generating changelog"
+        echo "Generating incremental changelog for version $NEXT_VERSION..."
         $CZ_CMD changelog --unreleased-version="$NEXT_VERSION" --incremental
-        
-        # Actually bump version
-        echo "Bumping version..."
+        echo "✓ Changelog generated successfully"
+        echo "::endgroup::"
+
+        echo "::group::Bumping version"
+        echo "Applying version bump..."
         if [ "${{ inputs.prerelease-type }}" != "none" ]; then
           $CZ_CMD bump --yes --increment ${{ inputs.increment }} --prerelease ${{ inputs.prerelease-type }}
         else
           $CZ_CMD bump --yes --increment ${{ inputs.increment }}
         fi
-        
-        # Verify the new version
+        echo "::endgroup::"
+
+        echo "::group::Verifying version bump"
         NEW_VERSION=$($CZ_CMD version --project)
         echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
-        echo "Final version: $NEW_VERSION"
-        
+
+        if [ "$NEW_VERSION" = "$NEXT_VERSION" ]; then
+          echo "✓ Version bump verified successfully"
+          echo "  Final version: $NEW_VERSION"
+        else
+          echo "::warning::Version mismatch detected!"
+          echo "  Expected: $NEXT_VERSION"
+          echo "  Actual: $NEW_VERSION"
+        fi
+
+        echo ""
+        echo "=== Version Bump Summary ==="
+        echo "Previous version: $CURRENT_VERSION"
+        echo "New version: $NEW_VERSION"
+        echo "Increment type: ${{ inputs.increment }}"
+        if [ "${{ inputs.prerelease-type }}" != "none" ]; then
+          echo "Prerelease: ${{ inputs.prerelease-type }}"
+        fi
+        echo "=========================="
         echo "::endgroup::"
 
     - name: Push changes and tags
       shell: bash
       run: |
-        echo "::group::Pushing changes and tags"
-        
-        echo "Pushing changes to repository"
+        echo "::group::Pushing changes and tags to repository"
+
+        echo "Pushing version bump commit to ${{ inputs.release-branch }}..."
         if ! git push; then
           echo "::error::Failed to push changes to repository"
+          echo "::error::Branch: ${{ inputs.release-branch }}"
           exit 1
         fi
-        
-        echo "Pushing tags to repository"
+        echo "✓ Changes pushed successfully"
+
+        echo ""
+        echo "Pushing tags to repository..."
         if ! git push --tags; then
           echo "::error::Failed to push tags to repository"
           exit 1
         fi
-        
+        echo "✓ Tags pushed successfully"
+
+        echo ""
+        echo "=== Git Push Summary ==="
+        echo "✓ Version bump committed and pushed"
+        echo "✓ Git tag created and pushed"
+        echo "  Tag: ${{ steps.bump_version.outputs.NEW_VERSION }}"
+        echo "  Branch: ${{ inputs.release-branch }}"
+        echo "======================="
         echo "::endgroup::"
 
     - name: Create GitHub Release
+      shell: bash
+      run: |
+        echo "::group::Creating GitHub Release"
+        echo "Release details:"
+        echo "  Version: ${{ steps.bump_version.outputs.NEW_VERSION }}"
+        echo "  Tag: ${{ steps.bump_version.outputs.NEW_VERSION }}"
+        if [ "${{ inputs.draft }}" = "true" ]; then
+          echo "  Type: Draft release"
+        else
+          echo "  Type: Published release"
+        fi
+
+        # Check if this is a prerelease
+        VERSION="${{ steps.bump_version.outputs.NEW_VERSION }}"
+        if [[ "$VERSION" == *"-"* ]] || [[ "$VERSION" == *"alpha"* ]] || [[ "$VERSION" == *"beta"* ]] || [[ "$VERSION" == *"rc"* ]]; then
+          echo "  Prerelease: Yes"
+        else
+          echo "  Prerelease: No"
+        fi
+        echo "::endgroup::"
+
+    - name: Publish GitHub Release
       uses: softprops/action-gh-release@v2
       with:
         token: ${{ inputs.github-token }}
@@ -220,3 +320,29 @@ runs:
         draft: ${{ inputs.draft == 'true' }}
         prerelease: ${{ contains(steps.bump_version.outputs.NEW_VERSION, '-') || contains(steps.bump_version.outputs.NEW_VERSION, 'alpha') || contains(steps.bump_version.outputs.NEW_VERSION, 'beta') || contains(steps.bump_version.outputs.NEW_VERSION, 'rc') }}
         generate_release_notes: true
+
+    - name: Release summary
+      shell: bash
+      run: |
+        echo "::group::Release Summary"
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "        GitHub Release Created"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        echo "✓ Version: ${{ steps.bump_version.outputs.NEW_VERSION }}"
+        echo "✓ Branch: ${{ inputs.release-branch }}"
+        echo "✓ Increment: ${{ inputs.increment }}"
+        if [ "${{ inputs.prerelease-type }}" != "none" ]; then
+          echo "✓ Prerelease: ${{ inputs.prerelease-type }}"
+        fi
+        if [ "${{ inputs.draft }}" = "true" ]; then
+          echo "✓ Status: Draft (not published)"
+        else
+          echo "✓ Status: Published"
+        fi
+        echo ""
+        echo "View release: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ steps.bump_version.outputs.NEW_VERSION }}"
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "::endgroup::"
