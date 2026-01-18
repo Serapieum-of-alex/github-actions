@@ -45,9 +45,16 @@ jobs:
           git config user.name "Test Bot"
           git config user.email "test@example.com"
 
+          # Create initial CHANGELOG.md file (required by release action)
+          cat > CHANGELOG.md << 'EOF'
+          # Changelog
+
+          All notable changes to this project will be documented in this file.
+          EOF
+
           # Create initial commit with pyproject.toml and tag it
           # This prevents commitizen from asking "Is this the first tag created?"
-          git add pyproject.toml
+          git add pyproject.toml CHANGELOG.md
           if [ "${{ matrix.package-manager }}" == "uv" ]; then
             git add uv.lock || true
           fi
@@ -132,8 +139,15 @@ jobs:
           git config user.name "Test Bot"
           git config user.email "test@example.com"
 
+          # Create initial CHANGELOG.md file (required by release action)
+          cat > CHANGELOG.md << 'EOF'
+          # Changelog
+
+          All notable changes to this project will be documented in this file.
+          EOF
+
           # Create initial tag to prevent commitizen interactive prompt
-          git add pyproject.toml
+          git add pyproject.toml CHANGELOG.md
           git commit -m "chore: initial commit"
           git tag 0.1.0
           git push origin main || git push origin $(git branch --show-current)
@@ -198,8 +212,15 @@ jobs:
           git config user.name "Test Bot"
           git config user.email "test@example.com"
 
+          # Create initial CHANGELOG.md file (required by release action)
+          cat > CHANGELOG.md << 'EOF'
+          # Changelog
+
+          All notable changes to this project will be documented in this file.
+          EOF
+
           # Create initial tag to prevent commitizen interactive prompt
-          git add pyproject.toml
+          git add pyproject.toml CHANGELOG.md
           git commit -m "chore: initial commit"
           git tag 1.0.0
           git push origin main || git push origin $(git branch --show-current)
@@ -285,8 +306,15 @@ jobs:
           git config user.name "Test Bot"
           git config user.email "test@example.com"
 
+          # Create initial CHANGELOG.md file (required by release action)
+          cat > CHANGELOG.md << 'EOF'
+          # Changelog
+
+          All notable changes to this project will be documented in this file.
+          EOF
+
           # Create initial tag to prevent commitizen interactive prompt
-          git add pyproject.toml
+          git add pyproject.toml CHANGELOG.md
           git commit -m "chore: initial commit"
           git tag 0.1.0
           git push origin main || git push origin $(git branch --show-current)
@@ -350,8 +378,15 @@ jobs:
           git config user.name "Test Bot"
           git config user.email "test@example.com"
 
+          # Create initial CHANGELOG.md file (required by release action)
+          cat > CHANGELOG.md << 'EOF'
+          # Changelog
+
+          All notable changes to this project will be documented in this file.
+          EOF
+
           # Create initial tag to prevent commitizen interactive prompt
-          git add pyproject.toml
+          git add pyproject.toml CHANGELOG.md
           git commit -m "chore: initial commit"
           git tag 0.1.0
           git push origin main || git push origin $(git branch --show-current)
@@ -412,8 +447,15 @@ jobs:
           # Create release branch
           git checkout -b release/v2.0
 
+          # Create initial CHANGELOG.md file (required by release action)
+          cat > CHANGELOG.md << 'EOF'
+          # Changelog
+
+          All notable changes to this project will be documented in this file.
+          EOF
+
           # Create initial tag to prevent commitizen interactive prompt
-          git add pyproject.toml
+          git add pyproject.toml CHANGELOG.md
           git commit -m "chore: initial commit"
           git tag 0.1.0
           git push origin release/v2.0
@@ -477,8 +519,15 @@ jobs:
           git config user.name "Test Bot"
           git config user.email "test@example.com"
 
+          # Create initial CHANGELOG.md file (required by release action)
+          cat > CHANGELOG.md << 'EOF'
+          # Changelog
+
+          All notable changes to this project will be documented in this file.
+          EOF
+
           # Create initial tag to prevent commitizen interactive prompt
-          git add pyproject.toml
+          git add pyproject.toml CHANGELOG.md
           git commit -m "chore: initial commit"
           git tag 0.1.0
           git push origin main || git push origin $(git branch --show-current)
@@ -548,8 +597,15 @@ jobs:
           git config user.name "Test Bot"
           git config user.email "test@example.com"
 
+          # Create initial CHANGELOG.md file (required by release action)
+          cat > CHANGELOG.md << 'EOF'
+          # Changelog
+
+          All notable changes to this project will be documented in this file.
+          EOF
+
           # Create initial tag to prevent commitizen interactive prompt
-          git add pyproject.toml
+          git add pyproject.toml CHANGELOG.md
           git commit -m "chore: initial commit"
           git tag 0.1.0
           git push origin main || git push origin $(git branch --show-current)
@@ -600,8 +656,15 @@ jobs:
 
       - name: Create test commit (git already configured by fake remote helper)
         run: |
+          # Create initial CHANGELOG.md file (required by release action)
+          cat > CHANGELOG.md << 'EOF'
+          # Changelog
+
+          All notable changes to this project will be documented in this file.
+          EOF
+
           # Create initial tag to prevent commitizen interactive prompt
-          git add pyproject.toml
+          git add pyproject.toml CHANGELOG.md
           git commit -m "chore: initial commit"
           git tag 0.1.0
           git push origin main
