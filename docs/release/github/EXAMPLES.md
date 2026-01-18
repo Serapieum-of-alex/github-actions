@@ -47,6 +47,17 @@ jobs:
 - Releases from `main` branch
 - Publishes release immediately (not draft)
 
+**Prerequisites:** Ensure your `pyproject.toml` has:
+
+```toml
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+version_files = ["pyproject.toml:version"]
+tag_format = "$version"
+update_changelog_on_bump = true  # Recommended for automatic changelog updates
+```
+
 ### Manual Release with Choice
 
 Allow choosing version increment type:

@@ -103,10 +103,22 @@ name = "cz_conventional_commits"
 version = "0.1.0"
 version_files = ["pyproject.toml:version"]
 tag_format = "$version"
-update_changelog_on_bump = true
+update_changelog_on_bump = true  # Required for automatic changelog updates
 ```
 
-2. **CHANGELOG.md** file (can be empty initially):
+**Important:** The `update_changelog_on_bump = true` setting is **recommended** but not strictly required. If not set, the action will detect this and generate the changelog manually, then amend it to the version bump commit.
+
+**Optional Commitizen settings:**
+
+```toml
+[tool.commitizen]
+# ... other settings ...
+changelog_file = "CHANGELOG.md"      # Custom changelog path (default: CHANGELOG.md)
+changelog_incremental = true         # Incremental updates (default: false)
+changelog_merge_prerelease = true    # Merge prerelease entries (default: false)
+```
+
+2. **Changelog file** (default: `CHANGELOG.md`, can be empty initially):
 
 ```markdown
 # Changelog
@@ -267,12 +279,43 @@ git commit -m "docs: add changelog"
 2. Branch should exist and be pushed to remote
 3. Check if branch protection rules allow the action to push
 
+### Changelog Not Updated
+
+**Symptom:** Version bumped successfully but changelog file wasn't updated.
+
+**Causes and Solutions:**
+
+1. **Missing `update_changelog_on_bump = true`**
+
+   The action will automatically detect this and generate the changelog manually. However, for optimal performance, add this to your `pyproject.toml`:
+
+   ```toml
+   [tool.commitizen]
+   # ... other settings ...
+   update_changelog_on_bump = true
+   ```
+
+2. **Custom changelog file path**
+
+   If using a custom path (e.g., `docs/HISTORY.md`), ensure it's configured:
+
+   ```toml
+   [tool.commitizen]
+   changelog_file = "docs/HISTORY.md"
+   ```
+
+   The action automatically detects and uses the configured path.
+
+3. **No commits to add**
+
+   If there are no conventional commits since the last release, the changelog won't have new entries.
+
 ### First Release Issues
 
 For the first release, ensure:
-1. CHANGELOG.md exists (even if empty)
+1. Changelog file exists at the configured path (default: `CHANGELOG.md`)
 2. At least one commit follows conventional format
-3. No tags exist in the repository
+3. No tags exist in the repository (or only one tag for second release)
 
 ## Related Documentation
 
