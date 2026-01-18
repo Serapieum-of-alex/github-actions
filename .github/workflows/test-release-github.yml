@@ -245,11 +245,25 @@ jobs:
           LATEST_TAG=$(git describe --tags --abbrev=0)
           echo "Latest tag: $LATEST_TAG"
 
-          # Verify it contains the prerelease type
-          if [[ "$LATEST_TAG" == *"${{ matrix.prerelease-type }}"* ]]; then
-            echo "[OK] Tag contains prerelease type: ${{ matrix.prerelease-type }}"
+          # Map prerelease type to Python version scheme abbreviation
+          # alpha -> a, beta -> b, rc -> rc
+          case "${{ matrix.prerelease-type }}" in
+            alpha)
+              EXPECTED_SUFFIX="a"
+              ;;
+            beta)
+              EXPECTED_SUFFIX="b"
+              ;;
+            rc)
+              EXPECTED_SUFFIX="rc"
+              ;;
+          esac
+
+          # Verify it contains the prerelease suffix
+          if [[ "$LATEST_TAG" == *"$EXPECTED_SUFFIX"* ]]; then
+            echo "[OK] Tag contains prerelease suffix: $EXPECTED_SUFFIX (from ${{ matrix.prerelease-type }})"
           else
-            echo "[ERROR] Tag does not contain prerelease type"
+            echo "[ERROR] Tag does not contain expected prerelease suffix: $EXPECTED_SUFFIX"
             exit 1
           fi
 
