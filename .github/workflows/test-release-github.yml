@@ -285,7 +285,7 @@ jobs:
       - name: Copy test fixture
         run: |
           cp tests/data/release-github/test-with-groups/pyproject.toml .
-
+          cp tests/data/release-github/test-with-groups/uv.lock .
 
       - name: Clean up repository tags
         run: |
