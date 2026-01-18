@@ -17,6 +17,9 @@ dev = [
 ]
 
 [dependency-groups]
+dev = [
+    "commitizen>=3.0.0",
+]
 docs = [
     "mkdocs>=1.5.0",
 ]
