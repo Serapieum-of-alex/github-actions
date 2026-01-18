@@ -11,6 +11,9 @@ dependencies = [
     "requests>=2.28.0",
 ]
 
+[tool.hatch.build.targets.wheel]
+packages = []
+
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",
