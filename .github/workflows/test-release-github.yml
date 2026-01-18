@@ -30,6 +30,9 @@ jobs:
           if [ "${{ matrix.package-manager }}" == "uv" ]; then
             cp tests/data/release-github/test-basic-${{ matrix.package-manager }}/uv.lock . || true
           fi
+          if [ "${{ matrix.package-manager }}" == "pip" ]; then
+            cp -r tests/data/release-github/test-basic-pip/src . || true
+          fi
 
       - name: Clean up repository tags
         run: |
