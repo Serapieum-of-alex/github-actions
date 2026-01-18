@@ -137,21 +137,9 @@ runs:
           fi
         fi
 
-        # Check if CHANGELOG.md exists
         echo ""
-        echo "Checking for CHANGELOG.md file..."
-        if [ ! -f "CHANGELOG.md" ]; then
-          echo "::error::CHANGELOG.md file not found"
-          echo "::error::A CHANGELOG.md file is required for release generation"
-          echo "::error::Please create CHANGELOG.md in the repository root before creating a release"
-          echo "::error::You can create an empty file or run 'cz changelog' to generate one"
-          exit 1
-        else
-          echo "✓ CHANGELOG.md file exists"
-        fi
-
-        echo ""
-        echo "✓ All prerequisites validated successfully"
+        echo "✓ Prerequisites check completed"
+        echo "Note: Changelog file will be validated after Python environment setup"
         echo "========================================"
         echo "::endgroup::"
 
@@ -217,6 +205,59 @@ runs:
         git config --global user.name '${{ github.actor }}'
         git config --global user.email '${{ github.actor }}@users.noreply.github.com'
         echo "✓ Git configured with user: ${{ github.actor }}"
+        echo "::endgroup::"
+
+    - name: Validate changelog file
+      shell: bash
+      run: |
+        echo "::group::Validating changelog file"
+
+        # Build commitizen command based on package manager
+        if [ "${{ inputs.package-manager }}" = "pip" ]; then
+          CZ_CMD="cz"
+        elif [ "${{ inputs.package-manager }}" = "pixi" ]; then
+          CZ_CMD="pixi run -e ${{ inputs.install-groups }} cz"
+        else
+          CZ_CMD="${{ inputs.package-manager }} run cz"
+        fi
+
+        # Get changelog file path from commitizen config
+        echo "Retrieving changelog file path from commitizen configuration..."
+        CHANGELOG_FILE=$($CZ_CMD changelog --dry-run 2>&1 | grep -oP "(?<=file: ).*" | head -1 || echo "CHANGELOG.md")
+
+        # If grep didn't find it, try to parse from config directly
+        if [ -z "$CHANGELOG_FILE" ] || [ "$CHANGELOG_FILE" = "CHANGELOG.md" ]; then
+          # Try to get from pyproject.toml
+          if [ -f "pyproject.toml" ]; then
+            CHANGELOG_FILE=$(grep -A 10 "\[tool.commitizen\]" pyproject.toml | grep "changelog_file" | sed 's/.*=\s*"\(.*\)"/\1/' || echo "CHANGELOG.md")
+          fi
+        fi
+
+        # Default to CHANGELOG.md if still not found
+        if [ -z "$CHANGELOG_FILE" ]; then
+          CHANGELOG_FILE="CHANGELOG.md"
+        fi
+
+        echo "Changelog file: $CHANGELOG_FILE"
+
+        # Check if changelog file exists
+        if [ ! -f "$CHANGELOG_FILE" ]; then
+          echo "::error::Changelog file not found: $CHANGELOG_FILE"
+          echo "::error::A changelog file is required for release generation"
+          echo "::error::Please create $CHANGELOG_FILE in the repository root"
+          echo "::error::You can create an empty file or run 'cz changelog' to generate one"
+          echo ""
+          echo "To create the file:"
+          echo "  cat > $CHANGELOG_FILE << 'EOF'"
+          echo "  # Changelog"
+          echo "  "
+          echo "  All notable changes to this project will be documented in this file."
+          echo "  EOF"
+          exit 1
+        else
+          echo "✓ Changelog file exists: $CHANGELOG_FILE"
+        fi
+
         echo "::endgroup::"
 
     - name: Generate changelog and bump version with commitizen
