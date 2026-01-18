@@ -275,12 +275,12 @@ runs:
 
         echo "::group::Bumping version"
         echo "Applying version bump..."
-        # Use --changelog-to-stdout to prevent cz bump from regenerating changelog
+        # Use --files-only to prevent cz bump from regenerating changelog
         # (we already generated it in the previous step)
         if [ "${{ inputs.prerelease-type }}" != "none" ]; then
-          $CZ_CMD bump --yes --increment ${{ inputs.increment }} --prerelease ${{ inputs.prerelease-type }} --changelog-to-stdout > /dev/null
+          $CZ_CMD bump --yes --increment ${{ inputs.increment }} --prerelease ${{ inputs.prerelease-type }} --files-only
         else
-          $CZ_CMD bump --yes --increment ${{ inputs.increment }} --changelog-to-stdout > /dev/null
+          $CZ_CMD bump --yes --increment ${{ inputs.increment }} --files-only
         fi
         echo "::endgroup::"
 
