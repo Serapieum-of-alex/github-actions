@@ -579,22 +579,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create minimal test fixture
+      - name: Copy test fixture
         run: |
-          cat > pyproject.toml << 'EOF'
-          [project]
-          name = "test-release-minimal"
-          version = "0.1.0"
-          requires-python = ">=3.10"
-          dependencies = ["requests"]
-
-          [tool.commitizen]
-          name = "cz_conventional_commits"
-          version = "0.1.0"
-          version_files = ["pyproject.toml:version"]
-          tag_format = "$version"
-          EOF
-
+          cp -r tests/data/release-github/test-minimal .
 
       - name: Clean up repository tags
         run: |
