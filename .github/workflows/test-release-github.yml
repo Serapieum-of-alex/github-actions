@@ -581,7 +581,7 @@ jobs:
 
       - name: Copy test fixture
         run: |
-          cp -r tests/data/release-github/test-minimal .
+          cp -r tests/data/release-github/test-minimal/* .
 
       - name: Clean up repository tags
         run: |
