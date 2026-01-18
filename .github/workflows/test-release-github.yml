@@ -68,6 +68,7 @@ jobs:
           package-manager: ${{ matrix.package-manager }}
           python-version: '3.12'
           install-groups: 'groups: dev docs'
+          skip-checkout: 'true'
 
       - name: Verify release was processed
         run: |
@@ -124,6 +125,7 @@ jobs:
           package-manager: 'pixi'
           python-version: '3.12'
           install-groups: 'default'
+          skip-checkout: 'true'
 
       - name: Verify release was processed
         run: |
@@ -175,6 +177,7 @@ jobs:
           draft: 'true'
           package-manager: 'uv'
           python-version: '3.12'
+          skip-checkout: 'true'
 
       - name: Verify prerelease was created
         run: |
@@ -248,6 +251,7 @@ jobs:
           package-manager: 'uv'
           python-version: '3.12'
           install-groups: ${{ matrix.install-groups }}
+          skip-checkout: 'true'
 
       - name: Verify dependencies installed correctly
         run: |
@@ -298,6 +302,7 @@ jobs:
           draft: 'true'
           package-manager: 'uv'
           python-version: ${{ matrix.python-version }}
+          skip-checkout: 'true'
 
       - name: Verify Python version
         run: |
@@ -346,6 +351,7 @@ jobs:
           draft: 'true'
           package-manager: 'uv'
           python-version: '3.12'
+          skip-checkout: 'true'
 
       - name: Verify release on custom branch
         run: |
@@ -397,6 +403,7 @@ jobs:
           draft: 'true'
           package-manager: 'uv'
           python-version: '3.12'
+          skip-checkout: 'true'
 
       - name: Verify release on ${{ matrix.os }}
         shell: bash
@@ -455,6 +462,7 @@ jobs:
           package-manager: 'uv'
           python-version: '3.12'
           install-groups: ''
+          skip-checkout: 'true'
 
       - name: Verify release succeeded
         run: |
@@ -492,6 +500,7 @@ jobs:
           draft: 'true'
           package-manager: 'uv'
           python-version: '3.12'
+          skip-checkout: 'true'
 
       - name: Verify git was configured by action
         run: |

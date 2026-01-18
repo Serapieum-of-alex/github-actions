@@ -89,11 +89,19 @@ inputs:
       environments and activate-environment parameters.
     required: false
     default: 'groups: docs dev'
+  skip-checkout:
+    description: |
+      Skip the checkout step (useful for testing).
+      - 'false': Checkout repository (default)
+      - 'true': Skip checkout (repository must already be checked out)
+    required: false
+    default: 'false'
 
 runs:
   using: 'composite'
   steps:
     - name: Checkout repository
+      if: ${{ inputs.skip-checkout != 'true' }}
       uses: actions/checkout@v5
       with:
         fetch-depth: 0
