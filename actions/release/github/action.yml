@@ -108,6 +108,46 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Check prerequisites for release
+      shell: bash
+      run: |
+        echo "::group::Checking release prerequisites"
+        echo "=== Validating release requirements ==="
+
+        # Check if there are any existing tags
+        echo ""
+        echo "Checking for existing tags..."
+        EXISTING_TAGS=$(git tag -l)
+        if [ -z "$EXISTING_TAGS" ]; then
+          echo "::warning::No existing tags found in repository"
+          echo "::warning::This appears to be the first release"
+          echo "::warning::Full changelog will be generated instead of incremental"
+        else
+          echo "✓ Found existing tags:"
+          echo "$EXISTING_TAGS" | head -5
+          if [ $(echo "$EXISTING_TAGS" | wc -l) -gt 5 ]; then
+            echo "  ... and $(($(echo "$EXISTING_TAGS" | wc -l) - 5)) more"
+          fi
+        fi
+
+        # Check if CHANGELOG.md exists
+        echo ""
+        echo "Checking for CHANGELOG.md file..."
+        if [ ! -f "CHANGELOG.md" ]; then
+          echo "::error::CHANGELOG.md file not found"
+          echo "::error::A CHANGELOG.md file is required for release generation"
+          echo "::error::Please create CHANGELOG.md in the repository root before creating a release"
+          echo "::error::You can create an empty file or run 'cz changelog' to generate one"
+          exit 1
+        else
+          echo "✓ CHANGELOG.md file exists"
+        fi
+
+        echo ""
+        echo "✓ All prerequisites validated successfully"
+        echo "========================================"
+        echo "::endgroup::"
+
     - name: Display release configuration
       shell: bash
       run: |
@@ -221,8 +261,15 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Generating changelog"
-        echo "Generating incremental changelog for version $NEXT_VERSION..."
-        $CZ_CMD changelog --unreleased-version="$NEXT_VERSION" --incremental
+        # Check if there are existing tags to determine changelog mode
+        EXISTING_TAGS=$(git tag -l)
+        if [ -z "$EXISTING_TAGS" ]; then
+          echo "Generating full changelog for version $NEXT_VERSION (first release)..."
+          $CZ_CMD changelog --unreleased-version="$NEXT_VERSION"
+        else
+          echo "Generating incremental changelog for version $NEXT_VERSION..."
+          $CZ_CMD changelog --unreleased-version="$NEXT_VERSION" --incremental
+        fi
         echo "✓ Changelog generated successfully"
         echo "::endgroup::"
 
