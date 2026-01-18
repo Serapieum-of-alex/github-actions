@@ -363,7 +363,7 @@ jobs:
       - name: Copy test fixture
         run: |
           cp tests/data/release-github/test-basic-uv/pyproject.toml .
-
+          cp tests/data/release-github/test-basic-uv/uv.lock .
 
       - name: Clean up repository tags
         run: |
@@ -429,7 +429,7 @@ jobs:
       - name: Copy test fixture
         run: |
           cp tests/data/release-github/test-basic-uv/pyproject.toml .
-
+          cp tests/data/release-github/test-basic-uv/uv.lock .
 
       - name: Clean up repository tags
         run: |
@@ -503,6 +503,7 @@ jobs:
         shell: bash
         run: |
           cp tests/data/release-github/test-basic-uv/pyproject.toml .
+          cp tests/data/release-github/test-basic-uv/uv.lock .
 
 
       - name: Clean up repository tags
@@ -644,7 +645,7 @@ jobs:
       - name: Copy test fixture
         run: |
           cp tests/data/release-github/test-basic-uv/pyproject.toml .
-
+          cp tests/data/release-github/test-basic-uv/uv.lock .
 
       - name: Clean up repository tags
         run: |
