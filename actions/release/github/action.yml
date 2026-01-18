@@ -5,7 +5,7 @@ inputs:
   github-token:
     description: |
       GitHub token for creating releases. Typically use the built-in GITHUB_TOKEN or a personal access token.
-      Example: ${{ secrets.GITHUB_TOKEN }}
+      Example: secrets.GITHUB_TOKEN
     required: true
   release-branch:
     description: |
